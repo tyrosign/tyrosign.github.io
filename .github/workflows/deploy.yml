@@ -32,6 +32,9 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_CLIENT_ID: 09fd64e6-142a-4fa5-8c9f-f09c20931bd7
+          VITE_TENANT_ID: 9efa3bdf-67ad-47e3-8dfb-d1df79a6d7fa
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

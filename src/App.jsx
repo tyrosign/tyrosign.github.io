@@ -5,6 +5,24 @@ import {
   Home, Info, RefreshCw, Upload, Image, Trash,
   Edit3, Star, X
 } from "lucide-react";
+import { PublicClientApplication, InteractionRequiredAuthError } from '@azure/msal-browser';
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MSAL CONFIGURATION
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const MSAL_ENABLED = !!(import.meta.env.VITE_CLIENT_ID && import.meta.env.VITE_TENANT_ID);
+
+const msalInstance = MSAL_ENABLED ? new PublicClientApplication({
+  auth: {
+    clientId: import.meta.env.VITE_CLIENT_ID,
+    authority: `https://login.microsoftonline.com/${import.meta.env.VITE_TENANT_ID}`,
+    redirectUri: window.location.origin,
+    postLogoutRedirectUri: window.location.origin,
+  },
+  cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false },
+}) : null;
+
+const msalLoginRequest = { scopes: ['User.Read'] };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // THEME (Light-only premium glass)
@@ -458,6 +476,7 @@ const GLOBAL_CSS = `
     .app-header-title { font-size: 0.85rem!important; }
     .app-header-title-accent { font-size: 0.85rem!important; }
     .app-header-nav { order: 3!important; width: 100%!important; justify-content: center!important; }
+    .app-header-auth { order: 2!important; }
     .app-header-lang { order: 2!important; margin-left: auto!important; }
     .app-header-lang button { padding: 0.25rem 0.5rem!important; font-size: 0.6rem!important; min-height: 28px!important; }
     .app-main { padding: 0.65rem 0.75rem!important; }
@@ -596,6 +615,9 @@ export default function App() {
   });
   const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '' });
   const [toasts, setToasts] = useState([]);
+  const [msalReady, setMsalReady] = useState(false);
+  const [msalAccount, setMsalAccount] = useState(null);
+  const [authLoading, setAuthLoading] = useState(false);
   const fRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -638,6 +660,8 @@ export default function App() {
     nameColorL: 'Ad Soyad Rengi', titleColorL: 'Ünvan Rengi',
     companyColorL: 'Şirket Adı Rengi', labelColorL: 'Etiket Rengi', valueColorL: 'Değer Rengi',
     bannerAccentL: 'Banner Aksan Rengi', textColorsTitle: 'İmza Metin Renkleri', bannerColorsTitle: 'Banner Renkleri',
+    msLogin: 'Microsoft Giriş', msLogging: 'Giriş yapılıyor...', msLogout: 'Çıkış',
+    msLoginOk: 'Giriş başarılı', msLoginFail: 'Giriş başarısız', msProfileFail: 'Profil alınamadı',
   } : {
     sigTab: 'Signature', banTab: 'Banner', setTab: 'Settings',
     fn: 'First Name', ln: 'Last Name', ttr: 'Title (TR)', ten: 'Title (EN)',
@@ -677,6 +701,8 @@ export default function App() {
     nameColorL: 'Name Color', titleColorL: 'Title Color',
     companyColorL: 'Company Text Color', labelColorL: 'Label Color', valueColorL: 'Value Color',
     bannerAccentL: 'Banner Accent Color', textColorsTitle: 'Signature Text Colors', bannerColorsTitle: 'Banner Colors',
+    msLogin: 'Microsoft Sign In', msLogging: 'Signing in...', msLogout: 'Sign out',
+    msLoginOk: 'Login successful', msLoginFail: 'Login failed', msProfileFail: 'Could not fetch profile',
   }, [lang]);
 
   const hasData = form.firstName.trim().length > 0;
@@ -695,6 +721,76 @@ export default function App() {
     const id = ++_toastId;
     setToasts(p => [...p, { id, msg, type }]);
     setTimeout(() => setToasts(p => p.filter(t => t.id !== id)), 3500);
+  }, []);
+
+  // ─── MSAL Authentication ───
+  const fetchGraphProfile = useCallback(async (account) => {
+    try {
+      const tokenResponse = await msalInstance.acquireTokenSilent({ ...msalLoginRequest, account });
+      const res = await fetch('https://graph.microsoft.com/v1.0/me?$select=givenName,surname,mail,jobTitle,mobilePhone', {
+        headers: { Authorization: `Bearer ${tokenResponse.accessToken}` },
+      });
+      if (!res.ok) throw new Error(`Graph API ${res.status}`);
+      const p = await res.json();
+      setForm(prev => ({
+        ...prev,
+        firstName: p.givenName || prev.firstName,
+        lastName: p.surname || prev.lastName,
+        email: p.mail || prev.email,
+        titleEN: p.jobTitle || prev.titleEN,
+        gsm: p.mobilePhone || prev.gsm,
+      }));
+    } catch (err) {
+      if (err instanceof InteractionRequiredAuthError) {
+        try {
+          const tokenResponse = await msalInstance.acquireTokenPopup(msalLoginRequest);
+          await fetchGraphProfile(tokenResponse.account);
+        } catch (_) { toast(lang === 'tr' ? 'Profil alınamadı' : 'Could not fetch profile', 'err'); }
+      } else {
+        console.error('Graph API error:', err);
+        toast(lang === 'tr' ? 'Profil alınamadı' : 'Could not fetch profile', 'err');
+      }
+    }
+  }, [lang, toast]);
+
+  const handleLogin = useCallback(async () => {
+    if (!msalReady || !msalInstance) return;
+    setAuthLoading(true);
+    try {
+      const response = await msalInstance.loginPopup(msalLoginRequest);
+      setMsalAccount(response.account);
+      await fetchGraphProfile(response.account);
+      toast(lang === 'tr' ? 'Giriş başarılı' : 'Login successful');
+    } catch (err) {
+      if (err.errorCode !== 'user_cancelled') {
+        console.error('Login error:', err);
+        toast(lang === 'tr' ? 'Giriş başarısız' : 'Login failed', 'err');
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  }, [msalReady, lang, toast, fetchGraphProfile]);
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await msalInstance.logoutPopup({ account: msalAccount, postLogoutRedirectUri: window.location.origin });
+    } catch (err) { console.error('Logout error:', err); }
+    setMsalAccount(null);
+  }, [msalAccount]);
+
+  useEffect(() => {
+    if (!MSAL_ENABLED || !msalInstance) return;
+    msalInstance.initialize().then(() => {
+      setMsalReady(true);
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        setMsalAccount(accounts[0]);
+        fetchGraphProfile(accounts[0]);
+      }
+    }).catch(err => {
+      console.error('MSAL init failed:', err);
+      setMsalReady(true);
+    });
   }, []);
 
   const procLogo = useCallback((file) => {
@@ -817,6 +913,79 @@ export default function App() {
 
   const tabIds = ['signature', 'banner', 'settings'];
 
+  // ─── Login Splash Screen ───
+  if (MSAL_ENABLED && !msalAccount) {
+    return (
+      <div style={{
+        fontFamily: 'Inter,sans-serif', background: C.bg, color: C.text1,
+        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <style>{GLOBAL_CSS}</style>
+        <div style={{
+          textAlign: 'center', padding: '3rem 2rem',
+          background: C.surface, borderRadius: 20,
+          border: `1px solid ${C.border}`, boxShadow: C.shadowLg,
+          backdropFilter: 'blur(16px)', maxWidth: 400, width: '90%',
+        }}>
+          {/* Logo */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <TyroLogo size={56} />
+          </div>
+          <h1 style={{
+            fontSize: '1.5rem', fontWeight: 800, color: C.primary,
+            fontFamily: 'Plus Jakarta Sans,sans-serif', margin: '0 0 0.25rem',
+          }}>
+            TYRO <span style={{ color: C.accent }}>Sign Snap</span>
+          </h1>
+          <p style={{ fontSize: '0.8rem', color: C.textM, margin: '0 0 2rem' }}>
+            {lang === 'tr' ? 'Kurumsal E-Posta İmza Oluşturucu' : 'Corporate Email Signature Studio'}
+          </p>
+
+          {/* Login Button */}
+          <button onClick={handleLogin} disabled={authLoading || !msalReady} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
+            width: '100%', padding: '0.75rem 1.5rem', borderRadius: 12,
+            border: 'none', cursor: (authLoading || !msalReady) ? 'wait' : 'pointer',
+            background: `linear-gradient(135deg, ${C.primary}, ${C.primarySoft})`,
+            color: '#fff', fontSize: '0.85rem', fontWeight: 700,
+            fontFamily: 'Inter,sans-serif', transition: 'all 0.3s ease',
+            boxShadow: `0 4px 16px ${C.primary}30`,
+            opacity: (authLoading || !msalReady) ? 0.7 : 1,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 21 21" fill="none">
+              <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+              <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+              <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+              <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+            </svg>
+            {authLoading
+              ? (lang === 'tr' ? 'Giriş yapılıyor...' : 'Signing in...')
+              : (lang === 'tr' ? 'Microsoft ile Giriş Yap' : 'Sign in with Microsoft')
+            }
+          </button>
+
+          {/* Language toggle */}
+          <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+            <button onClick={() => setLang('tr')} style={{
+              padding: '0.25rem 0.6rem', borderRadius: 6, border: 'none', cursor: 'pointer',
+              fontSize: '0.65rem', fontWeight: 700,
+              background: lang === 'tr' ? C.primary : 'transparent', color: lang === 'tr' ? '#fff' : C.textM,
+            }}>TR</button>
+            <button onClick={() => setLang('en')} style={{
+              padding: '0.25rem 0.6rem', borderRadius: 6, border: 'none', cursor: 'pointer',
+              fontSize: '0.65rem', fontWeight: 700,
+              background: lang === 'en' ? C.primary : 'transparent', color: lang === 'en' ? '#fff' : C.textM,
+            }}>EN</button>
+          </div>
+
+          <p style={{ fontSize: '0.6rem', color: C.textM, marginTop: '1.5rem', opacity: 0.6 }}>
+            Powered by TTECH Business Solutions
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ fontFamily: 'Inter,sans-serif', background: C.bg, color: C.text1, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <style>{GLOBAL_CSS}</style>
@@ -857,6 +1026,37 @@ export default function App() {
             <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Settings} label={L.setTab} />
           </div>
         </nav>
+
+        {/* ─── Auth Section (logged-in user info) ─── */}
+        {msalAccount && (
+          <div className="app-header-auth" style={{
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            padding: '0.25rem 0.65rem', background: `${C.primary}08`,
+            borderRadius: 20, border: `1px solid ${C.borderSub}`,
+          }}>
+            <div style={{
+              width: 26, height: 26, borderRadius: '50%',
+              background: `linear-gradient(135deg, ${C.primary}, ${C.primarySoft})`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#fff', fontSize: '0.55rem', fontWeight: 700,
+              fontFamily: 'Plus Jakarta Sans,sans-serif',
+            }}>
+              {(msalAccount.name || '').split(' ').map(n => n?.[0] || '').join('').slice(0, 2).toLocaleUpperCase('tr-TR')}
+            </div>
+            <span style={{
+              fontSize: '0.65rem', fontWeight: 600, color: C.text1,
+              maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}>
+              {msalAccount.name || msalAccount.username}
+            </span>
+            <button onClick={handleLogout} title={L.msLogout} style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: '0.15rem', display: 'flex', borderRadius: '50%',
+            }}>
+              <X size={13} style={{ color: C.textM }} />
+            </button>
+          </div>
+        )}
 
         <div className="app-header-lang" style={{
           display: 'flex', borderRadius: '20px', overflow: 'hidden',

@@ -744,8 +744,7 @@ export default function App() {
     } catch (err) {
       if (err instanceof InteractionRequiredAuthError) {
         try {
-          const tokenResponse = await msalInstance.acquireTokenPopup(msalLoginRequest);
-          await fetchGraphProfile(tokenResponse.account);
+          await msalInstance.acquireTokenRedirect(msalLoginRequest);
         } catch (_) { toast(lang === 'tr' ? 'Profil alınamadı' : 'Could not fetch profile', 'err'); }
       } else {
         console.error('Graph API error:', err);
@@ -758,35 +757,44 @@ export default function App() {
     if (!msalReady || !msalInstance) return;
     setAuthLoading(true);
     try {
-      const response = await msalInstance.loginPopup(msalLoginRequest);
-      setMsalAccount(response.account);
-      await fetchGraphProfile(response.account);
-      toast(lang === 'tr' ? 'Giriş başarılı' : 'Login successful');
+      await msalInstance.loginRedirect(msalLoginRequest);
     } catch (err) {
       if (err.errorCode !== 'user_cancelled') {
         console.error('Login error:', err);
         toast(lang === 'tr' ? 'Giriş başarısız' : 'Login failed', 'err');
       }
-    } finally {
       setAuthLoading(false);
     }
-  }, [msalReady, lang, toast, fetchGraphProfile]);
+  }, [msalReady, lang, toast]);
 
   const handleLogout = useCallback(async () => {
     try {
-      await msalInstance.logoutPopup({ account: msalAccount, postLogoutRedirectUri: window.location.origin });
+      await msalInstance.logoutRedirect({ account: msalAccount, postLogoutRedirectUri: window.location.origin });
     } catch (err) { console.error('Logout error:', err); }
     setMsalAccount(null);
   }, [msalAccount]);
 
   useEffect(() => {
     if (!MSAL_ENABLED || !msalInstance) return;
-    msalInstance.initialize().then(() => {
+    msalInstance.initialize().then(async () => {
+      // Handle redirect response (user returning from Microsoft login)
+      // Handle redirect response (user returning from Microsoft login)
+      let redirectAccount = null;
+      try {
+        const redirectResponse = await msalInstance.handleRedirectPromise();
+        if (redirectResponse?.account) {
+          redirectAccount = redirectResponse.account;
+        }
+      } catch (err) {
+        console.error('Redirect error:', err);
+      }
       setMsalReady(true);
-      const accounts = msalInstance.getAllAccounts();
-      if (accounts.length > 0) {
-        setMsalAccount(accounts[0]);
-        fetchGraphProfile(accounts[0]);
+      setAuthLoading(false);
+      // Use redirect account or check for cached session
+      const account = redirectAccount || msalInstance.getAllAccounts()[0] || null;
+      if (account) {
+        setMsalAccount(account);
+        fetchGraphProfile(account);
       }
     }).catch(err => {
       console.error('MSAL init failed:', err);

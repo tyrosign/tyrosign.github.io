@@ -105,6 +105,15 @@ const BANNER_TEMPLATES = [
 // UTILITIES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const escapeHtml = (s) => s ? s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '';
+const sanitizeUrl = (url) => {
+  if (!url) return '';
+  const trimmed = url.trim();
+  try {
+    const parsed = new URL(trimmed.startsWith('http') ? trimmed : `https://${trimmed}`);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return '';
+    return parsed.href;
+  } catch { return ''; }
+};
 const titleCase = (str) => {
   if (!str) return '';
   return str.split(' ').map(w => w ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR') : w).join(' ');
@@ -112,6 +121,11 @@ const titleCase = (str) => {
 const PROGRESS_FIELDS = ['firstName', 'lastName', 'titleTR', 'titleEN', 'officeId', 'gsm', 'email'];
 const OFFICE_GROUPS = ['Türkiye', 'Uluslararası'];
 let _toastId = 0;
+const _colorTimers = {};
+const debouncedColor = (key, value, setter) => {
+  clearTimeout(_colorTimers[key]);
+  _colorTimers[key] = setTimeout(() => setter(p => ({ ...p, [key]: value })), 80);
+};
 const DESIGNS = [
   { id: 'corporate', nameKey: 'designCorporate' },
   { id: 'classic', nameKey: 'designClassic' },
@@ -161,12 +175,12 @@ const genSig = (f, s, office) => {
       : txt;
     return `<a href="${url}" target="_blank" style="display:inline-block;width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:6px;text-align:center;line-height:28px;font-size:13px;font-weight:bold;color:#fff;text-decoration:none;margin:2px 3px;">${content}</a>`;
   };
-  const linkedinUrl = (f.linkedinPersonal && f.linkedinPersonal.trim()) || s.social.linkedin;
+  const linkedinUrl = sanitizeUrl((f.linkedinPersonal && f.linkedinPersonal.trim()) || s.social.linkedin);
   const icons = [];
   if (s.showLinkedin !== false) { const ic = mkI(linkedinUrl, 'in'); if (ic) icons.push(ic); }
-  if (s.showInstagram !== false) { const ic = mkI(s.social.instagram, '', true); if (ic) icons.push(ic); }
-  if (s.showTwitter !== false) { const ic = mkI(s.social.twitter, 'X'); if (ic) icons.push(ic); }
-  if (s.showFacebook !== false) { const ic = mkI(s.social.facebook, 'f'); if (ic) icons.push(ic); }
+  if (s.showInstagram !== false) { const ic = mkI(sanitizeUrl(s.social.instagram), '', true); if (ic) icons.push(ic); }
+  if (s.showTwitter !== false) { const ic = mkI(sanitizeUrl(s.social.twitter), 'X'); if (ic) icons.push(ic); }
+  if (s.showFacebook !== false) { const ic = mkI(sanitizeUrl(s.social.facebook), 'f'); if (ic) icons.push(ic); }
 
   // Build social rows (2 per row)
   let socialRows = '';
@@ -221,7 +235,7 @@ const genSigCorporate = (f, s, office) => {
     : `<table cellpadding="0" cellspacing="0" border="0"><tr><td style="vertical-align:middle;padding-right:6px;"><div style="width:40px;height:40px;background:${s.logoColor};border-radius:8px;text-align:center;line-height:40px;"><span style="font-family:Georgia,serif;font-size:26px;font-weight:bold;color:#c8922a;">T</span></div></td><td style="vertical-align:middle;"><span style="font-family:Georgia,serif;font-size:20px;font-weight:bold;color:${s.logoColor};letter-spacing:1.5px;">tiryaki</span><br/><span style="font-size:7px;color:#999;">${s.slogan}</span></td></tr></table>`;
 
   const rbBg = s.rightBlockBg || s.logoColor;
-  const linkedinUrl = (f.linkedinPersonal && f.linkedinPersonal.trim()) || s.social.linkedin;
+  const linkedinUrl = sanitizeUrl((f.linkedinPersonal && f.linkedinPersonal.trim()) || s.social.linkedin);
   // Clean handle: strip URL parts and remove hyphens for display
   const linkedinHandle = linkedinUrl ? linkedinUrl.replace(/https?:\/\/(www\.)?linkedin\.com\/(company\/|in\/)?/i, '').replace(/\/$/, '').replace(/-/g, '') : '';
 
@@ -746,14 +760,15 @@ export default function App() {
     } catch (err) {
       if (err instanceof InteractionRequiredAuthError) {
         try {
+          // Redirect will navigate away; this catch only runs on failure
           await msalInstance.acquireTokenRedirect(msalLoginRequest);
-        } catch (_) { toast(lang === 'tr' ? 'Profil alınamadı' : 'Could not fetch profile', 'err'); }
+        } catch (_) { toast('Profile unavailable', 'err'); }
       } else {
-        console.error('Graph API error:', err);
-        toast(lang === 'tr' ? 'Profil alınamadı' : 'Could not fetch profile', 'err');
+        console.error('Graph API error:', err.message);
+        toast('Profile unavailable', 'err');
       }
     }
-  }, [lang, toast]);
+  }, [toast]);
 
   const handleLogin = useCallback(async () => {
     if (!msalReady || !msalInstance) return;
@@ -778,21 +793,19 @@ export default function App() {
 
   useEffect(() => {
     if (!MSAL_ENABLED || !msalInstance) return;
+    let isMounted = true;
     msalInstance.initialize().then(async () => {
-      // Handle redirect response (user returning from Microsoft login)
-      // Handle redirect response (user returning from Microsoft login)
+      if (!isMounted) return;
       let redirectAccount = null;
       try {
         const redirectResponse = await msalInstance.handleRedirectPromise();
-        if (redirectResponse?.account) {
-          redirectAccount = redirectResponse.account;
-        }
+        if (redirectResponse?.account) redirectAccount = redirectResponse.account;
       } catch (err) {
         console.error('Redirect error:', err);
       }
+      if (!isMounted) return;
       setMsalReady(true);
       setAuthLoading(false);
-      // Use redirect account or check for cached session
       const account = redirectAccount || msalInstance.getAllAccounts()[0] || null;
       if (account) {
         setMsalAccount(account);
@@ -800,12 +813,15 @@ export default function App() {
       }
     }).catch(err => {
       console.error('MSAL init failed:', err);
-      setMsalReady(true);
+      if (isMounted) { setMsalReady(true); setAuthLoading(false); }
     });
+    return () => { isMounted = false; };
   }, []);
 
   const procLogo = useCallback((file) => {
     if (!file) return;
+    if (file.size > 512000) { toast('Max 500KB', 'err'); return; }
+    if (!file.type.startsWith('image/')) { toast('Invalid file type', 'err'); return; }
     const reader = new FileReader();
     reader.onload = (ev) => {
       const base64 = ev.target.result;
@@ -824,7 +840,23 @@ export default function App() {
     reader.readAsDataURL(file);
   }, [toast]);
 
-  const doCopy = useCallback(() => {
+  const doCopy = useCallback(async () => {
+    // Try modern Clipboard API first, fallback to execCommand
+    try {
+      if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([sigHTML], { type: 'text/html' }),
+            'text/plain': new Blob([sigHTML.replace(/<[^>]*>/g, '')], { type: 'text/plain' }),
+          }),
+        ]);
+        setCopied(true);
+        toast(L.cpd);
+        setTimeout(() => setCopied(false), 2500);
+        return;
+      }
+    } catch { /* fallback below */ }
+    // Fallback: DOM-based copy
     const div = document.createElement('div');
     div.innerHTML = sigHTML;
     div.style.position = 'fixed';
@@ -905,19 +937,20 @@ export default function App() {
     ctx.fillStyle = acBar; ctx.textAlign = 'right';
     ctx.fillText(stg.website, sz.w * 0.94, sz.h * 0.85);
     ctx.textAlign = 'left';
+    let logoImg = null;
     if (stg.logoBase64) {
-      const img = new window.Image();
-      img.onload = () => {
+      logoImg = new window.Image();
+      logoImg.onload = () => {
         if (!isMounted) return;
         const maxH = sz.h * 0.35, maxW = sz.w * 0.15;
-        let dw = img.width, dh = img.height;
+        let dw = logoImg.width, dh = logoImg.height;
         if (dw > maxW) { const r = maxW / dw; dw = maxW; dh *= r; }
         if (dh > maxH) { const r = maxH / dh; dh = maxH; dw *= r; }
-        ctx.drawImage(img, sz.w * 0.94 - dw, sz.h * 0.15, dw, dh);
+        ctx.drawImage(logoImg, sz.w * 0.94 - dw, sz.h * 0.15, dw, dh);
       };
-      img.src = stg.logoBase64;
+      logoImg.src = stg.logoBase64;
     }
-    return () => { isMounted = false; };
+    return () => { isMounted = false; if (logoImg) logoImg.src = ''; };
   }, [tab, banner, stg]);
 
   const uf = (k, v) => setForm(p => ({ ...p, [k]: v }));
@@ -1898,7 +1931,7 @@ export default function App() {
                         <label style={{ fontSize: '0.7rem', fontWeight: 600, color: C.text2, marginBottom: '0.3rem', display: 'block' }}>{label}</label>
                         <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                           <div style={{ width: 28, height: 28, borderRadius: 6, overflow: 'hidden', border: `2px solid ${C.borderSub}`, position: 'relative' }}>
-                            <input type="color" value={value} onChange={e => setStg(p => ({ ...p, [key]: e.target.value }))}
+                            <input type="color" value={value} onChange={e => debouncedColor(key, e.target.value, setStg)}
                               style={{ width: 44, height: 44, border: 'none', cursor: 'pointer', position: 'absolute', top: -7, left: -7 }} />
                           </div>
                           <span style={{ fontSize: '0.72rem', color: C.text2, fontFamily: 'monospace' }}>{value}</span>
@@ -1945,7 +1978,7 @@ export default function App() {
                         <label style={{ fontSize: '0.67rem', fontWeight: 600, color: C.text2, marginBottom: '0.3rem', display: 'block' }}>{label}</label>
                         <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                           <div style={{ width: 28, height: 28, borderRadius: 6, overflow: 'hidden', border: `2px solid ${C.borderSub}`, position: 'relative' }}>
-                            <input type="color" value={value} onChange={e => setStg(p => ({ ...p, [key]: e.target.value }))}
+                            <input type="color" value={value} onChange={e => debouncedColor(key, e.target.value, setStg)}
                               style={{ width: 42, height: 42, border: 'none', cursor: 'pointer', position: 'absolute', top: -7, left: -7 }} />
                           </div>
                           <span style={{ fontSize: '0.65rem', color: C.text2, fontFamily: 'monospace' }}>{value}</span>
@@ -1981,7 +2014,7 @@ export default function App() {
                           <label style={{ fontSize: '0.63rem', fontWeight: 600, color: C.text2, marginBottom: '0.3rem', display: 'block' }}>{label}</label>
                           <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
                             <div style={{ width: 28, height: 28, borderRadius: 6, overflow: 'hidden', border: `2px solid ${C.borderSub}`, position: 'relative' }}>
-                              <input type="color" value={value} onChange={e => setStg(p => ({ ...p, [key]: e.target.value }))}
+                              <input type="color" value={value} onChange={e => debouncedColor(key, e.target.value, setStg)}
                                 style={{ width: 40, height: 40, border: 'none', cursor: 'pointer', position: 'absolute', top: -7, left: -7 }} />
                             </div>
                             <span style={{ fontSize: '0.6rem', color: C.text2, fontFamily: 'monospace' }}>{value}</span>
@@ -1998,7 +2031,7 @@ export default function App() {
                       <label style={{ fontSize: '0.63rem', fontWeight: 600, color: C.text2, marginBottom: '0.3rem', display: 'block' }}>{L.bannerAccentL}</label>
                       <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
                         <div style={{ width: 28, height: 28, borderRadius: 6, overflow: 'hidden', border: `2px solid ${C.borderSub}`, position: 'relative' }}>
-                          <input type="color" value={stg.bannerAccentColor || '#c8922a'} onChange={e => setStg(p => ({ ...p, bannerAccentColor: e.target.value }))}
+                          <input type="color" value={stg.bannerAccentColor || '#c8922a'} onChange={e => debouncedColor('bannerAccentColor', e.target.value, setStg)}
                             style={{ width: 40, height: 40, border: 'none', cursor: 'pointer', position: 'absolute', top: -7, left: -7 }} />
                         </div>
                         <span style={{ fontSize: '0.6rem', color: C.text2, fontFamily: 'monospace' }}>{stg.bannerAccentColor || 'auto'}</span>

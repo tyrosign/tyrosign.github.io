@@ -985,7 +985,7 @@ export default function App() {
             <span>TYRO</span>{' '}
             <span style={{ color: '#c8922a' }}>Sign Snap</span>
             <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '-0.1rem', marginBottom: '-0.15rem' }}>
-              <TyroLogo size={32} />
+              <TyroLogo size={44} />
             </span>
           </h1>
 

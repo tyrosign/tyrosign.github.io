@@ -924,198 +924,118 @@ export default function App() {
 
   const tabIds = ['signature', 'banner', 'settings'];
 
-  // ─── Login Splash Screen ───
+  // ─── Login Splash Screen (Apple iOS Glassmorphism Light) ───
   if (MSAL_ENABLED && !msalAccount) {
     return (
       <div style={{
         fontFamily: 'Inter,sans-serif',
         minHeight: '100vh', display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        background: 'linear-gradient(160deg, #0a1628 0%, #132743 30%, #1e3a5f 60%, #15304f 100%)',
+        background: '#f5f5f7',
         position: 'relative', overflow: 'hidden',
       }}>
         <style>{GLOBAL_CSS}{`
-          @keyframes splashOrb1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,-40px) scale(1.1); } }
-          @keyframes splashOrb2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-40px,30px) scale(1.15); } }
-          @keyframes splashFadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-          @keyframes splashShimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-          .splash-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(200,146,42,0.35)!important; }
-          .splash-btn:active { transform: translateY(0); }
-          @keyframes signDraw {
-            0% { stroke-dashoffset: 400; }
-            100% { stroke-dashoffset: 0; }
-          }
-          @keyframes penMove {
-            0% { offset-distance: 0%; opacity: 1; }
-            85% { offset-distance: 85%; opacity: 1; }
-            100% { offset-distance: 100%; opacity: 0; }
-          }
-          @keyframes penMoveFallback {
-            0% { transform: translate(10px, 48px) rotate(-45deg); opacity: 1; }
-            15% { transform: translate(55px, 15px) rotate(-45deg); opacity: 1; }
-            30% { transform: translate(100px, 15px) rotate(-45deg); opacity: 1; }
-            50% { transform: translate(55px, 30px) rotate(-50deg); opacity: 1; }
-            70% { transform: translate(55px, 70px) rotate(-55deg); opacity: 1; }
-            85% { transform: translate(90px, 75px) rotate(-45deg); opacity: 1; }
-            95% { transform: translate(110px, 68px) rotate(-40deg); opacity: 0.5; }
-            100% { transform: translate(120px, 65px) rotate(-40deg); opacity: 0; }
-          }
-          @keyframes splashGlow {
-            0%,100% { filter: drop-shadow(0 0 6px rgba(200,146,42,0.3)); }
-            50% { filter: drop-shadow(0 0 16px rgba(200,146,42,0.5)); }
-          }
-          @keyframes contentReveal {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
+          @keyframes liquidA { 0%,100% { transform: translate(0,0) scale(1) rotate(0deg); } 33% { transform: translate(40px,-50px) scale(1.1) rotate(10deg); } 66% { transform: translate(-20px,30px) scale(0.95) rotate(-5deg); } }
+          @keyframes liquidB { 0%,100% { transform: translate(0,0) scale(1) rotate(0deg); } 33% { transform: translate(-50px,40px) scale(1.15) rotate(-8deg); } 66% { transform: translate(30px,-20px) scale(0.9) rotate(12deg); } }
+          @keyframes liquidC { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(25px,35px) scale(1.08); } }
+          @keyframes splashFadeUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+          .splash-btn-ios:hover { transform: scale(1.02); box-shadow: 0 8px 30px rgba(30,58,95,0.2)!important; }
+          .splash-btn-ios:active { transform: scale(0.98); }
         `}</style>
 
-        {/* Animated gradient orbs */}
+        {/* Liquid gradient blobs — iOS style */}
         <div style={{
-          position: 'absolute', width: 400, height: 400, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(200,146,42,0.12) 0%, transparent 70%)',
-          top: '-10%', right: '-5%', animation: 'splashOrb1 8s ease-in-out infinite',
-          filter: 'blur(40px)',
+          position: 'absolute', width: 500, height: 500, borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%',
+          background: 'linear-gradient(135deg, rgba(0,152,212,0.25), rgba(30,58,95,0.15))',
+          top: '-15%', right: '-10%', animation: 'liquidA 15s ease-in-out infinite',
+          filter: 'blur(60px)',
         }} />
         <div style={{
-          position: 'absolute', width: 350, height: 350, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,152,212,0.1) 0%, transparent 70%)',
-          bottom: '-8%', left: '-5%', animation: 'splashOrb2 10s ease-in-out infinite',
-          filter: 'blur(40px)',
+          position: 'absolute', width: 450, height: 450, borderRadius: '60% 40% 30% 70% / 50% 60% 40% 50%',
+          background: 'linear-gradient(135deg, rgba(200,146,42,0.2), rgba(232,197,96,0.12))',
+          bottom: '-12%', left: '-8%', animation: 'liquidB 18s ease-in-out infinite',
+          filter: 'blur(60px)',
+        }} />
+        <div style={{
+          position: 'absolute', width: 300, height: 300, borderRadius: '50% 60% 40% 70% / 60% 40% 60% 40%',
+          background: 'linear-gradient(135deg, rgba(30,58,95,0.08), rgba(0,152,212,0.1))',
+          top: '50%', left: '50%', marginLeft: -150, marginTop: -150,
+          animation: 'liquidC 12s ease-in-out infinite',
+          filter: 'blur(50px)',
         }} />
 
-        {/* Main card */}
+        {/* Main glass card */}
         <div style={{
           textAlign: 'center', padding: '2.5rem 2.5rem 2rem',
-          background: 'rgba(255,255,255,0.06)',
-          borderRadius: 24, maxWidth: 440, width: '92%',
-          border: '1px solid rgba(255,255,255,0.1)',
-          backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.1)',
-          animation: 'splashFadeUp 0.6s ease-out',
+          background: 'rgba(255,255,255,0.55)',
+          borderRadius: 28, maxWidth: 400, width: '88%',
+          border: '1px solid rgba(255,255,255,0.6)',
+          backdropFilter: 'blur(40px) saturate(180%)', WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+          boxShadow: '0 20px 60px rgba(30,58,95,0.08), 0 1px 3px rgba(30,58,95,0.05)',
+          animation: 'splashFadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
           position: 'relative', zIndex: 2,
         }}>
 
-          {/* ─── Signature Animation Area ─── */}
-          <div style={{
-            position: 'relative', width: 140, height: 100, margin: '0 auto 1rem',
-            animation: 'splashGlow 3s ease-in-out infinite',
-          }}>
-            <svg viewBox="0 0 140 100" width="140" height="100" fill="none" style={{ overflow: 'visible' }}>
-              <defs>
-                <linearGradient id="inkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#e8c560" />
-                  <stop offset="50%" stopColor="#c8922a" />
-                  <stop offset="100%" stopColor="#b07818" />
-                </linearGradient>
-              </defs>
-
-              {/* Signature "T" path — calligraphic stroke */}
-              <path
-                d="M15,50 Q20,18 55,18 Q75,18 100,22 M55,18 Q50,28 52,45 Q54,60 60,75 Q65,82 80,78 Q95,74 110,68"
-                stroke="url(#inkGrad)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
-                fill="none"
-                style={{
-                  strokeDasharray: 400,
-                  strokeDashoffset: 400,
-                  animation: 'signDraw 2.5s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards',
-                }}
-              />
-              {/* Decorative dot at end */}
-              <circle cx="112" cy="67" r="2.5" fill="#c8922a" style={{
-                opacity: 0,
-                animation: 'contentReveal 0.3s ease 2.6s forwards',
-              }} />
-
-              {/* Animated pen that follows the signature */}
-              <g style={{
-                animation: 'penMoveFallback 2.5s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards',
-                opacity: 0,
-                transformOrigin: '0 0',
-              }}>
-                {/* Pen body */}
-                <rect x="-3" y="-18" width="6" height="22" rx="1.5" fill="#2c3e50" />
-                {/* Gold band */}
-                <rect x="-3.5" y="-4" width="7" height="3" rx="0.5" fill="#c8922a" />
-                {/* Nib */}
-                <polygon points="0,6 -2,4 2,4" fill="#c8922a" />
-                {/* Nib tip */}
-                <circle cx="0" cy="7" r="0.8" fill="#e8c560" />
-              </g>
-            </svg>
+          {/* Logo */}
+          <div style={{ marginBottom: '1rem' }}>
+            <TyroLogo size={58} />
           </div>
 
-          {/* Title — appears after signature */}
+          {/* Title */}
           <h1 style={{
-            fontSize: '1.75rem', fontWeight: 800, color: '#fff',
-            fontFamily: 'Plus Jakarta Sans,sans-serif', margin: '0 0 0.15rem',
+            fontSize: '1.6rem', fontWeight: 800, color: '#1e3a5f',
+            fontFamily: 'Plus Jakarta Sans,sans-serif', margin: '0 0 0.1rem',
             letterSpacing: '-0.5px',
-            animation: 'contentReveal 0.6s ease 2.2s both',
           }}>
-            TYRO <span style={{
-              background: 'linear-gradient(135deg, #e8c560, #c8922a, #e8c560)',
-              backgroundSize: '200% auto',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              animation: 'splashShimmer 4s linear infinite',
-            }}>Sign Snap</span>
+            TYRO <span style={{ color: '#c8922a' }}>Sign Snap</span>
           </h1>
 
-          {/* Accent divider */}
-          <div style={{
-            width: 48, height: 3, borderRadius: 2, margin: '0.6rem auto',
-            background: 'linear-gradient(90deg, #c8922a, #0098d4)',
-            animation: 'contentReveal 0.5s ease 2.5s both',
-          }} />
-
           <p style={{
-            fontSize: '0.82rem', color: 'rgba(255,255,255,0.5)', margin: '0 0 1.8rem',
-            fontWeight: 400, letterSpacing: '0.3px',
-            animation: 'contentReveal 0.5s ease 2.7s both',
+            fontSize: '0.78rem', color: '#8e8e93', margin: '0.25rem 0 2rem',
+            fontWeight: 400,
           }}>
             {lang === 'tr' ? 'Kurumsal E-Posta İmza Oluşturucu' : 'Corporate Email Signature Studio'}
           </p>
 
-          {/* Microsoft Login Button */}
-          <div style={{ animation: 'contentReveal 0.5s ease 2.9s both' }}>
-            <button className="splash-btn" onClick={handleLogin} disabled={authLoading || !msalReady} style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.65rem',
-              width: '100%', padding: '0.85rem 1.5rem', borderRadius: 14,
-              border: '1px solid rgba(200,146,42,0.3)',
-              cursor: (authLoading || !msalReady) ? 'wait' : 'pointer',
-              background: 'linear-gradient(135deg, rgba(200,146,42,0.15), rgba(200,146,42,0.05))',
-              color: '#fff', fontSize: '0.88rem', fontWeight: 600,
-              fontFamily: 'Inter,sans-serif',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              boxShadow: '0 4px 20px rgba(200,146,42,0.15)',
-              opacity: (authLoading || !msalReady) ? 0.6 : 1,
-              backdropFilter: 'blur(8px)',
-            }}>
-              <svg width="20" height="20" viewBox="0 0 21 21" fill="none">
-                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
-                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
-                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
-                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
-              </svg>
-              {authLoading
-                ? (lang === 'tr' ? 'Giriş yapılıyor...' : 'Signing in...')
-                : (lang === 'tr' ? 'Microsoft ile Giriş Yap' : 'Sign in with Microsoft')
-              }
-            </button>
-          </div>
+          {/* Microsoft Login Button — iOS style */}
+          <button className="splash-btn-ios" onClick={handleLogin} disabled={authLoading || !msalReady} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
+            width: '100%', padding: '0.85rem 1.5rem', borderRadius: 14,
+            border: 'none',
+            cursor: (authLoading || !msalReady) ? 'wait' : 'pointer',
+            background: 'linear-gradient(135deg, #1e3a5f, #2a5f9e)',
+            color: '#fff', fontSize: '0.88rem', fontWeight: 600,
+            fontFamily: 'Inter,sans-serif',
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 4px 16px rgba(30,58,95,0.25)',
+            opacity: (authLoading || !msalReady) ? 0.6 : 1,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 21 21" fill="none">
+              <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+              <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+              <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+              <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+            </svg>
+            {authLoading
+              ? (lang === 'tr' ? 'Giriş yapılıyor...' : 'Signing in...')
+              : (lang === 'tr' ? 'Microsoft ile Giriş Yap' : 'Sign in with Microsoft')
+            }
+          </button>
 
-          {/* Language toggle */}
+          {/* Language toggle — pill style */}
           <div style={{
-            marginTop: '1.5rem', display: 'flex', justifyContent: 'center', gap: '0.3rem',
-            animation: 'contentReveal 0.4s ease 3.1s both',
+            marginTop: '1.25rem', display: 'inline-flex',
+            background: 'rgba(0,0,0,0.04)', borderRadius: 10, padding: 3,
           }}>
             {['tr', 'en'].map(l => (
               <button key={l} onClick={() => setLang(l)} style={{
-                padding: '0.3rem 0.75rem', borderRadius: 8,
-                border: lang === l ? '1px solid rgba(200,146,42,0.4)' : '1px solid transparent',
-                cursor: 'pointer', fontSize: '0.65rem', fontWeight: 700,
+                padding: '0.3rem 0.85rem', borderRadius: 8,
+                border: 'none', cursor: 'pointer',
+                fontSize: '0.65rem', fontWeight: 600,
                 fontFamily: 'Inter,sans-serif',
-                background: lang === l ? 'rgba(200,146,42,0.15)' : 'transparent',
-                color: lang === l ? '#e8c560' : 'rgba(255,255,255,0.35)',
+                background: lang === l ? '#fff' : 'transparent',
+                color: lang === l ? '#1e3a5f' : '#8e8e93',
+                boxShadow: lang === l ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
                 transition: 'all 0.2s ease',
               }}>{l.toUpperCase()}</button>
             ))}
@@ -1124,18 +1044,16 @@ export default function App() {
 
         {/* TTECH Footer */}
         <div style={{
-          marginTop: '2.5rem', textAlign: 'center',
-          animation: 'contentReveal 0.5s ease 3.3s both',
+          marginTop: '2rem', textAlign: 'center',
           position: 'relative', zIndex: 2,
         }}>
           <p style={{
-            fontSize: '0.78rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)',
-            fontFamily: 'Plus Jakarta Sans,sans-serif', letterSpacing: '1.5px',
-            margin: '0 0 0.35rem',
+            fontSize: '0.72rem', fontWeight: 600, color: 'rgba(30,58,95,0.4)',
+            fontFamily: 'Plus Jakarta Sans,sans-serif', letterSpacing: '1px',
+            margin: '0 0 0.25rem',
           }}>TTECH BUSINESS SOLUTIONS</p>
           <p style={{
-            fontSize: '0.6rem', color: 'rgba(255,255,255,0.25)', margin: 0,
-            letterSpacing: '0.5px',
+            fontSize: '0.58rem', color: 'rgba(30,58,95,0.25)', margin: 0,
           }}>
             {'© 2026 Tiryaki Agro'}
           </p>

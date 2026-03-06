@@ -285,41 +285,58 @@ const BannerIcon = memo(({ size = 14, color = 'currentColor' }) => (
 // APP LOGO - Stylish fountain pen mid-signature (no background)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const TyroLogo = memo(({ size = 36 }) => (
-  <svg width={size} height={size * 0.85} viewBox="0 0 56 48" fill="none" style={{ filter: 'drop-shadow(0 1px 4px rgba(30,58,95,0.18))' }}>
+  <svg width={size} height={size * 0.85} viewBox="0 0 64 54" fill="none" style={{ filter: 'drop-shadow(0 2px 6px rgba(30,58,95,0.15))' }}>
     <defs>
-      <linearGradient id="penBody" x1="10" y1="40" x2="48" y2="8">
-        <stop offset="0%" stopColor="#1e3a5f" />
-        <stop offset="45%" stopColor="#2c5282" />
-        <stop offset="100%" stopColor="#1e3a5f" />
+      <linearGradient id="penBarrel" x1="28" y1="38" x2="52" y2="6">
+        <stop offset="0%" stopColor="#1a2d47" />
+        <stop offset="30%" stopColor="#243f63" />
+        <stop offset="70%" stopColor="#1e3a5f" />
+        <stop offset="100%" stopColor="#152a45" />
       </linearGradient>
-      <linearGradient id="penGold" x1="0" y1="0" x2="20" y2="20">
+      <linearGradient id="penGold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#f0d878" />
+        <stop offset="40%" stopColor="#c8922a" />
+        <stop offset="100%" stopColor="#a67520" />
+      </linearGradient>
+      <linearGradient id="penNib" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stopColor="#e8c560" />
-        <stop offset="50%" stopColor="#c8922a" />
-        <stop offset="100%" stopColor="#b8821a" />
+        <stop offset="50%" stopColor="#d4a83a" />
+        <stop offset="100%" stopColor="#b8862a" />
       </linearGradient>
-      <linearGradient id="sigInk" x1="4" y1="38" x2="40" y2="38">
-        <stop offset="0%" stopColor="#1e3a5f" stopOpacity="0.15" />
-        <stop offset="40%" stopColor="#1e3a5f" stopOpacity="0.55" />
-        <stop offset="100%" stopColor="#1e3a5f" stopOpacity="0.8" />
+      <linearGradient id="sigInk" x1="0" y1="0" x2="36" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#1e3a5f" stopOpacity="0" />
+        <stop offset="15%" stopColor="#1e3a5f" stopOpacity="0.25" />
+        <stop offset="60%" stopColor="#1e3a5f" stopOpacity="0.5" />
+        <stop offset="100%" stopColor="#1e3a5f" stopOpacity="0.7" />
+      </linearGradient>
+      <linearGradient id="penShine" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#fff" stopOpacity="0.25" />
+        <stop offset="100%" stopColor="#fff" stopOpacity="0" />
       </linearGradient>
     </defs>
-    {/* Signature trail — flowing cursive line */}
-    <path d="M4 40 C8 36, 10 42, 14 38 C18 34, 16 40, 20 37 C24 34, 22 39, 26 36 C28 34, 30 38, 32 35" stroke="url(#sigInk)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-    {/* Fountain pen barrel — elegant diagonal */}
-    <path d="M32 35 L50 10" stroke="url(#penBody)" strokeWidth="4.5" strokeLinecap="round" />
-    {/* Pen grip section */}
-    <path d="M34 32 L38 27" stroke="#2c5282" strokeWidth="5" strokeLinecap="round" opacity="0.7" />
-    {/* Gold band / ring on pen */}
-    <path d="M37.5 28 L38.5 26.5" stroke="url(#penGold)" strokeWidth="5.5" strokeLinecap="butt" />
+    {/* Signature trail — elegant flowing cursive */}
+    <path d="M4 44 C8 40, 11 46, 16 42 Q20 38, 22 41 C24 44, 26 36, 30 40 Q33 43, 34 38" stroke="url(#sigInk)" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+    {/* Pen barrel — tapered elegant body */}
+    <path d="M36 36 L38.5 31 L52 8 L54 6 L52.5 5.5 L50.5 7 L37 30 L34.5 35 Z" fill="url(#penBarrel)" />
+    {/* Barrel shine — glass reflection */}
+    <path d="M38 31 L51 8.5 L52 7 L53 6.5 L52 8 L39 30.5 Z" fill="url(#penShine)" />
+    {/* Gold ring — upper */}
+    <path d="M46 16 L47.5 13.5" stroke="url(#penGold)" strokeWidth="5.2" strokeLinecap="butt" />
+    {/* Gold ring — lower (grip) */}
+    <path d="M40.5 26 L41.5 24.5" stroke="url(#penGold)" strokeWidth="4.5" strokeLinecap="butt" />
+    {/* Grip texture lines */}
+    <path d="M39 28.5 L40.2 26.5 M38.3 30 L39.5 28" stroke="#2c5282" strokeWidth="0.4" strokeLinecap="round" opacity="0.4" />
     {/* Pen clip */}
-    <path d="M47 14 C50 13, 50 10, 48 9" stroke="url(#penGold)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
-    {/* Nib — gold tip */}
-    <path d="M32 35 L33.5 33.5 L35 32" stroke="url(#penGold)" strokeWidth="2.5" strokeLinecap="round" />
-    {/* Ink flow at nib point */}
-    <circle cx="32" cy="35.5" r="1.2" fill="#1e3a5f" opacity="0.5" />
-    {/* Subtle ink splatter */}
-    <circle cx="8" cy="39" r="0.6" fill="#1e3a5f" opacity="0.12" />
-    <circle cx="18" cy="36.5" r="0.4" fill="#1e3a5f" opacity="0.1" />
+    <path d="M51.5 9.5 C53 8, 55 7.5, 55 5.5 C55 4, 53.5 4.5, 53 5.5" stroke="url(#penGold)" strokeWidth="1.1" strokeLinecap="round" fill="none" />
+    {/* Nib — split fountain pen nib */}
+    <path d="M34.5 35 L36 32.5 L38 30 L36 32 L34 35.5 Z" fill="url(#penNib)" />
+    <path d="M35.2 34.5 L36.8 31" stroke="#a67520" strokeWidth="0.4" strokeLinecap="round" opacity="0.6" />
+    {/* Nib tip — fine point */}
+    <circle cx="34.2" cy="35.8" r="0.7" fill="#c8922a" />
+    {/* Ink dot at nib */}
+    <circle cx="34" cy="36.5" r="1" fill="#1e3a5f" opacity="0.35" />
+    {/* Cap top finial */}
+    <ellipse cx="53.3" cy="5.8" rx="1.8" ry="1" fill="url(#penGold)" transform="rotate(-60 53.3 5.8)" />
   </svg>
 ));
 

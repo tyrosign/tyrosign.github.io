@@ -146,7 +146,7 @@ const genSig = (f, s, office) => {
   }
   if (f.gsm) rows.push(mkRow('GSM', escapeHtml(f.gsm)));
   if (f.email) rows.push(mkRow('Mail', `<a href="mailto:${escapeHtml(f.email)}" style="color:${s.accentColor};text-decoration:none;">${escapeHtml(f.email)}</a>`));
-  if (s.showAddress && office) rows.push(mkRow('Adres', `${escapeHtml(office.address)}, ${escapeHtml(office.city)}`));
+  if (s.showAddress && office) rows.push(mkRow('Adres', `<span style="white-space:nowrap">${escapeHtml(office.address)}</span><br/>${escapeHtml(office.city)}`));
 
   const rbBg = s.rightBlockBg || s.logoColor;
   const rbR = s.rightBlockRadius != null ? s.rightBlockRadius : 6;
@@ -228,7 +228,7 @@ const genSigCorporate = (f, s, office) => {
   // Build contact rows inside the band
   let bandRows = '';
   if (s.showAddress !== false && office) {
-    bandRows += `<div style="font-size:11px;line-height:1.6;margin-bottom:8px;color:rgba(255,255,255,0.92);">${escapeHtml(office.address)}<br/>${escapeHtml(office.city)}</div>`;
+    bandRows += `<div style="font-size:11px;line-height:1.6;margin-bottom:8px;color:rgba(255,255,255,0.92);"><span style="white-space:nowrap">${escapeHtml(office.address)}</span><br/>${escapeHtml(office.city)}</div>`;
   }
   const phones = [];
   if (f.gsm) phones.push(`<img src="${mobileIconSvg}" width="13" height="13" alt="" style="vertical-align:middle;border:0;margin-right:3px;" /><span style="vertical-align:middle;">${escapeHtml(f.gsm)}</span>`);
@@ -620,6 +620,7 @@ export default function App() {
   const [msalAccount, setMsalAccount] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [designOpen, setDesignOpen] = useState(false);
   const fRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -979,12 +980,13 @@ export default function App() {
           <h1 style={{
             fontSize: '1.6rem', fontWeight: 800, color: '#1e3a5f',
             fontFamily: 'Plus Jakarta Sans,sans-serif', margin: '0 0 0.1rem',
-            letterSpacing: '-0.5px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.15rem',
+            letterSpacing: '-0.5px', wordSpacing: '0.15rem',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+            paddingLeft: '1rem',
           }}>
             <span>TYRO</span>{' '}
-            <span style={{ color: '#c8922a' }}>Sign Snap</span>
-            <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '-0.1rem', marginBottom: '-0.15rem' }}>
+            <span style={{ color: '#c8922a', letterSpacing: '-0.3px', wordSpacing: '0.15rem' }}>Sign Snap</span>
+            <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '-0.5rem', marginBottom: '0.15rem' }}>
               <TyroLogo size={44} />
             </span>
           </h1>
@@ -1047,12 +1049,12 @@ export default function App() {
           position: 'relative', zIndex: 2,
         }}>
           <p style={{
-            fontSize: '0.72rem', fontWeight: 600, color: 'rgba(30,58,95,0.4)',
-            fontFamily: 'Plus Jakarta Sans,sans-serif', letterSpacing: '1px',
-            margin: '0 0 0.25rem',
+            fontSize: '0.7rem', fontWeight: 700, color: 'rgba(30,58,95,0.55)',
+            fontFamily: 'Plus Jakarta Sans,sans-serif', letterSpacing: '2px',
+            margin: '0 0 0.3rem',
           }}>TTECH BUSINESS SOLUTIONS</p>
           <p style={{
-            fontSize: '0.58rem', color: 'rgba(30,58,95,0.25)', margin: 0,
+            fontSize: '0.58rem', color: 'rgba(30,58,95,0.35)', margin: 0,
           }}>
             {'© 2026 Tiryaki Agro'}
           </p>
@@ -1073,10 +1075,12 @@ export default function App() {
         padding: '0 2rem', height: 56,
         display: 'flex', alignItems: 'center', gap: '1rem',
       }}>
-        <span className="app-header-logo"><TyroLogo size={34} /></span>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
           <span className="app-header-title" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.primary }}>TYRO</span>
           <span className="app-header-title-accent" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.accent }}>Sign Snap</span>
+          <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '-0.35rem', marginBottom: '0.05rem' }}>
+            <TyroLogo size={30} />
+          </span>
         </div>
 
         <nav className="app-header-nav" style={{
@@ -1111,14 +1115,14 @@ export default function App() {
           <button onClick={() => setLang('tr')} style={{
             padding: '0.3rem 0.6rem', border: 'none', cursor: 'pointer',
             fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
-            background: lang === 'tr' ? `linear-gradient(135deg, ${C.primary}, ${C.primarySoft})` : 'transparent',
+            background: lang === 'tr' ? `linear-gradient(135deg, ${C.accent}, #d4a43a)` : 'transparent',
             color: lang === 'tr' ? '#fff' : C.textM,
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           }}>TR</button>
           <button onClick={() => setLang('en')} style={{
             padding: '0.3rem 0.6rem', border: 'none', cursor: 'pointer',
             fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
-            background: lang === 'en' ? `linear-gradient(135deg, ${C.primary}, ${C.primarySoft})` : 'transparent',
+            background: lang === 'en' ? `linear-gradient(135deg, ${C.accent}, #d4a43a)` : 'transparent',
             color: lang === 'en' ? '#fff' : C.textM,
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           }}>EN</button>
@@ -1397,60 +1401,123 @@ export default function App() {
                       animation: 'pulse 2s infinite',
                     }} />}
 
-                    {/* ─── Design Switcher ─── */}
+                    {/* ─── Design Switcher Dropdown ─── */}
                     {(() => {
                       const dIdx = DESIGNS.findIndex(d => d.id === stg.designId);
-                      const prevD = () => setStg(p => ({ ...p, designId: DESIGNS[(dIdx - 1 + DESIGNS.length) % DESIGNS.length].id }));
-                      const nextD = () => setStg(p => ({ ...p, designId: DESIGNS[(dIdx + 1) % DESIGNS.length].id }));
                       const curDesign = DESIGNS[dIdx] || DESIGNS[0];
-                      const arrowBtn = {
-                        width: 24, height: 24, borderRadius: '50%', border: 'none',
-                        background: C.primary + '10', color: C.primary, cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        transition: 'all 0.2s', padding: 0, flexShrink: 0,
-                      };
-                      return (
-                        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <button onClick={prevD} style={arrowBtn} onMouseEnter={e => { e.currentTarget.style.background = C.primary + '20'; }} onMouseLeave={e => { e.currentTarget.style.background = C.primary + '10'; }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                          </button>
-
-                          {/* Mini preview */}
-                          <div className="design-mini-preview" style={{ width: 40, height: 24, borderRadius: 4, overflow: 'hidden', border: `1px solid ${C.borderSub}`, background: '#fff', display: 'flex', position: 'relative', flexShrink: 0 }}>
-                            {curDesign.id === 'classic' ? (<>
-                              <div style={{ width: 10, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <div style={{ width: 6, height: 8, borderRadius: 1, background: C.primary + '40' }} />
+                      const renderMiniPreview = (designId, size = 1) => {
+                        const w = 40 * size, h = 24 * size;
+                        return (
+                          <div style={{ width: w, height: h, borderRadius: 4, overflow: 'hidden', border: `1px solid ${C.borderSub}`, background: '#fff', display: 'flex', position: 'relative', flexShrink: 0 }}>
+                            {designId === 'classic' ? (<>
+                              <div style={{ width: 10 * size, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{ width: 6 * size, height: 8 * size, borderRadius: 1, background: C.primary + '40' }} />
                               </div>
                               <div style={{ width: 1, background: C.divider, flexShrink: 0 }} />
-                              <div style={{ flex: 1, padding: '3px 2px', display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                <div style={{ height: 1.5, width: '80%', background: C.primary + '50', borderRadius: 1 }} />
-                                <div style={{ height: 1, width: '60%', background: C.accent + '40', borderRadius: 1 }} />
-                                <div style={{ height: 1, width: '90%', background: '#ddd', borderRadius: 1 }} />
+                              <div style={{ flex: 1, padding: `${3 * size}px ${2 * size}px`, display: 'flex', flexDirection: 'column', gap: size }}>
+                                <div style={{ height: 1.5 * size, width: '80%', background: C.primary + '50', borderRadius: 1 }} />
+                                <div style={{ height: size, width: '60%', background: C.accent + '40', borderRadius: 1 }} />
+                                <div style={{ height: size, width: '90%', background: '#ddd', borderRadius: 1 }} />
                               </div>
-                              <div style={{ width: 9, background: C.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                                <div style={{ width: 3, height: 3, borderRadius: 1, background: 'rgba(255,255,255,0.4)' }} />
-                                <div style={{ width: 3, height: 3, borderRadius: 1, background: 'rgba(255,255,255,0.4)' }} />
+                              <div style={{ width: 9 * size, background: C.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: size }}>
+                                <div style={{ width: 3 * size, height: 3 * size, borderRadius: 1, background: 'rgba(255,255,255,0.4)' }} />
+                                <div style={{ width: 3 * size, height: 3 * size, borderRadius: 1, background: 'rgba(255,255,255,0.4)' }} />
                               </div>
                             </>) : (<>
-                              <div style={{ width: 14, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '2px 1px' }}>
-                                <div style={{ width: 8, height: 9, borderRadius: 1, background: C.primary + '30', marginBottom: 1 }} />
-                                <div style={{ height: 1, width: 10, background: C.accent + '40', borderRadius: 1 }} />
+                              <div style={{ width: 14 * size, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: `${2 * size}px ${size}px` }}>
+                                <div style={{ width: 8 * size, height: 9 * size, borderRadius: 1, background: C.primary + '30', marginBottom: size }} />
+                                <div style={{ height: size, width: 10 * size, background: C.accent + '40', borderRadius: 1 }} />
                               </div>
-                              <div style={{ flex: 1, background: stg.rightBlockBg || C.primary, borderRadius: '6px 0 0 3px', display: 'flex', flexDirection: 'column', padding: '3px 3px', gap: 1 }}>
-                                <div style={{ height: 1.5, width: '85%', background: 'rgba(255,255,255,0.7)', borderRadius: 1 }} />
-                                <div style={{ height: 1, width: '55%', background: 'rgba(255,255,255,0.4)', borderRadius: 1 }} />
-                                <div style={{ height: 1, width: '75%', background: 'rgba(255,255,255,0.3)', borderRadius: 1, marginTop: 1 }} />
+                              <div style={{ flex: 1, background: stg.rightBlockBg || C.primary, borderRadius: `${6 * size}px 0 0 ${3 * size}px`, display: 'flex', flexDirection: 'column', padding: `${3 * size}px`, gap: size }}>
+                                <div style={{ height: 1.5 * size, width: '85%', background: 'rgba(255,255,255,0.7)', borderRadius: 1 }} />
+                                <div style={{ height: size, width: '55%', background: 'rgba(255,255,255,0.4)', borderRadius: 1 }} />
+                                <div style={{ height: size, width: '75%', background: 'rgba(255,255,255,0.3)', borderRadius: 1, marginTop: size }} />
                               </div>
                             </>)}
                           </div>
-
-                          <span style={{ fontSize: '0.68rem', fontWeight: 600, color: C.text1, fontFamily: 'Plus Jakarta Sans,sans-serif', whiteSpace: 'nowrap' }}>
-                            {L[curDesign.nameKey]}
-                          </span>
-
-                          <button onClick={nextD} style={arrowBtn} onMouseEnter={e => { e.currentTarget.style.background = C.primary + '20'; }} onMouseLeave={e => { e.currentTarget.style.background = C.primary + '10'; }}>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+                        );
+                      };
+                      return (
+                        <div style={{ marginLeft: 'auto', position: 'relative' }}>
+                          <button
+                            onClick={() => setDesignOpen(p => !p)}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: '0.4rem',
+                              padding: '0.25rem 0.5rem 0.25rem 0.3rem',
+                              background: designOpen ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.55)',
+                              backdropFilter: 'blur(12px) saturate(180%)', WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                              borderRadius: 20, border: `1.5px solid ${designOpen ? C.primary + '30' : 'rgba(255,255,255,0.6)'}`,
+                              boxShadow: designOpen ? '0 4px 16px rgba(30,58,95,0.12)' : '0 2px 8px rgba(30,58,95,0.08)',
+                              cursor: 'pointer', transition: 'all 0.2s ease',
+                            }}
+                            onMouseEnter={e => { if (!designOpen) { e.currentTarget.style.background = 'rgba(255,255,255,0.75)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(30,58,95,0.12)'; } }}
+                            onMouseLeave={e => { if (!designOpen) { e.currentTarget.style.background = 'rgba(255,255,255,0.55)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(30,58,95,0.08)'; } }}
+                          >
+                            <span className="design-mini-preview">{renderMiniPreview(curDesign.id)}</span>
+                            <span style={{ fontSize: '0.68rem', fontWeight: 600, color: C.text1, fontFamily: 'Plus Jakarta Sans,sans-serif', whiteSpace: 'nowrap' }}>
+                              {L[curDesign.nameKey]}
+                            </span>
+                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{
+                              transition: 'transform 0.2s ease',
+                              transform: designOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                            }}>
+                              <path d="M1 1L5 5L9 1" stroke={C.textM} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
                           </button>
+
+                          {designOpen && (
+                            <>
+                              <div onClick={() => setDesignOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 199 }} />
+                              <div style={{
+                                position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+                                minWidth: 200, background: C.surface,
+                                borderRadius: 14, border: `1px solid ${C.borderSub}`,
+                                boxShadow: '0 12px 40px rgba(30,58,95,0.15), 0 4px 12px rgba(30,58,95,0.08)',
+                                zIndex: 200, overflow: 'hidden',
+                                animation: 'fadeSlideDown 0.2s ease',
+                              }}>
+                                <div style={{ padding: '0.5rem 0.6rem 0.35rem', borderBottom: `1px solid ${C.borderSub}` }}>
+                                  <span style={{ fontSize: '0.6rem', fontWeight: 600, color: C.textM, fontFamily: 'Plus Jakarta Sans,sans-serif', letterSpacing: '0.5px' }}>
+                                    {L.designSelect}
+                                  </span>
+                                </div>
+                                <div style={{ padding: '0.3rem' }}>
+                                  {DESIGNS.map(d => {
+                                    const isActive = d.id === stg.designId;
+                                    return (
+                                      <button
+                                        key={d.id}
+                                        onClick={() => { setStg(p => ({ ...p, designId: d.id })); setDesignOpen(false); }}
+                                        style={{
+                                          width: '100%', display: 'flex', alignItems: 'center', gap: '0.6rem',
+                                          padding: '0.5rem 0.55rem', borderRadius: 10,
+                                          border: 'none', background: isActive ? `${C.primary}0a` : 'transparent',
+                                          cursor: 'pointer', transition: 'background 0.15s ease',
+                                        }}
+                                        onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = `${C.primary}06`; }}
+                                        onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
+                                      >
+                                        {renderMiniPreview(d.id)}
+                                        <div style={{ flex: 1, textAlign: 'left' }}>
+                                          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: C.text1, fontFamily: 'Plus Jakarta Sans,sans-serif' }}>
+                                            {L[d.nameKey]}
+                                          </div>
+                                          <div style={{ fontSize: '0.6rem', color: C.textM, marginTop: 1 }}>
+                                            {L[d.nameKey + 'Desc']}
+                                          </div>
+                                        </div>
+                                        {isActive && (
+                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="20 6 9 17 4 12" />
+                                          </svg>
+                                        )}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       );
                     })()}

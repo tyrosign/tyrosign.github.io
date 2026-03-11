@@ -118,6 +118,15 @@ const titleCase = (str) => {
   if (!str) return '';
   return str.split(' ').map(w => w ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR') : w).join(' ');
 };
+const formatGSM = (val) => {
+  if (!val) return '';
+  let cleaned = val.replace(/[^\d+]/g, '');
+  if (cleaned.startsWith('05')) cleaned = '+90' + cleaned;
+  else if (cleaned.length === 10 && cleaned.startsWith('5')) cleaned = '+900' + cleaned;
+  const match = cleaned.match(/^(\+90)?(0?)(\d{3})(\d{3})(\d{2})(\d{2})$/);
+  if (match) return `+90 0${match[3]} ${match[4]} ${match[5]} ${match[6]}`;
+  return val;
+};
 const PROGRESS_FIELDS = ['firstName', 'lastName', 'titleTR', 'titleEN', 'officeId', 'gsm', 'email'];
 const OFFICE_GROUPS = ['Türkiye', 'Uluslararası'];
 let _toastId = 0;
@@ -137,7 +146,7 @@ const igIcon = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wid
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SIGNATURE GENERATOR (parametric)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const genSig = (f, s, office) => {
+const genSig = (f, s, office, sigBanner) => {
   const firstName = escapeHtml(titleCase(f.firstName));
   const lastName = f.lastName ? escapeHtml(f.lastName.toLocaleUpperCase('tr-TR')) : '';
   const name = [firstName, lastName].filter(Boolean).join(' ');
@@ -158,7 +167,7 @@ const genSig = (f, s, office) => {
     if (s.showFax && office.fax) sdnVal += `&nbsp;&nbsp;&nbsp;Fax : ${office.fax}`;
     rows.push(mkRow('SDN', sdnVal));
   }
-  if (f.gsm) rows.push(mkRow('GSM', escapeHtml(f.gsm)));
+  if (f.gsm) rows.push(mkRow('GSM', escapeHtml(formatGSM(f.gsm))));
   if (f.email) rows.push(mkRow('Mail', `<a href="mailto:${escapeHtml(f.email)}" style="color:${s.accentColor};text-decoration:none;">${escapeHtml(f.email)}</a>`));
   if (s.showAddress && office) rows.push(mkRow('Adres', `<span style="white-space:nowrap">${escapeHtml(office.address)}</span><br/>${escapeHtml(office.city)}`));
 
@@ -194,13 +203,13 @@ const genSig = (f, s, office) => {
   const showRB = s.showRightBlock !== false && socialContent.length > 0;
 
   // Responsive email signature CSS
-  const sigCSS = `<style>@media screen and (max-width:480px){.sig-table{width:100%!important}.sig-logo,.sig-divider,.sig-info,.sig-spacer,.sig-social{display:block!important;width:100%!important;text-align:center!important;padding:4px 0!important}.sig-logo{padding-bottom:8px!important}.sig-divider{height:2px!important;width:50%!important;margin:4px auto!important;background:${divC}!important}.sig-info{padding:8px 0!important}.sig-info table{margin:0 auto!important}.sig-spacer{display:none!important}.sig-social{border-radius:${rbR}px!important;margin-top:8px!important;padding:12px!important}}</style>`;
+  const sigCSS = `<style>.sig-social{border-top-right-radius:${rbR}px!important;border-bottom-right-radius:${rbR}px!important}@media screen and (max-width:480px){.sig-table{width:100%!important}.sig-logo,.sig-divider,.sig-info,.sig-spacer,.sig-social{display:block!important;width:100%!important;text-align:center!important;padding:4px 0!important}.sig-logo{padding-bottom:8px!important}.sig-divider{height:2px!important;width:50%!important;margin:4px auto!important;background:${divC}!important}.sig-info{padding:8px 0!important}.sig-info table{margin:0 auto!important}.sig-spacer{display:none!important}.sig-social{border-top-right-radius:${rbR}px!important;border-bottom-right-radius:${rbR}px!important;margin-top:8px!important;padding:12px!important}}</style>`;
 
   return sigCSS +
-    `<table class="sig-table" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;border-collapse:collapse;max-width:680px;"><tr>` +
+    `<table class="sig-table" cellpadding="0" cellspacing="0" border="0" width="680" style="width:100%; max-width:680px; font-family:Arial,sans-serif; border-collapse:collapse;"><tr>` +
     `<td class="sig-logo" style="vertical-align:middle;padding:8px 14px 8px 0;">${logo}</td>` +
     `<td class="sig-divider" style="width:${divW}px;background:${divC};font-size:0;">&nbsp;</td>` +
-    `<td class="sig-info" style="vertical-align:top;padding:6px 14px;">` +
+    `<td class="sig-info" width="100%" style="width:100%; vertical-align:top; padding:6px 14px;">` +
       `<table cellpadding="0" cellspacing="0" border="0">` +
         `<tr><td colspan="3" style="padding:0 0 1px;"><strong style="font-size:15px;color:${s.nameColor || s.logoColor};">${name || 'Ad SOYAD'}</strong></td></tr>` +
         (title ? `<tr><td colspan="3" style="padding:0 0 4px;"><span style="font-size:12px;color:${s.titleColor || s.accentColor};font-style:italic;">${title}</span></td></tr>` : '') +
@@ -210,9 +219,17 @@ const genSig = (f, s, office) => {
     `</td>` +
     (showRB
       ? `<td class="sig-spacer" style="width:12px;font-size:0;">&nbsp;</td>` +
-        `<td class="sig-social" style="vertical-align:middle;padding:0;background-color:${rbBg};border-radius:0 ${rbR}px ${rbR}px 0;"><div style="padding:14px 18px;text-align:center;">${socialContent}</div></td>`
+        `<td class="sig-social" style="vertical-align:middle;padding:0;background-color:${rbBg};"><div style="padding:14px 18px;text-align:center;">${socialContent}</div></td>`
       : '') +
-    `</tr></table>`;
+    `</tr>` +
+    (sigBanner?.enabled && sigBanner?.base64
+      ? `<tr><td colspan="${showRB ? 5 : 3}" style="padding-top:10px;">` +
+        (sigBanner.linkUrl ? `<a href="${sanitizeUrl(sigBanner.linkUrl)}" target="_blank" style="text-decoration:none;">` : '') +
+        `<img src="${sigBanner.base64}" width="680" alt="${escapeHtml(sigBanner.alt || 'Banner')}" style="display:block; border:0; width:100%; height:auto;" />` +
+        (sigBanner.linkUrl ? '</a>' : '') +
+        `</td></tr>`
+      : '') +
+    `</table>`;
 };
 
 // Phone icons for corporate template (data URI SVGs)
@@ -223,7 +240,7 @@ const linkedinBlueSvg = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CORPORATE SIGNATURE GENERATOR (PDF design - wave band)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const genSigCorporate = (f, s, office) => {
+const genSigCorporate = (f, s, office, sigBanner) => {
   const firstName = escapeHtml(titleCase(f.firstName));
   const lastName = f.lastName ? escapeHtml(f.lastName.toLocaleUpperCase('tr-TR')) : '';
   const name = [firstName, lastName].filter(Boolean).join(' ');
@@ -245,7 +262,7 @@ const genSigCorporate = (f, s, office) => {
     bandRows += `<div style="font-size:11px;line-height:1.6;margin-bottom:8px;color:rgba(255,255,255,0.92);"><span style="white-space:nowrap">${escapeHtml(office.address)}</span><br/>${escapeHtml(office.city)}</div>`;
   }
   const phones = [];
-  if (f.gsm) phones.push(`<img src="${mobileIconSvg}" width="13" height="13" alt="" style="vertical-align:middle;border:0;margin-right:3px;" /><span style="vertical-align:middle;">${escapeHtml(f.gsm)}</span>`);
+  if (f.gsm) phones.push(`<img src="${mobileIconSvg}" width="13" height="13" alt="" style="vertical-align:middle;border:0;margin-right:3px;" /><span style="vertical-align:middle;">${escapeHtml(formatGSM(f.gsm))}</span>`);
   if (s.showSDN !== false && office?.sdn) phones.push(`<img src="${phoneIconSvg}" width="13" height="13" alt="" style="vertical-align:middle;border:0;margin-right:3px;" /><span style="vertical-align:middle;">${escapeHtml(office.sdn)}</span>`);
   if (phones.length > 0) {
     bandRows += `<div style="font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.92);white-space:nowrap;">${phones.join('&nbsp;&nbsp;&nbsp;')}</div>`;
@@ -262,18 +279,18 @@ const genSigCorporate = (f, s, office) => {
   if (s.showLinkedin !== false && linkedinUrl) footerItems.push(`<a href="${linkedinUrl}" target="_blank" style="text-decoration:none;vertical-align:baseline;"><img src="${linkedinBlueSvg}" width="14" height="14" alt="in" style="vertical-align:-2px;border:0;margin-right:4px;" /><span style="color:${footerC};font-size:11px;font-style:italic;font-weight:bold;vertical-align:baseline;">${linkedinHandle || 'LinkedIn'}</span></a>`);
   const footer = footerItems.length > 0 ? `<div style="line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</div>` : '';
 
-  // Responsive CSS
-  const sigCSS = `<style>@media screen and (max-width:480px){.sig-corp-table{width:100%!important}.sig-corp-logo,.sig-corp-band{display:block!important;width:100%!important;text-align:center!important}.sig-corp-logo{padding:0 0 8px 0!important}.sig-corp-logo img{margin:0 auto!important}.sig-corp-logo table{margin:0 auto!important}.sig-corp-band{border-radius:12px!important;margin-top:6px!important}.sig-corp-band>div{padding:16px 20px!important;text-align:center!important}}</style>`;
+  // Responsive CSS (removed mobile stacking so the email scales/shrinks to fit)
+  const sigCSS = `<style>.sig-corp-band{border-top-left-radius:130px!important}</style>`;
 
   return sigCSS +
-    `<table class="sig-corp-table" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;border-collapse:collapse;width:100%;max-width:600px;">` +
+    `<table class="sig-corp-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     // Row 1: logo + band (band spans 2 rows)
     `<tr>` +
     `<td class="sig-corp-logo" style="vertical-align:top;padding:34px 50px 0 0;">` +
       logo +
     `</td>` +
-    `<td class="sig-corp-band" rowspan="${footer ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};border-radius:130px 0 0 0;padding:0;">` +
-      `<div style="padding:22px 24px 18px 130px;color:#fff;">` +
+    `<td class="sig-corp-band" rowspan="${footer ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:0;">` +
+      `<div style="padding:22px 24px 18px 105px;color:#fff;">` +
         `<div style="font-size:16px;font-weight:bold;margin-bottom:1px;color:#fff;">${name || 'Ad SOYAD'}</div>` +
         (titleEN ? `<div style="font-size:12px;margin-bottom:0;color:rgba(255,255,255,0.85);font-style:italic;">${titleEN}</div>` : '') +
         (titleTR ? `<div style="font-size:12px;margin-bottom:10px;color:rgba(255,255,255,0.85);font-style:italic;">${titleTR}</div>` : '<div style="margin-bottom:10px;"></div>') +
@@ -283,6 +300,14 @@ const genSigCorporate = (f, s, office) => {
     `</tr>` +
     // Row 2: footer left-aligned with logo's first text character (~30% of logo width)
     (footer ? `<tr><td style="vertical-align:bottom;padding:0 50px 18px ${s.logoBase64 ? Math.round(s.logoW * 0.3) : 46}px;">${footer}</td></tr>` : '') +
+    // Row 3: Banner
+    (sigBanner?.enabled && sigBanner?.base64
+      ? `<tr><td colspan="2" style="padding-top:10px;">` +
+        (sigBanner.linkUrl ? `<a href="${sanitizeUrl(sigBanner.linkUrl)}" target="_blank" style="text-decoration:none;">` : '') +
+        `<img src="${sigBanner.base64}" width="600" alt="${escapeHtml(sigBanner.alt || 'Banner')}" style="display:block; border:0; width:100%; height:auto;" />` +
+        (sigBanner.linkUrl ? '</a>' : '') +
+        `</td></tr>`
+      : '') +
     `</table>`;
 };
 
@@ -629,6 +654,7 @@ export default function App() {
     designId: 'corporate',
   });
   const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '' });
+  const [sigBanner, setSigBanner] = useState({ enabled: false, base64: '', width: 0, height: 0, linkUrl: '', alt: '' });
   const [toasts, setToasts] = useState([]);
   const [msalReady, setMsalReady] = useState(false);
   const [msalAccount, setMsalAccount] = useState(null);
@@ -679,6 +705,10 @@ export default function App() {
     bannerAccentL: 'Banner Aksan Rengi', textColorsTitle: 'İmza Metin Renkleri', bannerColorsTitle: 'Banner Renkleri',
     msLogin: 'Microsoft Giriş', msLogging: 'Giriş yapılıyor...', msLogout: 'Çıkış',
     msLoginOk: 'Giriş başarılı', msLoginFail: 'Giriş başarısız', msProfileFail: 'Profil alınamadı',
+    proBanner: 'Promosyon Banneri', proBannerDesc: 'İmzanızın altına etkinlik, fuar veya kampanya görseli ekleyin',
+    proBannerUpload: 'Banner Yükle', proBannerHint: 'PNG/JPG/GIF max 2MB, önerilen genişlik: 600px',
+    proBannerLink: 'Tıklama Linki (opsiyonel)', proBannerAlt: 'Alternatif Metin',
+    proBannerRemove: 'Banneri Kaldır', proBannerEnabled: 'Promosyon Banneri Ekle',
   } : {
     sigTab: 'Signature', banTab: 'Banner', setTab: 'Settings',
     fn: 'First Name', ln: 'Last Name', ttr: 'Title (TR)', ten: 'Title (EN)',
@@ -720,14 +750,18 @@ export default function App() {
     bannerAccentL: 'Banner Accent Color', textColorsTitle: 'Signature Text Colors', bannerColorsTitle: 'Banner Colors',
     msLogin: 'Microsoft Sign In', msLogging: 'Signing in...', msLogout: 'Sign out',
     msLoginOk: 'Login successful', msLoginFail: 'Login failed', msProfileFail: 'Could not fetch profile',
+    proBanner: 'Promotional Banner', proBannerDesc: 'Add event, fair or campaign visual below your signature',
+    proBannerUpload: 'Upload Banner', proBannerHint: 'PNG/JPG/GIF max 2MB, recommended width: 600px',
+    proBannerLink: 'Click URL (optional)', proBannerAlt: 'Alt Text',
+    proBannerRemove: 'Remove Banner', proBannerEnabled: 'Add Promotional Banner',
   }, [lang]);
 
   const hasData = form.firstName.trim().length > 0;
   const office = OFFICES.find(o => o.id === form.officeId) || null;
   const sigHTML = useMemo(() => {
-    if (stg.designId === 'corporate') return genSigCorporate(form, stg, office);
-    return genSig(form, stg, office);
-  }, [form, stg, office]);
+    if (stg.designId === 'corporate') return genSigCorporate(form, stg, office, sigBanner);
+    return genSig(form, stg, office, sigBanner);
+  }, [form, stg, office, sigBanner]);
 
   const progress = useMemo(() => {
     const filled = PROGRESS_FIELDS.filter(k => form[k].trim().length > 0).length;
@@ -839,6 +873,28 @@ export default function App() {
     reader.onerror = () => toast('Dosya okunamadı', 'err');
     reader.readAsDataURL(file);
   }, [toast]);
+
+  const bannerFileRef = useRef(null);
+  const procBanner = useCallback((file) => {
+    if (!file) return;
+    if (file.size > 2097152) { toast('Max 2MB', 'err'); return; }
+    if (!file.type.startsWith('image/')) { toast('Invalid file type', 'err'); return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const base64 = ev.target.result;
+      const img = new window.Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > 680) { const r = 680 / w; w = 680; h = Math.round(h * r); }
+        setSigBanner(p => ({ ...p, base64, width: w, height: h, enabled: true }));
+        toast('Banner OK');
+      };
+      img.onerror = () => toast(lang === 'tr' ? 'Geçersiz görsel' : 'Invalid image', 'err');
+      img.src = base64;
+    };
+    reader.onerror = () => toast(lang === 'tr' ? 'Dosya okunamadı' : 'File read error', 'err');
+    reader.readAsDataURL(file);
+  }, [toast, lang]);
 
   const doCopy = useCallback(async () => {
     // Try modern Clipboard API first, fallback to execCommand
@@ -1724,6 +1780,92 @@ export default function App() {
                       </div>
                     )}
                   </div>
+                </GlassCard>
+              </div>
+
+              {/* ROW 3 FULL-WIDTH: Promosyon Banneri */}
+              <div className="sig-sec-banner" style={{ gridColumn: '1 / -1', animation: 'fadeIn 0.4s ease-out' }}>
+                <GlassCard accent>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem', marginBottom: sigBanner.enabled ? '0.75rem' : 0 }}>
+                    <div>
+                      <SectionTitle icon={Image}>{L.proBanner}</SectionTitle>
+                      <p style={{ fontSize: '0.62rem', color: C.textM, marginTop: '-0.4rem', marginBottom: '0.2rem' }}>{L.proBannerDesc}</p>
+                    </div>
+                    <div style={{ paddingTop: '0.2rem' }}>
+                      <ToggleSwitch label="" checked={sigBanner.enabled} onChange={(v) => setSigBanner(p => ({ ...p, enabled: v }))} />
+                    </div>
+                  </div>
+
+                  {sigBanner.enabled && (
+                    <div style={{ animation: 'fadeIn 0.25s ease' }}>
+                      {sigBanner.base64 ? (
+                        <div>
+                          {/* Banner preview */}
+                          <div style={{
+                            padding: '0.75rem', background: C.primaryGhost, borderRadius: 10,
+                            border: `1px solid ${C.borderSub}`, marginBottom: '0.75rem',
+                          }}>
+                            <div style={{ borderRadius: 8, overflow: 'hidden', border: `1px solid ${C.borderSub}`, background: '#fff' }}>
+                              {sigBanner.linkUrl ? (
+                                <a href={sanitizeUrl(sigBanner.linkUrl)} target="_blank" rel="noopener noreferrer" style={{ display: 'block' }}>
+                                  <img src={sigBanner.base64} alt={sigBanner.alt || 'Banner'} style={{ display: 'block', maxWidth: '100%', height: 'auto' }} />
+                                </a>
+                              ) : (
+                                <img src={sigBanner.base64} alt={sigBanner.alt || 'Banner'} style={{ display: 'block', maxWidth: '100%', height: 'auto' }} />
+                              )}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+                              <span style={{ fontSize: '0.6rem', color: C.textM }}>{sigBanner.width}x{sigBanner.height}px</span>
+                              <div style={{ display: 'flex', gap: '0.35rem' }}>
+                                <button onClick={() => bannerFileRef.current?.click()} style={{
+                                  padding: '0.3rem 0.55rem', borderRadius: 6, border: `1px solid ${C.borderSub}`,
+                                  background: '#fff', cursor: 'pointer', fontSize: '0.6rem', color: C.text2,
+                                  display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'Inter,sans-serif',
+                                }}>
+                                  <Upload size={10} /> {lang === 'tr' ? 'Değiştir' : 'Change'}
+                                </button>
+                                <button onClick={() => setSigBanner(p => ({ ...p, base64: '', width: 0, height: 0 }))} style={{
+                                  padding: '0.3rem 0.55rem', borderRadius: 6, border: `1px solid ${C.borderSub}`,
+                                  background: 'transparent', cursor: 'pointer', fontSize: '0.6rem', color: C.err,
+                                  display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'Inter,sans-serif',
+                                }}>
+                                  <Trash size={10} /> {L.proBannerRemove}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Link URL + Alt text */}
+                          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.5rem' }}>
+                            <FormField label={L.proBannerLink} value={sigBanner.linkUrl}
+                              onChange={e => setSigBanner(p => ({ ...p, linkUrl: e.target.value }))}
+                              placeholder="https://tiryaki.com.tr/fuar" />
+                            <FormField label={L.proBannerAlt} value={sigBanner.alt}
+                              onChange={e => setSigBanner(p => ({ ...p, alt: e.target.value }))}
+                              placeholder={lang === 'tr' ? 'Fuar 2026' : 'Fair 2026'} />
+                          </div>
+                        </div>
+                      ) : (
+                        /* Upload area */
+                        <div
+                          onClick={() => bannerFileRef.current?.click()}
+                          onDragOver={e => e.preventDefault()}
+                          onDrop={e => { e.preventDefault(); if (e.dataTransfer.files?.[0]) procBanner(e.dataTransfer.files[0]); }}
+                          style={{
+                            border: `2px dashed ${C.accent}50`, borderRadius: 12, padding: '1.8rem 1rem',
+                            textAlign: 'center', cursor: 'pointer', background: C.accentGhost,
+                            transition: 'all 0.25s ease',
+                          }}
+                        >
+                          <Upload size={26} style={{ color: C.accent, marginBottom: '0.4rem', opacity: 0.7 }} />
+                          <p style={{ fontSize: '0.78rem', fontWeight: 700, color: C.text1 }}>{L.proBannerUpload}</p>
+                          <p style={{ fontSize: '0.58rem', color: C.textM, marginTop: '0.15rem' }}>{L.proBannerHint}</p>
+                        </div>
+                      )}
+                      <input ref={bannerFileRef} type="file" accept="image/*" style={{ display: 'none' }}
+                        onChange={e => { if (e.target.files?.[0]) procBanner(e.target.files[0]); }} />
+                    </div>
+                  )}
                 </GlassCard>
               </div>
             </div>

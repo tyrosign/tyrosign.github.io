@@ -1,0 +1,9 @@
+export const MAX_LOGO_SIZE = 512000;       // 500KB
+export const MAX_LOGO_W = 200;
+export const MAX_LOGO_H = 80;
+export const DEFAULT_LOGO_W = 140;
+export const DEFAULT_LOGO_H = 45;
+export const MAX_BANNER_SIZE = 2097152;    // 2MB
+export const MAX_BANNER_W = 680;
+export const SIG_WIDTH = 680;
+export const SIG_CORP_WIDTH = 600;

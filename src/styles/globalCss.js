@@ -1,0 +1,100 @@
+import { C } from '../constants/theme';
+
+export const GLOBAL_CSS = `
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap");
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { overflow-y: scroll; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  @keyframes ripple { 0% { box-shadow: 0 0 0 0 rgba(200,146,42,0.35); } 100% { box-shadow: 0 0 0 14px rgba(200,146,42,0); } }
+  @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+  @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-6px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+  @keyframes progressFlow { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+  @keyframes progressGlow { 0%, 100% { box-shadow: 0 0 4px rgba(0,152,212,0.3), 0 0 8px rgba(0,152,212,0.1); } 50% { box-shadow: 0 0 8px rgba(0,152,212,0.5), 0 0 16px rgba(0,152,212,0.2); } }
+  @keyframes progressComplete { 0%, 100% { box-shadow: 0 0 6px rgba(22,163,74,0.4), 0 0 12px rgba(22,163,74,0.15); } 50% { box-shadow: 0 0 10px rgba(22,163,74,0.6), 0 0 20px rgba(22,163,74,0.25); } }
+  @keyframes countPop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
+  @keyframes completeBounce { 0% { transform: scale(0.8); opacity: 0; } 50% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes barShine { 0% { left: -40%; } 100% { left: 140%; } }
+  @keyframes signing {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    8%   { transform: translate(6px, -3px) rotate(2deg); }
+    16%  { transform: translate(14px, 1px) rotate(-1deg); }
+    24%  { transform: translate(20px, -4px) rotate(3deg); }
+    32%  { transform: translate(28px, 0px) rotate(-2deg); }
+    40%  { transform: translate(34px, -5px) rotate(4deg); }
+    48%  { transform: translate(26px, -2px) rotate(-1deg); }
+    56%  { transform: translate(18px, 2px) rotate(2deg); }
+    64%  { transform: translate(10px, -3px) rotate(-3deg); }
+    72%  { transform: translate(4px, 1px) rotate(1deg); }
+    80%  { transform: translate(0, -2px) rotate(-1deg); }
+    90%  { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+  @keyframes signLine {
+    0%   { width: 0; opacity: 0; }
+    5%   { opacity: 1; }
+    80%  { width: 100%; opacity: 1; }
+    90%  { width: 100%; opacity: 0.3; }
+    100% { width: 0; opacity: 0; }
+  }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(30,58,95,0.12); border-radius: 3px; }
+  ::selection { background: ${C.accent}30; }
+
+  /* ═══ GLASS CARD HOVER (CSS-only, no React re-render) ═══ */
+  .glass-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .glass-card:hover { box-shadow: ${C.shadowLg}; transform: translateY(-1px); border-color: ${C.accent}25; }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:900px) {
+    .sig-layout { flex-direction: column!important; }
+    .sig-right { position: relative!important; top: auto!important; }
+  }
+  @media(max-width:768px) {
+    .app-header { padding: 0 0.75rem!important; height: auto!important; min-height: 48px!important; flex-wrap: wrap!important; gap: 0.4rem!important; padding-top: 0.4rem!important; padding-bottom: 0.4rem!important; }
+    .app-header-logo { display: none!important; }
+    .app-header-title { font-size: 0.85rem!important; }
+    .app-header-title-accent { font-size: 0.85rem!important; }
+    .app-header-nav { order: 3!important; width: 100%!important; justify-content: center!important; }
+    .app-header-lang { order: 2!important; margin-left: auto!important; }
+    .app-header-auth { order: 3!important; }
+    .app-header-lang button { padding: 0.25rem 0.5rem!important; font-size: 0.6rem!important; min-height: 28px!important; }
+    .app-main { padding: 0.65rem 0.75rem!important; }
+    .sig-grid { grid-template-columns: 1fr!important; gap: 0.75rem!important; }
+    .sig-grid > div { animation: fadeIn 0.3s ease-out!important; }
+    .sig-sec-personal { order: 1!important; }
+    .sig-sec-contact { order: 2!important; }
+    .sig-sec-preview { order: 3!important; }
+    .sig-sec-export { order: 4!important; }
+    .banner-flex { flex-direction: column!important; }
+    .banner-left { flex: 1!important; min-width: 0!important; }
+    .settings-modal { width: 100vw!important; max-width: 100vw!important; height: 100vh!important; max-height: 100vh!important; border-radius: 0!important; top: 0!important; left: 0!important; transform: none!important; }
+    .settings-tabs-inner { gap: 0!important; }
+    .settings-tab-btn { font-size: 0.6rem!important; padding: 0.38rem 0.3rem!important; gap: 0.15rem!important; min-height: 32px!important; }
+    .settings-content { padding: 0.85rem!important; }
+    .settings-color-grid-3 { grid-template-columns: 1fr 1fr!important; }
+    .social-grid { grid-template-columns: 1fr!important; }
+    .progress-bar { padding: 0.5rem 0.65rem!important; gap: 0.5rem!important; }
+    .glass-card-inner { padding: 0.75rem 0.85rem!important; }
+    .export-btns { flex-direction: column!important; }
+    .export-btns button { width: 100%!important; justify-content: center!important; }
+  }
+  @media(max-width:480px) {
+    .app-header-nav .nav-tabs-inner { gap: 0!important; }
+    .nav-tab-btn { padding: 0.35rem 0.6rem!important; font-size: 0.68rem!important; }
+    .app-main { padding: 0.5rem 0.5rem!important; }
+    .settings-color-grid-2 { grid-template-columns: 1fr!important; }
+    .company-grid { grid-template-columns: 1fr!important; }
+    .design-mini-preview { display: none!important; }
+  }
+  @media(max-width:360px) {
+    .nav-tab-btn { padding: 0.3rem 0.45rem!important; font-size: 0.62rem!important; }
+  }
+`;

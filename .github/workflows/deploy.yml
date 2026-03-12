@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build & Deploy
 
 on:
   push:
@@ -41,7 +41,8 @@ jobs:
         with:
           path: dist
 
-  deploy:
+  # Deploy to source repo's own GitHub Pages
+  deploy-pages:
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -51,3 +52,27 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Deploy to tyrosign.github.io
+  deploy-tyrosign:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: artifact
+
+      - name: Extract build
+        run: |
+          mkdir dist
+          tar -xf artifact/artifact.tar -C dist
+
+      - name: Deploy to tyrosign.github.io
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          external_repository: tyrosign/tyrosign.github.io
+          personal_token: ${{ secrets.TYROSIGN_DEPLOY_TOKEN }}
+          publish_dir: dist
+          publish_branch: main

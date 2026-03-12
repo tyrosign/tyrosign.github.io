@@ -45,7 +45,7 @@ export const TR = {
   proBannerUpload: 'Banner Yükle', proBannerHint: 'PNG/JPG/GIF max 2MB, önerilen genişlik: 600px',
   proBannerLink: 'Tıklama Linki (opsiyonel)', proBannerAlt: 'Alternatif Metin',
   proBannerRemove: 'Banneri Kaldır', proBannerEnabled: 'Promosyon Banneri Ekle',
-  qrGen: 'QR Üret', qrTitle: 'Kartvizit QR Kodu', qrDl: 'QR İndir', qrScan: 'Telefonunuzla okutarak rehbere kaydedin',
+  qrGen: 'QR Üret', qrTitle: 'Kartvizit QR Kodu', qrDl: 'QR İndir', qrCopy: 'QR Kopyala', qrCopied: 'QR panoya kopyalandı!', qrScan: 'Telefonunuzla okutarak rehbere kaydedin',
   olOpen: 'Outlook Ayarlar',
 };
 
@@ -96,6 +96,6 @@ export const EN = {
   proBannerUpload: 'Upload Banner', proBannerHint: 'PNG/JPG/GIF max 2MB, recommended width: 600px',
   proBannerLink: 'Click URL (optional)', proBannerAlt: 'Alt Text',
   proBannerRemove: 'Remove Banner', proBannerEnabled: 'Add Promotional Banner',
-  qrGen: 'Generate QR', qrTitle: 'Business Card QR Code', qrDl: 'Download QR', qrScan: 'Scan with your phone to save contact',
+  qrGen: 'Generate QR', qrTitle: 'Business Card QR Code', qrDl: 'Download QR', qrCopy: 'Copy QR', qrCopied: 'QR copied to clipboard!', qrScan: 'Scan with your phone to save contact',
   olOpen: 'Outlook Settings',
 };

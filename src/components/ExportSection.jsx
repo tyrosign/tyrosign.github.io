@@ -1,51 +1,97 @@
 import { memo } from 'react';
-import { Copy, Check, RefreshCw, Info, Zap } from 'lucide-react';
+import { Copy, Check, RefreshCw, Info } from 'lucide-react';
 import { C } from '../constants/theme';
 
-const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, showSteps, setShowSteps, L }) => (
+const QrIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="8" height="8" rx="1" /><rect x="14" y="2" width="8" height="8" rx="1" /><rect x="2" y="14" width="8" height="8" rx="1" />
+    <path d="M14 14h2v2h-2zM20 14h2v2h-2zM14 20h2v2h-2zM20 20h2v2h-2zM17 17h2v2h-2z" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+const OutlookIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+    <path d="M22 6.5V17.5C22 18.33 21.33 19 20.5 19H8.5C7.67 19 7 18.33 7 17.5V6.5C7 5.67 7.67 5 8.5 5H20.5C21.33 5 22 5.67 22 6.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M7 8L14.5 13L22 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 7V18C2 18.55 2.45 19 3 19H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const btnBase = {
+  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+  padding: '0.5rem 0.4rem', borderRadius: 10, border: 'none',
+  fontSize: '0.68rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
+  transition: 'all 0.3s ease', cursor: 'pointer', whiteSpace: 'nowrap',
+};
+
+const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onOutlookApply, olApplying, msalAccount, showSteps, setShowSteps, L }) => (
   <>
-    <div className="export-btns" style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.6rem' }}>
+    {/* All 4 buttons in one row */}
+    <div className="export-btns" style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.6rem' }}>
+      {/* 1. İmzayı Kopyala */}
       <button
         onClick={doCopy} disabled={!hasData}
         style={{
-          flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-          padding: '0.55rem 1rem', borderRadius: 10, border: 'none', cursor: hasData ? 'pointer' : 'not-allowed',
+          ...btnBase,
           background: copied ? `linear-gradient(135deg, ${C.ok}, #22c55e)` : `linear-gradient(135deg, ${C.primary}, ${C.primarySoft})`,
-          color: '#fff', fontSize: '0.8rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
-          opacity: hasData ? 1 : 0.5, transition: 'all 0.3s ease',
-          boxShadow: hasData ? `0 4px 16px ${C.primary}30` : 'none',
+          color: '#fff',
+          opacity: hasData ? 1 : 0.5,
+          cursor: hasData ? 'pointer' : 'not-allowed',
+          boxShadow: hasData ? `0 4px 12px ${C.primary}25` : 'none',
         }}
       >
-        {copied ? <Check size={16} /> : <Copy size={16} />}
+        {copied ? <Check size={14} /> : <Copy size={14} />}
         {copied ? L.cpd : L.cp}
       </button>
+
+      {/* 2. Outlook'a Uygula (sadece giriş yapılmışsa) */}
+      {msalAccount && (
+        <button
+          onClick={onOutlookApply} disabled={!hasData || olApplying}
+          style={{
+            ...btnBase,
+            background: olApplying
+              ? `linear-gradient(135deg, #0078d4aa, #106ebeaa)`
+              : `linear-gradient(135deg, #0078d4, #106ebe)`,
+            color: '#fff',
+            opacity: hasData ? 1 : 0.5,
+            cursor: (hasData && !olApplying) ? 'pointer' : 'not-allowed',
+            boxShadow: hasData ? '0 4px 12px rgba(0,120,212,0.25)' : 'none',
+          }}
+        >
+          <OutlookIcon />
+          {olApplying ? L.olApplying : L.olApply}
+        </button>
+      )}
+
+      {/* 3. QR Üret */}
       <button
         onClick={onQrClick} disabled={!hasData}
         style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-          padding: '0.55rem 1rem', borderRadius: 10,
-          border: `1px solid ${C.accent}40`, cursor: hasData ? 'pointer' : 'not-allowed',
-          background: `linear-gradient(135deg, ${C.accent}12, ${C.accent}06)`,
-          color: C.accent, fontSize: '0.75rem', fontWeight: 700,
-          fontFamily: 'Inter,sans-serif', transition: 'all 0.3s ease',
+          ...btnBase,
+          background: `linear-gradient(135deg, ${C.accent}, ${C.accent}dd)`,
+          color: '#fff',
           opacity: hasData ? 1 : 0.5,
+          cursor: hasData ? 'pointer' : 'not-allowed',
+          boxShadow: hasData ? `0 4px 12px ${C.accent}25` : 'none',
         }}
       >
-        <Zap size={14} />
+        <QrIcon />
         {L.qrGen}
       </button>
+
+      {/* 4. Sıfırla */}
       <button
         onClick={doReset}
         style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-          padding: '0.55rem 1rem', borderRadius: 10,
-          border: `1px solid ${C.borderSub}`, cursor: 'pointer',
-          background: C.glass, color: C.text2, fontSize: '0.75rem', fontWeight: 600,
-          fontFamily: 'Inter,sans-serif', transition: 'all 0.3s ease',
-          backdropFilter: 'blur(8px)',
+          ...btnBase,
+          background: '#fff',
+          color: C.text2,
+          border: `1px solid ${C.borderSub}`,
+          boxShadow: 'none',
         }}
       >
-        <RefreshCw size={14} />
+        <RefreshCw size={13} />
         {L.rst}
       </button>
     </div>

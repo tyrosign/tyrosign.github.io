@@ -25,7 +25,7 @@ export default function App() {
   const [lang, setLang] = useState('tr');
   const [tab, setTab] = useState('signature');
   const [copied, setCopied] = useState(false);
-  const [showSteps, setShowSteps] = useState(true);
+  const [showSteps, setShowSteps] = useState(false);
   const [settingsTab, setSettingsTab] = useState('logo');
   const [form, setForm] = useState({
     firstName: '', lastName: '', titleTR: '', titleEN: '',
@@ -56,7 +56,7 @@ export default function App() {
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();
-  const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout } = useMsal({ toast, lang, setForm });
+  const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, applySignature } = useMsal({ toast, lang, setForm });
 
   // ─── Derived ───
   const L = useMemo(() => lang === 'tr' ? TR : EN, [lang]);
@@ -220,6 +220,7 @@ export default function App() {
             designOpen={designOpen} setDesignOpen={setDesignOpen}
             sigBanner={sigBanner} setSigBanner={setSigBanner}
             bannerFileRef={bannerFileRef} procBanner={procBanner}
+            applySignature={applySignature} msalAccount={msalAccount} toast={toast}
           />
         )}
 

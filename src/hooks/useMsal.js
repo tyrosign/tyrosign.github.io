@@ -13,7 +13,7 @@ const msalInstance = MSAL_ENABLED ? new PublicClientApplication({
   cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false },
 }) : null;
 
-const msalLoginRequest = { scopes: ['User.Read'] };
+const msalLoginRequest = { scopes: ['User.Read', 'MailboxSettings.ReadWrite'] };
 
 export function useMsal({ toast, lang, setForm }) {
   const [msalReady, setMsalReady] = useState(false);
@@ -98,5 +98,42 @@ export function useMsal({ toast, lang, setForm }) {
     return () => { isMounted = false; };
   }, []);
 
-  return { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout };
+  const applySignature = useCallback(async (sigHTML) => {
+    if (!msalInstance || !msalAccount) return false;
+    try {
+      const tokenResponse = await msalInstance.acquireTokenSilent({
+        scopes: ['MailboxSettings.ReadWrite'],
+        account: msalAccount,
+      });
+      const headers = {
+        Authorization: `Bearer ${tokenResponse.accessToken}`,
+        'Content-Type': 'application/json',
+      };
+      // Set signature for new messages and replies
+      const res = await fetch('https://graph.microsoft.com/v1.0/me/mailboxSettings', {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({
+          userPurpose: 'user',
+          signatureHtml: sigHTML,
+        }),
+      });
+      if (!res.ok) {
+        const errText = await res.text();
+        if (import.meta.env.DEV) console.error('Graph API response:', res.status, errText);
+        throw new Error(`Graph API ${res.status}`);
+      }
+      return true;
+    } catch (err) {
+      if (err instanceof InteractionRequiredAuthError) {
+        try {
+          await msalInstance.acquireTokenRedirect({ scopes: ['MailboxSettings.ReadWrite'] });
+        } catch (_) { /* redirect will happen */ }
+      }
+      if (import.meta.env.DEV) console.error('Apply signature error:', err);
+      return false;
+    }
+  }, [msalAccount]);
+
+  return { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, applySignature };
 }

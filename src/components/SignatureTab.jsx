@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { User, Phone, Eye, Download } from 'lucide-react';
 import { C } from '../constants/theme';
 import { OFFICES, OFFICE_GROUPS } from '../constants/offices';
@@ -19,8 +19,30 @@ const SignatureTab = memo(({
   copied, doCopy, doReset, showSteps, setShowSteps,
   designOpen, setDesignOpen,
   sigBanner, setSigBanner, bannerFileRef, procBanner,
+  applySignature, msalAccount, toast,
 }) => {
   const [qrOpen, setQrOpen] = useState(false);
+  const [olApplying, setOlApplying] = useState(false);
+
+  const handleOutlookApply = useCallback(async () => {
+    if (!msalAccount) {
+      toast(L.olNoLogin, 'err');
+      return;
+    }
+    if (!window.confirm(L.olConfirm)) return;
+    setOlApplying(true);
+    try {
+      const ok = await applySignature(sigHTML);
+      if (ok) {
+        toast(L.olOk);
+      } else {
+        toast(L.olFail, 'err');
+      }
+    } catch {
+      toast(L.olFail, 'err');
+    }
+    setOlApplying(false);
+  }, [msalAccount, applySignature, sigHTML, toast, L]);
 
   return (
     <div style={{ animation: 'fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1)' }}>
@@ -113,6 +135,8 @@ const SignatureTab = memo(({
             <ExportSection
               hasData={hasData} copied={copied} doCopy={doCopy} doReset={doReset}
               onQrClick={() => setQrOpen(true)}
+              onOutlookApply={handleOutlookApply} olApplying={olApplying}
+              msalAccount={msalAccount}
               showSteps={showSteps} setShowSteps={setShowSteps} L={L}
             />
           </GlassCard>

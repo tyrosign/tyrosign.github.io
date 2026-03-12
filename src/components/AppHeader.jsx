@@ -3,12 +3,12 @@ import { Edit3, Settings } from 'lucide-react';
 import { C } from '../constants/theme';
 import TyroLogo from './ui/TyroLogo';
 import TabBtn from './ui/TabBtn';
-import BannerIcon from './ui/BannerIcon';
+import LinkedInIcon from './ui/LinkedInIcon';
 import ProfileDropdown from './ProfileDropdown';
 
 const TAB_IDS = ['signature', 'banner', 'settings'];
 
-const AppHeader = memo(({ tab, setTab, lang, setLang, msalAccount, profileOpen, setProfileOpen, handleLogout }) => (
+const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout }) => (
   <header className="app-header" style={{
     position: 'sticky', top: 0, zIndex: 100,
     background: C.glassSolid, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
@@ -37,9 +37,9 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, msalAccount, profileOpen, 
           boxShadow: '0 1px 3px rgba(30,58,95,0.1), 0 1px 2px rgba(30,58,95,0.06)',
           transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }} />
-        <TabBtn active={tab === 'signature'} onClick={() => setTab('signature')} icon={Edit3} label={lang === 'tr' ? 'İmza' : 'Signature'} />
-        <TabBtn active={tab === 'banner'} onClick={() => setTab('banner')} icon={BannerIcon} label="Banner" />
-        <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Settings} label={lang === 'tr' ? 'Ayarlar' : 'Settings'} />
+        <TabBtn active={tab === 'signature'} onClick={() => setTab('signature')} icon={Edit3} label={L.sigTab} />
+        <TabBtn active={tab === 'banner'} onClick={() => setTab('banner')} icon={LinkedInIcon} label={L.banTab} />
+        <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Settings} label={L.setTab} />
       </div>
     </nav>
 

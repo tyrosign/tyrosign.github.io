@@ -1,5 +1,5 @@
 export const TR = {
-  sigTab: 'İmza', banTab: 'Banner', setTab: 'Ayarlar',
+  sigTab: 'İmza', banTab: 'LinkedIn', setTab: 'Ayarlar',
   fn: 'Ad', ln: 'Soyad', ttr: 'Ünvan (TR)', ten: 'Ünvan (EN)',
   ofc: 'Ofis Seçimi', sc: 'Şirket Seçimi', gsm: 'GSM', email: 'E-Posta',
   cp: 'İmzayı Kopyala', cpd: 'Kopyalandı!', dl: 'HTML İndir', rst: 'Sıfırla',
@@ -43,10 +43,11 @@ export const TR = {
   proBannerUpload: 'Banner Yükle', proBannerHint: 'PNG/JPG/GIF max 2MB, önerilen genişlik: 600px',
   proBannerLink: 'Tıklama Linki (opsiyonel)', proBannerAlt: 'Alternatif Metin',
   proBannerRemove: 'Banneri Kaldır', proBannerEnabled: 'Promosyon Banneri Ekle',
+  qrGen: 'QR Üret', qrTitle: 'Kartvizit QR Kodu', qrDl: 'QR İndir', qrScan: 'Telefonunuzla okutarak rehbere kaydedin',
 };
 
 export const EN = {
-  sigTab: 'Signature', banTab: 'Banner', setTab: 'Settings',
+  sigTab: 'Signature', banTab: 'LinkedIn', setTab: 'Settings',
   fn: 'First Name', ln: 'Last Name', ttr: 'Title (TR)', ten: 'Title (EN)',
   ofc: 'Select Office', sc: 'Select Company', gsm: 'GSM', email: 'Email',
   cp: 'Copy Signature', cpd: 'Copied!', dl: 'Download HTML', rst: 'Reset',
@@ -90,4 +91,5 @@ export const EN = {
   proBannerUpload: 'Upload Banner', proBannerHint: 'PNG/JPG/GIF max 2MB, recommended width: 600px',
   proBannerLink: 'Click URL (optional)', proBannerAlt: 'Alt Text',
   proBannerRemove: 'Remove Banner', proBannerEnabled: 'Add Promotional Banner',
+  qrGen: 'Generate QR', qrTitle: 'Business Card QR Code', qrDl: 'Download QR', qrScan: 'Scan with your phone to save contact',
 };

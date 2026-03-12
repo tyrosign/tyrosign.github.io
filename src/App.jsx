@@ -32,7 +32,7 @@ export default function App() {
     officeId: '', companyId: 'tiryaki-agro', gsm: '', email: '', linkedinPersonal: '',
   });
   const [stg, setStg] = useState({
-    companyName: 'Tiryaki Agro Gida San. ve Tic. A.S.', website: 'www.tiryaki.com.tr',
+    companyName: 'Tiryaki Agro', website: 'www.tiryaki.com.tr',
     slogan: 'Good people. Good earth.', logoColor: '#1e3a5f', accentColor: '#0098d4',
     logoBase64: DEFAULT_LOGO_BASE64, logoW: 140, logoH: 45,
     social: { linkedin: 'https://www.linkedin.com/company/tiryaki-agro/', twitter: 'https://x.com/tiryakiagro', facebook: 'https://www.facebook.com/tiryakiagro', instagram: 'https://www.instagram.com/tiryakiagro/' },
@@ -45,7 +45,7 @@ export default function App() {
     bannerAccentColor: '',
     designId: 'corporate',
   });
-  const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '' });
+  const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '', companyId: 'tiryaki-agro' });
   const [sigBanner, setSigBanner] = useState({ enabled: false, base64: '', width: 0, height: 0, linkUrl: '', alt: '' });
   const [profileOpen, setProfileOpen] = useState(false);
   const [designOpen, setDesignOpen] = useState(false);
@@ -57,7 +57,6 @@ export default function App() {
   // ─── Hooks ───
   const { toasts, toast } = useToast();
   const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout } = useMsal({ toast, lang, setForm });
-  useBannerCanvas(canvasRef, tab, banner, stg);
 
   // ─── Derived ───
   const L = useMemo(() => lang === 'tr' ? TR : EN, [lang]);
@@ -71,6 +70,16 @@ export default function App() {
     logoW: company.logoW,
     logoH: company.logoH,
   }), [stg, company]);
+
+  const bannerCompany = useMemo(() => COMPANIES.find(c => c.id === banner.companyId) || COMPANIES[0], [banner.companyId]);
+  const bannerStg = useMemo(() => ({
+    ...stg,
+    logoBase64: bannerCompany.logoBase64,
+    logoW: bannerCompany.logoW,
+    logoH: bannerCompany.logoH,
+  }), [stg, bannerCompany]);
+
+  useBannerCanvas(canvasRef, tab, banner, bannerStg);
 
   const sigHTML = useMemo(() => {
     if (effectiveStg.designId === 'corporate') return genSigCorporate(form, effectiveStg, office, sigBanner);
@@ -186,7 +195,7 @@ export default function App() {
 
       <AppHeader
         tab={tab} setTab={setTab}
-        lang={lang} setLang={setLang}
+        lang={lang} setLang={setLang} L={L}
         msalAccount={msalAccount} profileOpen={profileOpen} setProfileOpen={setProfileOpen}
         handleLogout={handleLogout}
       />
@@ -204,7 +213,7 @@ export default function App() {
 
         {tab === 'signature' && (
           <SignatureTab
-            form={form} uf={uf} stg={stg} setStg={setStg} office={office}
+            form={form} uf={uf} stg={stg} setStg={setStg} office={office} company={company}
             sigHTML={sigHTML} hasData={hasData} progress={progress} L={L} lang={lang}
             copied={copied} doCopy={doCopy} doReset={doReset}
             showSteps={showSteps} setShowSteps={setShowSteps}
@@ -216,7 +225,7 @@ export default function App() {
 
         {tab === 'banner' && (
           <BannerTab
-            banner={banner} setBanner={setBanner} stg={stg}
+            banner={banner} setBanner={setBanner} stg={bannerStg}
             canvasRef={canvasRef} downloadBanner={downloadBanner} L={L}
           />
         )}

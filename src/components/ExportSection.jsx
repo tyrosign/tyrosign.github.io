@@ -1,8 +1,8 @@
-import { memo, useState } from 'react';
-import { Copy, Check, RefreshCw, Info } from 'lucide-react';
+import { memo } from 'react';
+import { Copy, Check, RefreshCw, Info, Zap } from 'lucide-react';
 import { C } from '../constants/theme';
 
-const ExportSection = memo(({ hasData, copied, doCopy, doReset, showSteps, setShowSteps, L }) => (
+const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, showSteps, setShowSteps, L }) => (
   <>
     <div className="export-btns" style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.6rem' }}>
       <button
@@ -18,6 +18,21 @@ const ExportSection = memo(({ hasData, copied, doCopy, doReset, showSteps, setSh
       >
         {copied ? <Check size={16} /> : <Copy size={16} />}
         {copied ? L.cpd : L.cp}
+      </button>
+      <button
+        onClick={onQrClick} disabled={!hasData}
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
+          padding: '0.55rem 1rem', borderRadius: 10,
+          border: `1px solid ${C.accent}40`, cursor: hasData ? 'pointer' : 'not-allowed',
+          background: `linear-gradient(135deg, ${C.accent}12, ${C.accent}06)`,
+          color: C.accent, fontSize: '0.75rem', fontWeight: 700,
+          fontFamily: 'Inter,sans-serif', transition: 'all 0.3s ease',
+          opacity: hasData ? 1 : 0.5,
+        }}
+      >
+        <Zap size={14} />
+        {L.qrGen}
       </button>
       <button
         onClick={doReset}

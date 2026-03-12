@@ -65,9 +65,11 @@ export const GLOBAL_CSS = `
     .app-header-nav { order: 3!important; width: 100%!important; justify-content: center!important; }
     .app-header-lang { order: 2!important; margin-left: auto!important; }
     .app-header-lang button { padding: 0.15rem 0.35rem!important; font-size: 0.52rem!important; min-height: 20px!important; min-width: 24px!important; border-radius: 5px!important; }
-    .app-header-auth button { padding: 0.1rem 0.3rem 0.1rem 0.1rem!important; }
-    .app-header-auth button > div:first-child { width: 24px!important; height: 24px!important; font-size: 0.5rem!important; }
-    .app-header-auth svg { width: 8px!important; height: 5px!important; }
+    .app-header-auth { order: 2!important; }
+    .app-header-auth .profile-trigger { padding: 0.1rem 0.25rem 0.1rem 0.1rem!important; gap: 0.2rem!important; border-radius: 16px!important; }
+    .app-header-auth .profile-avatar { width: 22px!important; height: 22px!important; font-size: 0.48rem!important; }
+    .app-header-auth .profile-chevron { width: 7px!important; height: 4px!important; }
+    .profile-dropdown { min-width: 200px!important; }
     .nav-tabs-inner { gap: 2px!important; }
     .nav-tab-btn { padding: 0.35rem 0.65rem!important; font-size: 0.7rem!important; gap: 0.2rem!important; }
     .app-main { padding: 0.65rem 0.75rem 2rem!important; }

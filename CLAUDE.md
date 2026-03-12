@@ -44,6 +44,22 @@ Istanbul, Gaziantep, Mersin, Ankara, Dubai, Moscow, Shanghai
 - Template literals sorun çıkardı, string concatenation (+) tercih edildi
 - Claude Code ortamında bu kısıtlamalar geçerli DEĞİL, modern syntax kullanılabilir
 
+## Release Checklist (Canlı Çıkış Gereklilikleri)
+Her canlı çıkışta aşağıdaki adımları UNUTMA:
+1. Source repo'da commit + push (djeanker34/TYRO-SignSnap)
+2. Deploy repo'yu senkronize et (tyrosign/tyrosign.github.io) — tüm src, package.json, package-lock.json, vite.config.js, index.html, .gitignore kopyala
+3. Deploy repo'da commit + push
+4. **Git tag oluştur:** `git tag vX.Y.Z && git push origin vX.Y.Z` (semantic versioning)
+5. GitHub Pages deploy'un tamamlandığını kontrol et (Actions sekmesi)
+6. Live site'i test et: https://tyrosign.github.io/
+
+### Versioning (Semantic)
+- **Major (vX.0.0):** Mimari değişiklik, breaking change
+- **Minor (v0.X.0):** Yeni özellik (QR, Outlook Apply, Banner vb.)
+- **Patch (v0.0.X):** Bug fix, küçük düzeltme, responsive fix
+
+### Son Tag: Güncel tag'i kontrol et: `git tag --sort=-v:refname | head -1`
+
 ## Folder Structure
 ```
 tyro-sign-snap/

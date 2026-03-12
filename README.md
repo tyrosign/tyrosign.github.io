@@ -1,38 +1,62 @@
-# TYRO Sign Snap — Corporate Signature Studio
+<p align="center">
+  <img src="https://www.tiryaki.com.tr/Content/images/logo/tiryaki_logo.svg" alt="Tiryaki Agro" width="200" />
+</p>
 
-**Tiryaki Agro** grubuna ait 23 sirket icin kurumsal e-posta imza olusturma platformu. Calisanlar tek bir arayuzden sirket, ofis, unvan ve iletisim bilgilerini girerek Outlook uyumlu HTML imzalarini olusturur.
+<h1 align="center">TYRO Sign Snap</h1>
+<h3 align="center">Corporate Email Signature Studio</h3>
 
-![React 18](https://img.shields.io/badge/React-18.2-61DAFB?logo=react&logoColor=white)
-![Vite 5](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)
-![MSAL](https://img.shields.io/badge/Auth-Azure%20AD%20%2F%20MSAL-0078D4?logo=microsoft&logoColor=white)
-![Glassmorphism](https://img.shields.io/badge/Design-Glassmorphism-blue)
-![License](https://img.shields.io/badge/License-Private-red)
+<p align="center">
+  <strong>Tiryaki Agro grubuna ait 23 sirket icin kurumsal e-posta imza olusturma platformu.</strong><br/>
+  Calisanlar tek bir arayuzden sirket, ofis, unvan ve iletisim bilgilerini girerek<br/>
+  Outlook uyumlu HTML imzalarini aninda olusturur, kopyalar ve uygular.
+</p>
 
-> **Live:** [https://tyrosign.github.io/](https://tyrosign.github.io/)
+<p align="center">
+  <a href="https://tyrosign.github.io/"><img src="https://img.shields.io/badge/🌐_Live_Demo-tyrosign.github.io-1e3a5f?style=for-the-badge" alt="Live Demo" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18.2-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React 18" />
+  <img src="https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite 5" />
+  <img src="https://img.shields.io/badge/Azure_AD-MSAL_v2-0078D4?style=flat-square&logo=microsoftazure&logoColor=white" alt="MSAL" />
+  <img src="https://img.shields.io/badge/Microsoft_Graph-API-00BCF2?style=flat-square&logo=microsoft&logoColor=white" alt="Graph API" />
+  <img src="https://img.shields.io/badge/QR_vCard-3.0-c8922a?style=flat-square" alt="vCard QR" />
+  <img src="https://img.shields.io/badge/Design-Glassmorphism-blue?style=flat-square" alt="Glassmorphism" />
+  <img src="https://img.shields.io/badge/i18n-TR_|_EN-green?style=flat-square" alt="i18n" />
+  <img src="https://img.shields.io/badge/License-Private-red?style=flat-square" alt="License" />
+</p>
 
 ---
 
 ## Ozellikler
 
 ### Imza Olusturucu
-- **Cift Tasarim Modu** — Corporate (Wave Band) ve Classic (sosyal medya bloklu) olmak uzere iki farkli imza tasarimi arasinda gecis
-- **23 Sirket Destegi** — Tiryaki Agro grup sirketlerinin tamami, logolari ile birlikte hazir tanimli. Sirket secildiginde logo otomatik degisir
-- **7 Ofis** — Istanbul, Gaziantep, Mersin, Ankara, Dubai, Moskova, Shanghai. Ofis secildiginde adres, SDN ve Fax bilgileri otomatik dolar
-- **Azure AD Entegrasyonu** — Microsoft Graph API uzerinden tek tikla ad, unvan, e-posta ve GSM bilgilerini cekme
-- **Title Case Formatter** — Kucuk harfle yazilan unvanlari kurumsal standartlara gore otomatik duzeltir
+- **Cift Tasarim Modu** — Corporate (Wave Band) ve Classic (sosyal medya bloklu) olmak uzere iki farkli imza tasarimi
+- **23 Sirket Destegi** — Tiryaki Agro grup sirketlerinin tamami logolari ile hazir tanimli
+- **7 Ofis** — Istanbul, Gaziantep, Mersin, Ankara, Dubai, Moskova, Shanghai — ofis secildiginde adres/SDN/Fax otomatik dolar
+- **Azure AD Entegrasyonu** — Microsoft hesabiyla giris yaparak ad, unvan, e-posta ve GSM bilgilerini tek tikla cekme
+- **Outlook'a Tek Tikla Uygulama** — Microsoft Graph API uzerinden imzayi dogrudan Outlook hesabina yazar
 - **Canli Onizleme** — Outlook gorunumunu taklit eden gercek zamanli imza onizlemesi
-- **Promosyon Banneri** — Imzalarin altina kampanya veya etkinlik gorseli ekleme destegi
-- **Iki Dil** — Turkce ve Ingilizce arayuz (i18n)
+- **Promosyon Banneri** — Imzalarin altina kampanya veya etkinlik gorseli ekleme
+- **Title Case Formatter** — Kucuk/buyuk harfle yazilan isimleri ve unvanlari otomatik duzeltir
+- **Iki Dil** — Turkce ve Ingilizce arayuz
+
+### QR Kartvizit
+- **vCard 3.0 QR Kodu** — Form bilgilerinden (ad, unvan, sirket, telefon, email, adres, LinkedIn) vCard QR kodu uretir
+- **Kartvizit Onizleme** — Glassmorphic modal icinde canli onizleme
+- **PNG Indirme** — Profesyonel kartvizit tasarimli PNG olarak indirme
+- **Telefonla Okut & Kaydet** — QR kodu telefonla okutularak kisi rehbere kaydedilebilir
 
 ### Banner Uretici
-- **Canvas Motoru** — LinkedIn veya e-posta icin yuksek cozunurluklu bannerlar uretin
+- **Canvas Motoru** — LinkedIn veya e-posta icin yuksek cozunurluklu bannerlar
 - **Hazir Sablonlar** — Classic, Gold Elegance ve Light Modern secenekleri
-- **Canli Editor** — Metin, renk ve yerlestirme ayarlari anlik olarak guncellenir
+- **Canli Editor** — Metin, renk ve yerlestirme ayarlari anlik guncellenir
 
 ### Disa Aktarma
-- **Rich HTML Copy** — `document.createRange` + `execCommand('copy')` ile Outlook Desktop & Web uyumlu zengin metin kopyalama
-- **HTML Export** — `Blob` + `URL.createObjectURL` ile `.html` dosya olarak indirme
-- **Adim Adim Rehber** — Outlook'a nasil yapistirildigi gorsel olarak anlatilir
+- **Rich HTML Kopyalama** — Outlook Desktop & Web uyumlu zengin metin kopyalama
+- **Outlook'a Uygula** — Graph API ile imzayi direkt Outlook'a yazma (Azure AD oturumu gerektirir)
+- **QR Kartvizit Uret** — vCard QR kodu olustur ve PNG olarak indir
+- **Adim Adim Rehber** — Outlook'a nasil yapistirildigi aciklanir
 
 ---
 
@@ -43,24 +67,56 @@
 | Framework | React 18.2 (SPA) |
 | Build Tool | Vite 5 |
 | Auth | @azure/msal-browser (MSAL.js v2) |
+| API | Microsoft Graph API (MailboxSettings) |
+| QR | qrcode (vCard 3.0 encoding) |
 | Ikonlar | lucide-react 0.263.1 |
 | Styling | Inline CSS-in-JS (Glassmorphism) |
 | Fontlar | Google Fonts — Inter + Plus Jakarta Sans |
-| Deploy | GitHub Pages |
+| Deploy | GitHub Pages + GitHub Actions |
 
 ### Tasarim Sistemi
-- **Primary:** `#1e3a5f` (Navy)
-- **Accent:** `#c8922a` (Gold)
-- **Divider:** `#0098d4` (Blue)
-- **UI:** Glassmorphism — `backdrop-filter: blur`, saydam katmanlar, hafif golge ve yumusak kenarlar
-- **Animasyonlar:** `fadeIn`, `slideInLeft`, `slideInRight`, `pulse` keyframes
+| Renk | Kod | Kullanim |
+|---|---|---|
+| Navy | `#1e3a5f` | Primary — basliklar, logo, arka plan |
+| Gold | `#c8922a` | Accent — butonlar, vurgular |
+| Blue | `#0098d4` | Divider — ayirici cizgiler, linkler |
 
-### Mimari Yaklasim
-- **Modular Component Tree** — 15+ bilesen, her biri `memo()` ile optimize
+- **UI:** Glassmorphism — `backdrop-filter: blur`, saydam katmanlar, hafif golge
+- **Animasyonlar:** `fadeIn`, `slideInLeft`, `slideInRight`, `pulse`, `signing` keyframes
+- **Responsive:** 768px ve 480px breakpoint'leri ile tam mobil uyum
+
+### Mimari
+- **15+ Modular Bilesen** — Her biri `React.memo()` ile optimize
 - **Custom Hooks** — `useMsal`, `useToast`, `useBannerCanvas`
-- **Centralized Constants** — Tema, ofis, sirket, tasarim ve limit degerleri ayri dosyalarda
-- **Derived State** — `useMemo` ile hesaplanan `effectiveStg`, `company`, `progress` degerleri
+- **Centralized Constants** — Tema, ofis, sirket, tasarim ve limitler ayri dosyalarda
+- **Derived State** — `useMemo` ile `effectiveStg`, `company`, `progress`
 - **Reusable UI Kit** — `GlassCard`, `FormField`, `SearchableSelect`, `Btn`, `SectionTitle`, `ToggleSwitch`, `ColorPicker`
+
+---
+
+## Hizli Baslangic
+
+```bash
+# 1. Repoyu klonlayin
+git clone https://github.com/djeanker34/TYRO-SignSnap.git
+cd TYRO-SignSnap
+
+# 2. Bagimliliklari kurun
+npm install
+
+# 3. Ortam degiskenleri (Azure AD icin)
+#    .env dosyasi olusturun:
+#    VITE_CLIENT_ID=your-azure-app-client-id
+#    VITE_TENANT_ID=your-azure-tenant-id
+
+# 4. Gelistirme sunucusu
+npm run dev
+
+# 5. Production build
+npm run build
+```
+
+> **Not:** Azure AD degiskenleri olmadan uygulama calisir ancak Microsoft hesabi ile giris ve Outlook'a uygulama ozellikleri devre disi kalir.
 
 ---
 
@@ -75,135 +131,57 @@ TYRO-SignSnap/
 ├── README.md
 │
 └── src/
-    ├── main.jsx                          # Giris noktasi
-    ├── App.jsx                           # Ana uygulama, state yonetimi, routing
-    ├── defaultLogo.js                    # Fallback logo (Base64)
+    ├── main.jsx                    # Giris noktasi
+    ├── App.jsx                     # Ana uygulama + state yonetimi
+    ├── defaultLogo.js              # Fallback logo (Base64)
     │
     ├── components/
-    │   ├── AppHeader.jsx                 # Ust baslik + dil/tema toggle
-    │   ├── AppFooter.jsx                 # TTECH copyright footer
-    │   ├── SignatureTab.jsx              # Imza olusturma sayfasi (ana sekme)
-    │   ├── BannerTab.jsx                 # Banner uretici sayfasi
-    │   ├── OutlookPreview.jsx            # Outlook benzeri canli onizleme
-    │   ├── ExportSection.jsx             # Kopyala / Indir / Adim-adim rehber
-    │   ├── DesignSwitcher.jsx            # Corporate / Classic tasarim gecisi
-    │   ├── ProgressBar.jsx               # Form tamamlanma ilerleme cubugu
-    │   ├── PromoBannerSection.jsx        # Promosyon banner ekleme alani
-    │   ├── SettingsModal.jsx             # Gelismis ayarlar modali
-    │   ├── ProfileDropdown.jsx           # Azure AD profil menusu
-    │   ├── LoginSplash.jsx               # Giris ekrani animasyonu
-    │   ├── ToastContainer.jsx            # Bildirim toast'lari
-    │   ├── ErrorBoundary.jsx             # React error boundary
-    │   │
-    │   └── ui/
-    │       ├── SearchableSelect.jsx      # Custom dropdown (gruplu, scroll)
-    │       ├── GlassCard.jsx             # Glassmorphic kart bileşeni
-    │       ├── FormField.jsx             # Label + input birlesik alan
-    │       ├── Btn.jsx                   # Stilize buton
-    │       ├── SectionTitle.jsx          # Ikon + baslik
-    │       ├── ToggleSwitch.jsx          # Acma/kapama anahtari
-    │       ├── ColorPicker.jsx           # Renk secici
-    │       ├── TabBtn.jsx                # Sekme butonu
-    │       ├── TyroLogo.jsx              # SVG logo bileşeni
-    │       └── BannerIcon.jsx            # Banner ikon bileşeni
+    │   ├── AppHeader.jsx           # Ust baslik + dil/tema toggle
+    │   ├── AppFooter.jsx           # TTECH copyright footer
+    │   ├── SignatureTab.jsx        # Imza olusturma sayfasi
+    │   ├── BannerTab.jsx           # Banner uretici
+    │   ├── OutlookPreview.jsx      # Outlook benzeri canli onizleme
+    │   ├── ExportSection.jsx       # Kopyala / Outlook / QR / Sifirla
+    │   ├── QrModal.jsx             # QR kartvizit modal
+    │   ├── DesignSwitcher.jsx      # Corporate / Classic gecisi
+    │   ├── ProgressBar.jsx         # Form tamamlanma ilerleme cubugu
+    │   ├── PromoBannerSection.jsx  # Promosyon banner alani
+    │   ├── SettingsModal.jsx       # Gelismis ayarlar modali
+    │   ├── ProfileDropdown.jsx     # Azure AD profil menusu
+    │   ├── LoginSplash.jsx         # Giris ekrani animasyonu
+    │   ├── ToastContainer.jsx      # Bildirim toast'lari
+    │   ├── ErrorBoundary.jsx       # React error boundary
+    │   └── ui/                     # Reusable UI kit (10+ bilesen)
     │
-    ├── constants/
-    │   ├── theme.js                      # Renk paleti, golge, border degerleri
-    │   ├── offices.js                    # 7 ofis: adres, SDN, Fax
-    │   ├── companies.js                  # 23 sirket: logo (Base64), grup
-    │   ├── designs.js                    # Tasarim varyantlari
-    │   ├── limits.js                     # Karakter ve boyut limitleri
-    │   ├── progressFields.js             # Ilerleme cubugu alan eslestirmeleri
-    │   └── bannerConfig.js               # Banner sablon konfigurasyonu
-    │
-    ├── hooks/
-    │   ├── useMsal.js                    # Azure AD / MSAL authentication hook
-    │   ├── useToast.js                   # Toast bildirim hook'u
-    │   └── useBannerCanvas.js            # Canvas tabanli banner uretim hook'u
-    │
-    ├── i18n/
-    │   └── translations.js              # TR/EN ceviri sozlugu
-    │
-    ├── icons/
-    │   └── svgDataUris.js               # Imza icindeki SVG ikonlar (data URI)
-    │
-    ├── signature/
-    │   ├── genSig.js                     # Classic imza HTML uretici
-    │   └── genSigCorporate.js            # Corporate (Wave Band) imza HTML uretici
-    │
-    ├── styles/
-    │   └── globalCss.js                  # Global CSS (keyframes, responsive)
-    │
-    └── utils/
-        ├── formatting.js                 # titleCase, telefon formatlama
-        └── debouncedColor.js             # Renk secici debounce yardimcisi
-```
-
----
-
-## Kurulum
-
-```bash
-# 1. Repoyu klonlayin
-git clone https://github.com/djeanker34/TYRO-SignSnap.git
-cd TYRO-SignSnap
-
-# 2. Bagimliliklari kurun
-npm install
-
-# 3. Ortam degiskenlerini yapilandirin
-#    Kok dizine .env dosyasi olusturun:
-#    VITE_CLIENT_ID=your-azure-app-client-id
-#    VITE_TENANT_ID=your-azure-tenant-id
-
-# 4. Gelistirme sunucusunu baslatın
-npm run dev
-
-# 5. Production build
-npm run build
+    ├── constants/                  # Tema, ofis, sirket, tasarim, limitler
+    ├── hooks/                      # useMsal, useToast, useBannerCanvas
+    ├── i18n/                       # TR/EN ceviri sozlugu
+    ├── icons/                      # SVG data URI ikonlar
+    ├── signature/                  # Imza HTML ureticileri (Classic + Corporate)
+    ├── styles/                     # Global CSS (keyframes, responsive)
+    └── utils/                      # Yardimci fonksiyonlar (vCard, titleCase, vb.)
 ```
 
 ---
 
 ## Imza Yapisi
 
-Her imza 3 bolumden olusur:
-
 ```
 ┌──────────┬───┬────────────────────────────────────────┐
 │          │   │ Ad Soyad                               │
 │  LOGO    │ | │ Unvan (TR) / Title (EN)                │
-│ (sirket) │ | │ Sirket Adi                              │
-│          │ | │ SDN: ... | Fax: ...                     │
-│          │ | │ GSM: ... | Email: ...                   │
-│          │   │ Adres                                   │
+│ (sirket) │ | │ Sirket Adi                             │
+│          │ | │ SDN: ... | Fax: ...                    │
+│          │ | │ GSM: ... | Email: ...                  │
+│          │   │ Adres                                  │
 ├──────────┴───┴────────────────────────────────────────┤
 │ [LinkedIn] [Twitter] [Facebook] [Instagram]  website  │
 └───────────────────────────────────────────────────────┘
 ```
 
-- **Sol:** Secilen sirketin logosu (Base64 gomulu)
-- **Orta:** Dikey accent cizgi ayirici + calisan bilgileri
-- **Alt:** Navy arka planli sosyal medya ikonu gridi + website
-
 ---
 
-## Temel Fonksiyonlar
-
-| Fonksiyon | Aciklama |
-|---|---|
-| `genSig()` | Classic tasarim HTML ciktisi |
-| `genSigCorporate()` | Corporate (Wave Band) tasarim HTML ciktisi |
-| `titleCase()` | Unvan metnini kurumsal standarda cevirir |
-| `useMsal()` | Azure AD ile oturum acma ve Graph API cagrilari |
-| `useBannerCanvas()` | Canvas uzerinde banner render + export |
-| `useToast()` | Bildirim gosterme/gizleme yonetimi |
-| `effectiveStg` | Sirket secimini logo ile birlestiren derived state |
-| `doCopy()` | DOM-based rich HTML kopyalama (Outlook uyumlu) |
-
----
-
-## Desteklenen Sirketler
+## Desteklenen Sirketler (23)
 
 | Grup | Sirketler |
 |---|---|
@@ -216,15 +194,30 @@ Her imza 3 bolumden olusur:
 
 ---
 
-## Gelistirici Notlari
+## Linkler
 
-- `lucide-react@0.263.1` — Eski versiyon; bazi yeni ikonlar (Wand2, Sparkles, Building2 vb.) mevcut degil
-- Imza HTML'i tamamen inline style kullanir (e-posta istemci uyumlulugu icin)
-- Logolar Base64 olarak gomulur, harici bagimliligi yoktur
-- `ClipboardItem` API desteklenmedigi icin DOM-based (`createRange` + `execCommand`) kopyalama kullanilir
-- Dark mode toggle mevcut ancak imza ciktisi her zaman acik tema uzerinedir
+| | Link |
+|---|---|
+| Live Demo | [tyrosign.github.io](https://tyrosign.github.io/) |
+| Source Code | [github.com/djeanker34/TYRO-SignSnap](https://github.com/djeanker34/TYRO-SignSnap) |
+| Deploy Repo | [github.com/tyrosign/tyrosign.github.io](https://github.com/tyrosign/tyrosign.github.io) |
+| Tiryaki Agro | [www.tiryaki.com.tr](https://www.tiryaki.com.tr) |
+| TTECH | [www.ttech.com.tr](https://www.ttech.com.tr) |
 
 ---
 
-**Powered by TTECH Business Solutions**
-© 2026 Tiryaki Agro — [www.tiryaki.com.tr](https://www.tiryaki.com.tr)
+## Gelistirici Notlari
+
+- Imza HTML'i tamamen **inline style** kullanir (e-posta istemci uyumlulugu)
+- Logolar **Base64** olarak gomulur, harici bagimliligi yoktur
+- DOM-based kopyalama (`createRange` + `execCommand`) — ClipboardItem destegi olmayan ortamlar icin
+- Dark mode toggle mevcut, imza ciktisi her zaman acik tema uzerinedir
+- `lucide-react@0.263.1` — Bazi yeni ikonlar (Wand2, Sparkles vb.) bu versiyonda mevcut degil
+- QR kartvizit Canvas API ile render edilir, indirilen PNG modal onizleme ile birebir eslesir
+
+---
+
+<p align="center">
+  <strong>Powered by TTECH Business Solutions</strong><br/>
+  &copy; 2026 Tiryaki Agro
+</p>

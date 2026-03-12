@@ -8,8 +8,6 @@
 ![Glassmorphism](https://img.shields.io/badge/Design-Glassmorphism-blue)
 ![License](https://img.shields.io/badge/License-Private-red)
 
-> **Live:** [https://djeanker34.github.io/TYRO-SignSnap](https://djeanker34.github.io/TYRO-SignSnap)
-
 ---
 
 ## Ozellikler

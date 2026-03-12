@@ -45,7 +45,7 @@ export default function App() {
     bannerAccentColor: '',
     designId: 'corporate',
   });
-  const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '', companyId: 'tiryaki-agro' });
+  const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '', companyId: 'tiryaki-agro', logoPosition: 'top-right', showLogo: true });
   const [sigBanner, setSigBanner] = useState({ enabled: false, base64: '', width: 0, height: 0, linkUrl: '', alt: '' });
   const [profileOpen, setProfileOpen] = useState(false);
   const [designOpen, setDesignOpen] = useState(false);

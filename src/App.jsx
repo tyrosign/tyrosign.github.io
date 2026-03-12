@@ -56,7 +56,7 @@ export default function App() {
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();
-  const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, applySignature } = useMsal({ toast, lang, setForm });
+  const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout } = useMsal({ toast, lang, setForm });
 
   // ─── Derived ───
   const L = useMemo(() => lang === 'tr' ? TR : EN, [lang]);
@@ -220,7 +220,7 @@ export default function App() {
             designOpen={designOpen} setDesignOpen={setDesignOpen}
             sigBanner={sigBanner} setSigBanner={setSigBanner}
             bannerFileRef={bannerFileRef} procBanner={procBanner}
-            applySignature={applySignature} msalAccount={msalAccount} toast={toast}
+            msalAccount={msalAccount} toast={toast}
           />
         )}
 

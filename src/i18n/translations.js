@@ -44,10 +44,7 @@ export const TR = {
   proBannerLink: 'Tıklama Linki (opsiyonel)', proBannerAlt: 'Alternatif Metin',
   proBannerRemove: 'Banneri Kaldır', proBannerEnabled: 'Promosyon Banneri Ekle',
   qrGen: 'QR Üret', qrTitle: 'Kartvizit QR Kodu', qrDl: 'QR İndir', qrScan: 'Telefonunuzla okutarak rehbere kaydedin',
-  olApply: 'Outlook\'a Uygula', olApplying: 'Uygulanıyor...',
-  olConfirm: 'Outlook imza ayarlarınız otomatik güncellenecektir. Emin misiniz?',
-  olOk: 'İmzanız Outlook\'a başarıyla uygulandı!', olFail: 'İmza uygulanamadı. Lütfen tekrar deneyin.',
-  olNoLogin: 'Önce Microsoft hesabınızla giriş yapmalısınız.',
+  olOpen: 'Outlook Ayarlar',
 };
 
 export const EN = {
@@ -96,8 +93,5 @@ export const EN = {
   proBannerLink: 'Click URL (optional)', proBannerAlt: 'Alt Text',
   proBannerRemove: 'Remove Banner', proBannerEnabled: 'Add Promotional Banner',
   qrGen: 'Generate QR', qrTitle: 'Business Card QR Code', qrDl: 'Download QR', qrScan: 'Scan with your phone to save contact',
-  olApply: 'Apply to Outlook', olApplying: 'Applying...',
-  olConfirm: 'Your Outlook signature settings will be automatically updated. Are you sure?',
-  olOk: 'Signature successfully applied to Outlook!', olFail: 'Failed to apply signature. Please try again.',
-  olNoLogin: 'Please sign in with your Microsoft account first.',
+  olOpen: 'Outlook Settings',
 };

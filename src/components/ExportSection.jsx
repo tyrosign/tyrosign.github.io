@@ -24,7 +24,7 @@ const btnBase = {
   transition: 'all 0.3s ease', cursor: 'pointer', whiteSpace: 'nowrap',
 };
 
-const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onOutlookApply, olApplying, msalAccount, showSteps, setShowSteps, L }) => (
+const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onOutlookOpen, msalAccount, showSteps, setShowSteps, L }) => (
   <>
     {/* All 4 buttons in one row */}
     <div className="export-btns" style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.6rem' }}>
@@ -44,23 +44,21 @@ const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onOut
         {copied ? L.cpd : L.cp}
       </button>
 
-      {/* 2. Outlook'a Uygula (sadece giriş yapılmışsa) */}
+      {/* 2. Outlook Ayarlarını Aç (imzayı kopyalar + Outlook Web açar) */}
       {msalAccount && (
         <button
-          onClick={onOutlookApply} disabled={!hasData || olApplying}
+          onClick={onOutlookOpen} disabled={!hasData}
           style={{
             ...btnBase,
-            background: olApplying
-              ? `linear-gradient(135deg, #0078d4aa, #106ebeaa)`
-              : `linear-gradient(135deg, #0078d4, #106ebe)`,
+            background: `linear-gradient(135deg, #0078d4, #106ebe)`,
             color: '#fff',
             opacity: hasData ? 1 : 0.5,
-            cursor: (hasData && !olApplying) ? 'pointer' : 'not-allowed',
+            cursor: hasData ? 'pointer' : 'not-allowed',
             boxShadow: hasData ? '0 4px 12px rgba(0,120,212,0.25)' : 'none',
           }}
         >
           <OutlookIcon />
-          {olApplying ? L.olApplying : L.olApply}
+          {L.olOpen}
         </button>
       )}
 

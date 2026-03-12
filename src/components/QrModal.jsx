@@ -1,6 +1,6 @@
-import { memo, useEffect, useRef, useCallback } from 'react';
+import { memo, useEffect, useRef, useCallback, useState } from 'react';
 import QRCode from 'qrcode';
-import { X, Download } from 'lucide-react';
+import { X, Download, Copy, Check } from 'lucide-react';
 import { C } from '../constants/theme';
 import { generateVCard } from '../utils/generateVCard';
 import Btn from './ui/Btn';
@@ -156,8 +156,9 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-const QrModal = memo(({ open, onClose, form, office, stg, company, L }) => {
+const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) => {
   const canvasRef = useRef(null);
+  const [copyOk, setCopyOk] = useState(false);
 
   // Generate QR code
   useEffect(() => {
@@ -171,6 +172,9 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, L }) => {
     }).catch(() => {});
   }, [open, form, office, stg, company]);
 
+  // Reset copy state when modal opens
+  useEffect(() => { if (open) setCopyOk(false); }, [open]);
+
   // Download styled card
   const handleDownload = useCallback(async () => {
     const qrCanvas = canvasRef.current;
@@ -183,6 +187,25 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, L }) => {
     link.href = cardCanvas.toDataURL('image/png');
     link.click();
   }, [form, stg, company]);
+
+  // Copy styled card to clipboard
+  const handleCopy = useCallback(async () => {
+    const qrCanvas = canvasRef.current;
+    if (!qrCanvas) return;
+    try {
+      const qrDataUrl = qrCanvas.toDataURL('image/png');
+      const cardCanvas = await drawCardCanvas(qrDataUrl, form, stg, company);
+      const blob = await new Promise(resolve => cardCanvas.toBlob(resolve, 'image/png'));
+      if (blob && navigator.clipboard && navigator.clipboard.write) {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        setCopyOk(true);
+        if (toast) toast(L.qrCopied);
+        setTimeout(() => setCopyOk(false), 2500);
+      }
+    } catch (err) {
+      console.warn('QR copy failed:', err);
+    }
+  }, [form, stg, company, toast, L]);
 
   // Escape to close
   useEffect(() => {
@@ -311,8 +334,9 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, L }) => {
           )}
         </div>
 
-        {/* Download */}
-        <div>
+        {/* Actions */}
+        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+          <Btn onClick={handleCopy} icon={copyOk ? Check : Copy}>{copyOk ? '✓' : L.qrCopy}</Btn>
           <Btn onClick={handleDownload} icon={Download}>{L.qrDl}</Btn>
         </div>
       </div>

@@ -139,6 +139,7 @@ const SignatureTab = memo(({
         office={office}
         stg={stg}
         company={company}
+        toast={toast}
         L={L}
       />
     </div>

@@ -158,9 +158,10 @@ function roundRect(ctx, x, y, w, h, r) {
 
 const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) => {
   const canvasRef = useRef(null);
+  const cardRef = useRef(null); // Pre-rendered card canvas
   const [copyOk, setCopyOk] = useState(false);
 
-  // Generate QR code
+  // Generate QR code + pre-render card canvas
   useEffect(() => {
     if (!open || !canvasRef.current) return;
     const vcard = generateVCard(form, office, stg, company);
@@ -169,6 +170,10 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
       margin: 2,
       color: { dark: NAVY, light: '#ffffff' },
       errorCorrectionLevel: 'M',
+    }).then(() => {
+      // Pre-render the styled card so copy is instant
+      const qrDataUrl = canvasRef.current.toDataURL('image/png');
+      drawCardCanvas(qrDataUrl, form, stg, company).then(c => { cardRef.current = c; });
     }).catch(() => {});
   }, [open, form, office, stg, company]);
 
@@ -176,36 +181,43 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
   useEffect(() => { if (open) setCopyOk(false); }, [open]);
 
   // Download styled card
-  const handleDownload = useCallback(async () => {
-    const qrCanvas = canvasRef.current;
-    if (!qrCanvas) return;
-    const qrDataUrl = qrCanvas.toDataURL('image/png');
-    const cardCanvas = await drawCardCanvas(qrDataUrl, form, stg, company);
+  const handleDownload = useCallback(() => {
+    const card = cardRef.current;
+    if (!card) return;
     const link = document.createElement('a');
     const name = [form.firstName, form.lastName].filter(Boolean).join('-') || 'qr';
     link.download = name.toLowerCase() + '-business-card.png';
-    link.href = cardCanvas.toDataURL('image/png');
+    link.href = card.toDataURL('image/png');
     link.click();
-  }, [form, stg, company]);
+  }, [form]);
 
-  // Copy styled card to clipboard
-  const handleCopy = useCallback(async () => {
-    const qrCanvas = canvasRef.current;
-    if (!qrCanvas) return;
+  // Copy styled card to clipboard — uses pre-rendered canvas for instant user-gesture compliance
+  const handleCopy = useCallback(() => {
+    const card = cardRef.current;
+    if (!card) return;
     try {
-      const qrDataUrl = qrCanvas.toDataURL('image/png');
-      const cardCanvas = await drawCardCanvas(qrDataUrl, form, stg, company);
-      const blob = await new Promise(resolve => cardCanvas.toBlob(resolve, 'image/png'));
-      if (blob && navigator.clipboard && navigator.clipboard.write) {
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      // ClipboardItem with lazy blob promise — keeps user gesture context
+      const item = new ClipboardItem({
+        'image/png': new Promise((resolve, reject) => {
+          card.toBlob(blob => {
+            if (blob) resolve(blob);
+            else reject(new Error('toBlob failed'));
+          }, 'image/png');
+        }),
+      });
+      navigator.clipboard.write([item]).then(() => {
         setCopyOk(true);
         if (toast) toast(L.qrCopied);
         setTimeout(() => setCopyOk(false), 2500);
-      }
+      }).catch(err => {
+        console.warn('Clipboard write failed:', err);
+        if (toast) toast('Kopyalama başarısız — tarayıcı izni gerekebilir');
+      });
     } catch (err) {
       console.warn('QR copy failed:', err);
+      if (toast) toast('Kopyalama desteklenmiyor');
     }
-  }, [form, stg, company, toast, L]);
+  }, [toast, L]);
 
   // Escape to close
   useEffect(() => {

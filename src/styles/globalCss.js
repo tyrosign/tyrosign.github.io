@@ -65,8 +65,8 @@ export const GLOBAL_CSS = `
     .app-header-nav { order: 3!important; width: 100%!important; justify-content: center!important; }
     .app-header-lang { order: 2!important; margin-left: auto!important; }
     .app-header-auth { order: 3!important; }
-    .app-header-lang button { padding: 0.25rem 0.5rem!important; font-size: 0.6rem!important; min-height: 28px!important; }
-    .app-main { padding: 0.65rem 0.75rem!important; }
+    .app-header-lang button { padding: 0.2rem 0.4rem!important; font-size: 0.55rem!important; min-height: 24px!important; min-width: 28px!important; border-radius: 6px!important; }
+    .app-main { padding: 0.65rem 0.75rem 2rem!important; }
     .sig-grid { grid-template-columns: 1fr!important; gap: 0.75rem!important; }
     .sig-grid > div { animation: fadeIn 0.3s ease-out!important; }
     .sig-sec-personal { order: 1!important; }
@@ -85,6 +85,8 @@ export const GLOBAL_CSS = `
     .glass-card-inner { padding: 0.75rem 0.85rem!important; }
     .export-btns { flex-direction: column!important; }
     .export-btns button { width: 100%!important; justify-content: center!important; }
+    .sig-html-wrap > div { zoom: 0.52!important; }
+    .sig-body { padding: 0.5rem!important; overflow: hidden!important; }
   }
   @media(max-width:480px) {
     .app-header-nav .nav-tabs-inner { gap: 0!important; }

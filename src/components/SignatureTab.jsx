@@ -85,7 +85,7 @@ const SignatureTab = memo(({
             <div style={{ height: 1, background: C.borderSub, margin: '0.5rem 0 0.6rem' }} />
 
             <SectionTitle icon={Phone}>{L.ci}</SectionTitle>
-            <FormField label={L.gsm} value={form.gsm} onChange={e => uf('gsm', e.target.value)} placeholder="0545 821 38 08" />
+            <FormField label={L.gsm} value={form.gsm} onChange={e => uf('gsm', e.target.value)} placeholder="0530 914 45 91" />
             <FormField label={L.email} value={form.email} onChange={e => uf('email', e.target.value)} placeholder="cenk.sayli@tiryaki.com.tr" required />
             <div style={{ marginBottom: '0.4rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.7rem', fontWeight: 600, color: C.text2, marginBottom: '0.25rem' }}>

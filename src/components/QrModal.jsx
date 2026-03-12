@@ -9,34 +9,45 @@ const NAVY = '#1e3a5f';
 const GOLD = '#c8922a';
 const BLUE = '#0098d4';
 
+function titleCase(str) {
+  if (!str) return '';
+  return str.replace(/\S+/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+
+function formatName(form) {
+  return [titleCase(form.firstName), titleCase(form.lastName)].filter(Boolean).join(' ') || '—';
+}
+
 /**
- * Draws a vertical business card: QR top, info below
+ * Draws a vertical business card: QR top, info below — matches modal preview
  */
-function drawCardCanvas(qrDataUrl, form, stg, company) {
+async function drawCardCanvas(qrDataUrl, form, stg, company) {
   const W = 420;
   const qrSize = 220;
-  const pad = 40;
+  const qrPad = 12;
+  const qrBoxSize = qrSize + qrPad * 2;
 
-  // Pre-calculate height based on content
-  const fullName = [form.firstName, (form.lastName || '').toUpperCase()].filter(Boolean).join(' ') || '—';
+  const fullName = formatName(form);
   const companyName = (company && company.name) || stg.companyName || 'Tiryaki Agro';
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' / ');
 
-  let contentH = 0;
-  contentH += 6;            // top bar
-  contentH += 30;           // top padding
-  contentH += qrSize + 24;  // QR + border
-  contentH += 24;           // gap
-  contentH += 28;           // name
-  contentH += 14;           // divider + gap
-  if (titleText) contentH += 22;
-  contentH += 22;           // company
-  if (form.gsm) contentH += 20;
-  if (form.email) contentH += 20;
-  contentH += 20;           // bottom hint
-  contentH += 4;            // bottom bar
+  // Height calc — matches modal spacing exactly
+  let H = 0;
+  H += 6;              // top navy bar
+  H += 24;             // padding above QR
+  H += qrBoxSize;      // QR + bg padding
+  H += 20;             // gap QR → name
+  H += 26;             // name line
+  H += 4;              // name → divider gap
+  H += 3;              // divider
+  H += 8;              // divider → company gap
+  H += 18;             // company
+  if (titleText) H += 18;
+  if (form.gsm) H += 18;
+  if (form.email) H += 18;
+  H += 24;             // bottom hint
+  H += 4;              // bottom gold bar
 
-  const H = contentH;
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;
@@ -54,74 +65,80 @@ function drawCardCanvas(qrDataUrl, form, stg, company) {
   ctx.fillStyle = GOLD;
   ctx.fillRect(0, H - 4, W, 4);
 
-  let y = 36;
+  ctx.textAlign = 'center';
+  let y = 6 + 24; // after top bar + padding
 
-  // QR code — centered
-  const qrX = (W - qrSize) / 2;
-
-  // QR background
+  // QR background box
+  const qrBoxX = (W - qrBoxSize) / 2;
   ctx.fillStyle = '#f8f9fc';
   ctx.beginPath();
-  roundRect(ctx, qrX - 12, y - 12, qrSize + 24, qrSize + 24, 12);
+  roundRect(ctx, qrBoxX, y, qrBoxSize, qrBoxSize, 10);
   ctx.fill();
   ctx.strokeStyle = '#e2e8f0';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  roundRect(ctx, qrX - 12, y - 12, qrSize + 24, qrSize + 24, 12);
+  roundRect(ctx, qrBoxX, y, qrBoxSize, qrBoxSize, 10);
   ctx.stroke();
 
-  // Draw QR
-  const qrImg = new window.Image();
-  qrImg.src = qrDataUrl;
-  ctx.drawImage(qrImg, qrX, y, qrSize, qrSize);
+  // Draw QR — wait for image to load
+  const qrImgX = qrBoxX + qrPad;
+  const qrImgY = y + qrPad;
+  await new Promise((resolve) => {
+    const qrImg = new window.Image();
+    qrImg.onload = () => {
+      ctx.drawImage(qrImg, qrImgX, qrImgY, qrSize, qrSize);
+      resolve();
+    };
+    qrImg.src = qrDataUrl;
+  });
 
-  y += qrSize + 30;
+  y += qrBoxSize + 20; // gap after QR box
 
-  // Name — centered
+  // Name
   ctx.fillStyle = NAVY;
-  ctx.font = 'bold 22px "Plus Jakarta Sans", "Inter", Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(fullName, W / 2, y);
-  y += 14;
+  ctx.font = 'bold 20px "Plus Jakarta Sans", "Inter", Arial, sans-serif';
+  ctx.fillText(fullName, W / 2, y + 16);
+  y += 26 + 4; // name height + gap
 
   // Divider
   ctx.fillStyle = BLUE;
   ctx.fillRect(W / 2 - 25, y, 50, 3);
-  y += 16;
+  y += 3 + 8; // divider + gap
 
-  // Company + Title
+  // Company
   ctx.fillStyle = NAVY;
-  ctx.font = 'bold 14px "Inter", Arial, sans-serif';
-  ctx.fillText(companyName, W / 2, y);
-  y += 20;
+  ctx.font = 'bold 13px "Inter", Arial, sans-serif';
+  ctx.fillText(companyName, W / 2, y + 12);
+  y += 18;
 
+  // Title
   if (titleText) {
     ctx.fillStyle = '#666666';
-    ctx.font = '12px "Inter", Arial, sans-serif';
-    ctx.fillText(titleText, W / 2, y);
-    y += 20;
+    ctx.font = '11px "Inter", Arial, sans-serif';
+    ctx.fillText(titleText, W / 2, y + 11);
+    y += 18;
   }
 
   // GSM
   if (form.gsm) {
     ctx.fillStyle = '#777777';
     ctx.font = '11px "Inter", Arial, sans-serif';
-    ctx.fillText('📱 ' + form.gsm, W / 2, y);
-    y += 20;
+    ctx.fillText('📱 ' + form.gsm, W / 2, y + 11);
+    y += 18;
   }
 
   // Email
   if (form.email) {
     ctx.fillStyle = '#888888';
     ctx.font = '11px "Inter", Arial, sans-serif';
-    ctx.fillText('✉ ' + form.email, W / 2, y);
-    y += 20;
+    ctx.fillText('✉ ' + form.email, W / 2, y + 11);
+    y += 18;
   }
 
   // Bottom hint
   ctx.fillStyle = '#bbbbbb';
   ctx.font = 'italic 9px "Inter", Arial, sans-serif';
-  ctx.fillText('Scan QR to save contact', W / 2, H - 14);
+  ctx.fillText('Scan QR to save contact', W / 2, H - 12);
 
   return canvas;
 }
@@ -155,11 +172,11 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, L }) => {
   }, [open, form, office, stg, company]);
 
   // Download styled card
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     const qrCanvas = canvasRef.current;
     if (!qrCanvas) return;
     const qrDataUrl = qrCanvas.toDataURL('image/png');
-    const cardCanvas = drawCardCanvas(qrDataUrl, form, stg, company);
+    const cardCanvas = await drawCardCanvas(qrDataUrl, form, stg, company);
     const link = document.createElement('a');
     const name = [form.firstName, form.lastName].filter(Boolean).join('-') || 'qr';
     link.download = name.toLowerCase() + '-business-card.png';
@@ -177,7 +194,7 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, L }) => {
 
   if (!open) return null;
 
-  const fullName = [form.firstName, form.lastName].filter(Boolean).join(' ');
+  const fullName = formatName(form);
   const companyName = (company && company.name) || 'Tiryaki Agro';
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' · ');
 

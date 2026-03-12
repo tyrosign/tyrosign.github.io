@@ -29,14 +29,14 @@ const OutlookPreview = memo(({ hasData, sigHTML, L, lang }) => (
         <span style={{ color: C.text2 }}>ali.yilmaz@tiryaki.com.tr</span>
       </div>
     </div>
-    <div style={{ padding: '0.8rem 1rem' }}>
+    <div className="sig-body" style={{ padding: '0.8rem 1rem', overflow: 'hidden' }}>
       {hasData && (
         <div style={{ marginBottom: '1rem', fontSize: '0.75rem', color: C.text1, lineHeight: 1.6 }}>
           <p>{L.mockBody}</p>
           <p style={{ color: C.text2, marginTop: '0.2rem' }}>{L.mockBodyLine}</p>
         </div>
       )}
-      <div style={{ minHeight: 80, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+      <div className="sig-html-wrap" style={{ minHeight: 80 }}>
         {hasData ? (
           <div dangerouslySetInnerHTML={{ __html: sigHTML }} />
         ) : (

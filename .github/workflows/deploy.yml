@@ -28,6 +28,9 @@ jobs:
       - run: npm ci
 
       - run: npm run build
+        env:
+          VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
+          VITE_TENANT_ID: ${{ secrets.VITE_TENANT_ID }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

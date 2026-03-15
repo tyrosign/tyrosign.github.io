@@ -48,6 +48,32 @@ export const GLOBAL_CSS = `
   ::-webkit-scrollbar-thumb { background: rgba(30,58,95,0.12); border-radius: 3px; }
   ::selection { background: ${C.accent}30; }
 
+  /* ═══ TOOLTIP (CSS-only) ═══ */
+  .tip-wrap { position: relative; }
+  .tip-wrap .tip-box {
+    visibility: hidden; opacity: 0;
+    position: absolute; bottom: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: rgba(20,30,48,0.92); color: #fff;
+    font-size: 0.6rem; font-weight: 500; line-height: 1.45;
+    padding: 0.45rem 0.7rem; border-radius: 9px;
+    white-space: normal; width: max-content; max-width: 220px;
+    pointer-events: none; z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    font-family: 'Inter',sans-serif; text-align: center; letter-spacing: -0.01em;
+  }
+  .tip-wrap .tip-box::after {
+    content: ''; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: rgba(20,30,48,0.92);
+  }
+  .tip-wrap:hover .tip-box {
+    visibility: visible; opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   /* ═══ GLASS CARD HOVER (CSS-only, no React re-render) ═══ */
   .glass-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
   .glass-card:hover { box-shadow: ${C.shadowLg}; transform: translateY(-1px); border-color: ${C.accent}25; }
@@ -58,6 +84,7 @@ export const GLOBAL_CSS = `
     .sig-right { position: relative!important; top: auto!important; }
   }
   @media(max-width:768px) {
+    .tip-wrap .tip-box { display: none!important; }
     .app-header { padding: 0 0.75rem!important; height: auto!important; min-height: 48px!important; flex-wrap: wrap!important; gap: 0.3rem!important; padding-top: 0.4rem!important; padding-bottom: 0.4rem!important; }
     .app-header-logo { display: none!important; }
     .app-header-title { font-size: 0.82rem!important; }

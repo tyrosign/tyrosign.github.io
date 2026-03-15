@@ -56,6 +56,11 @@ export const TR = {
   bcRemoveProfile: 'Profili kaldır',
   bcLabelGSM: 'GSM', bcLabelEmail: 'E-Posta', bcLabelAddress: 'Adres', bcLabelLocation: 'Konum',
   bcCardSuffix: 'Kartvizit', bcDigitalCardText: 'dijital kartviziti',
+  tipCopy: 'İmzanızı panoya kopyalar, Outlook veya Gmail\'e yapıştırabilirsiniz',
+  tipOutlook: 'İmzayı kopyalar ve Outlook Web imza ayarlarını açar',
+  tipQr: 'Rehbere ekleme QR kodu oluşturur, telefon ile okutulabilir',
+  tipBc: 'Dijital kartvizit oluşturur — görsel, HTML ve paylaşım seçenekleri',
+  tipReset: 'Tüm form alanlarını temizler ve sıfırdan başlatır',
 };
 
 export const EN = {
@@ -116,4 +121,9 @@ export const EN = {
   bcRemoveProfile: 'Remove profile',
   bcLabelGSM: 'Phone', bcLabelEmail: 'Email', bcLabelAddress: 'Address', bcLabelLocation: 'Location',
   bcCardSuffix: 'Business Card', bcDigitalCardText: 'digital business card',
+  tipCopy: 'Copies your signature to clipboard — paste it into Outlook or Gmail',
+  tipOutlook: 'Copies signature and opens Outlook Web signature settings',
+  tipQr: 'Generates a QR code for adding contact info to phone',
+  tipBc: 'Creates a digital business card — image, HTML and sharing options',
+  tipReset: 'Clears all form fields and starts fresh',
 };

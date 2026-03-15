@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useCallback, lazy, Suspense } from 'react';
+import { useState, useRef, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
 import DEFAULT_LOGO_BASE64 from './defaultLogo.js';
 import { C } from './constants/theme';
 import { OFFICES } from './constants/offices';
@@ -22,7 +22,9 @@ import ToastContainer from './components/ToastContainer';
 
 export default function App() {
   // ─── State ───
-  const [lang, setLang] = useState('tr');
+  const [lang, _setLang] = useState(() => localStorage.getItem('tyro-lang') || 'tr');
+  // Synchronous localStorage write — prevents loss during MSAL loginRedirect
+  const setLang = useCallback((l) => { localStorage.setItem('tyro-lang', l); _setLang(l); }, []);
   const [tab, setTab] = useState('signature');
   const [copied, setCopied] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
@@ -53,6 +55,9 @@ export default function App() {
   const fRef = useRef(null);
   const canvasRef = useRef(null);
   const bannerFileRef = useRef(null);
+
+  // ─── Persist lang ───
+  useEffect(() => { localStorage.setItem('tyro-lang', lang); }, [lang]);
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();

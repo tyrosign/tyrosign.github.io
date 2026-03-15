@@ -21,6 +21,7 @@
   <img src="https://img.shields.io/badge/Azure_AD-MSAL_v2-0078D4?style=flat-square&logo=microsoftazure&logoColor=white" alt="MSAL" />
   <img src="https://img.shields.io/badge/Microsoft_Graph-API-00BCF2?style=flat-square&logo=microsoft&logoColor=white" alt="Graph API" />
   <img src="https://img.shields.io/badge/QR_vCard-3.0-c8922a?style=flat-square" alt="vCard QR" />
+  <img src="https://img.shields.io/badge/Business_Card-Canvas_PNG-d4760a?style=flat-square" alt="Business Card" />
   <img src="https://img.shields.io/badge/Design-Glassmorphism-blue?style=flat-square" alt="Glassmorphism" />
   <img src="https://img.shields.io/badge/i18n-TR_|_EN-green?style=flat-square" alt="i18n" />
   <img src="https://img.shields.io/badge/License-Private-red?style=flat-square" alt="License" />
@@ -41,6 +42,13 @@
 - **Title Case Formatter** — Kucuk/buyuk harfle yazilan isimleri ve unvanlari otomatik duzeltir
 - **Iki Dil** — Turkce ve Ingilizce arayuz
 
+### Dijital Kartvizit
+- **Canvas PNG Render** — Profesyonel kartvizit gorseli (Retina 2x cozunurluk)
+- **Profil Fotografi** — Kartvizite kisisel profil fotografi yukleme
+- **HTML Dijital Kart** — Indirilebilir HTML formatinda interaktif kartvizit
+- **Paylasim & Kopyalama** — Web Share API ile paylasim, panoya kopyalama
+- **QR Kod Entegrasyonu** — Kartvizit uzerinde vCard QR kodu
+
 ### QR Kartvizit
 - **vCard 3.0 QR Kodu** — Form bilgilerinden (ad, unvan, sirket, telefon, email, adres, LinkedIn) vCard QR kodu uretir
 - **Kartvizit Onizleme** — Glassmorphic modal icinde canli onizleme
@@ -55,7 +63,9 @@
 ### Disa Aktarma
 - **Rich HTML Kopyalama** — Outlook Desktop & Web uyumlu zengin metin kopyalama
 - **Outlook'a Uygula** — Graph API ile imzayi direkt Outlook'a yazma (Azure AD oturumu gerektirir)
-- **QR Kartvizit Uret** — vCard QR kodu olustur ve PNG olarak indir
+- **QR Kod Uret** — vCard QR kodu olustur ve PNG olarak indir
+- **Dijital Kartvizit** — Canvas PNG, HTML kart ve paylasim secenekleri
+- **Tooltip Rehberi** — Her butonun uzerine geldiginde islevini aciklayan bilgi baloncugu
 - **Adim Adim Rehber** — Outlook'a nasil yapistirildigi aciklanir
 
 ---
@@ -80,13 +90,19 @@
 | Navy | `#1e3a5f` | Primary — basliklar, logo, arka plan |
 | Gold | `#c8922a` | Accent — butonlar, vurgular |
 | Blue | `#0098d4` | Divider — ayirici cizgiler, linkler |
+| Lime | `#8dc63f` | QR butonu |
+| Turkuaz | `#00b4d8` | Outlook butonu |
+| Turuncu | `#d4760a` | Kartvizit butonu |
 
 - **UI:** Glassmorphism — `backdrop-filter: blur`, saydam katmanlar, hafif golge
 - **Animasyonlar:** `fadeIn`, `slideInLeft`, `slideInRight`, `pulse`, `signing` keyframes
 - **Responsive:** 768px ve 480px breakpoint'leri ile tam mobil uyum
+- **Tooltip:** CSS-only hover tooltip sistemi — butonlara bilgi baloncugu
 
 ### Mimari
 - **15+ Modular Bilesen** — Her biri `React.memo()` ile optimize
+- **Lazy Loading** — Modaller (QR, Kartvizit, Ayarlar) `React.lazy()` + Suspense
+- **Code Splitting** — Vite `manualChunks` ile vendor ayristirma (react, qrcode)
 - **Custom Hooks** — `useMsal`, `useToast`, `useBannerCanvas`
 - **Centralized Constants** — Tema, ofis, sirket, tasarim ve limitler ayri dosyalarda
 - **Derived State** — `useMemo` ile `effectiveStg`, `company`, `progress`
@@ -130,6 +146,9 @@ TYRO-SignSnap/
 ├── CLAUDE.md
 ├── README.md
 │
+├── public/
+│   └── bg-card.jpg               # Kartvizit arka plan gorseli
+│
 └── src/
     ├── main.jsx                    # Giris noktasi
     ├── App.jsx                     # Ana uygulama + state yonetimi
@@ -141,8 +160,9 @@ TYRO-SignSnap/
     │   ├── SignatureTab.jsx        # Imza olusturma sayfasi
     │   ├── BannerTab.jsx           # Banner uretici
     │   ├── OutlookPreview.jsx      # Outlook benzeri canli onizleme
-    │   ├── ExportSection.jsx       # Kopyala / Outlook / QR / Sifirla
+    │   ├── ExportSection.jsx       # Kopyala / Outlook / QR / Kartvizit / Temizle
     │   ├── QrModal.jsx             # QR kartvizit modal
+    │   ├── BusinessCardModal.jsx   # Dijital kartvizit modal (Canvas + HTML)
     │   ├── DesignSwitcher.jsx      # Corporate / Classic gecisi
     │   ├── ProgressBar.jsx         # Form tamamlanma ilerleme cubugu
     │   ├── PromoBannerSection.jsx  # Promosyon banner alani
@@ -158,7 +178,7 @@ TYRO-SignSnap/
     ├── i18n/                       # TR/EN ceviri sozlugu
     ├── icons/                      # SVG data URI ikonlar
     ├── signature/                  # Imza HTML ureticileri (Classic + Corporate)
-    ├── styles/                     # Global CSS (keyframes, responsive)
+    ├── styles/                     # Global CSS (keyframes, responsive, tooltip)
     └── utils/                      # Yardimci fonksiyonlar (vCard, titleCase, vb.)
 ```
 
@@ -214,6 +234,8 @@ TYRO-SignSnap/
 - Dark mode toggle mevcut, imza ciktisi her zaman acik tema uzerinedir
 - `lucide-react@0.263.1` — Bazi yeni ikonlar (Wand2, Sparkles vb.) bu versiyonda mevcut degil
 - QR kartvizit Canvas API ile render edilir, indirilen PNG modal onizleme ile birebir eslesir
+- Dijital kartvizit 3 render target: React onizleme, Canvas PNG, HTML download
+- Kartvizit arka plani lazy-loaded (`public/bg-card.jpg`) — bundle boyutundan 710KB tasarruf
 
 ---
 

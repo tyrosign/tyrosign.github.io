@@ -3,6 +3,8 @@
  * Form + office + company verilerinden vCard string üretir.
  * QR okutulduğunda telefon rehberine kişi ekleme ekranı açılır.
  */
+import { formatGSM } from './formatting';
+
 export function generateVCard(form, office, stg, company) {
   const lines = [
     'BEGIN:VCARD',
@@ -28,7 +30,7 @@ export function generateVCard(form, office, stg, company) {
 
   // Mobile (GSM)
   if (form.gsm) {
-    lines.push('TEL;TYPE=CELL:' + form.gsm.replace(/\s/g, ''));
+    lines.push('TEL;TYPE=CELL:' + formatGSM(form.gsm).replace(/\s/g, ''));
   }
 
   // Office phone (SDN)

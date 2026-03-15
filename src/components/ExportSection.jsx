@@ -24,33 +24,42 @@ const btnBase = {
   transition: 'all 0.3s ease', cursor: 'pointer', whiteSpace: 'nowrap',
 };
 
-const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onOutlookOpen, msalAccount, showSteps, setShowSteps, L }) => (
+const CardIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <circle cx="8" cy="11" r="2" />
+    <path d="M14 9h4M14 13h3" />
+    <path d="M5 18c0-2 1.5-3 3-3s3 1 3 3" />
+  </svg>
+);
+
+const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcClick, onOutlookOpen, msalAccount, showSteps, setShowSteps, L }) => (
   <>
     {/* All 4 buttons in one row */}
     <div className="export-btns" style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.6rem' }}>
-      {/* 1. İmzayı Kopyala */}
+      {/* 1. İmza Kopyala — Navy (#1e3a5f) */}
       <button
         onClick={doCopy} disabled={!hasData}
         style={{
           ...btnBase,
-          background: copied ? `linear-gradient(135deg, ${C.ok}, #22c55e)` : `linear-gradient(135deg, ${C.primary}, ${C.primarySoft})`,
+          background: copied ? `linear-gradient(135deg, ${C.ok}, #22c55e)` : `linear-gradient(135deg, #1e3a5f, #2c5282)`,
           color: '#fff',
           opacity: hasData ? 1 : 0.5,
           cursor: hasData ? 'pointer' : 'not-allowed',
-          boxShadow: hasData ? `0 4px 12px ${C.primary}25` : 'none',
+          boxShadow: hasData ? '0 4px 12px rgba(30,58,95,0.25)' : 'none',
         }}
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}
         {copied ? L.cpd : L.cp}
       </button>
 
-      {/* 2. Outlook Ayarlarını Aç (imzayı kopyalar + Outlook Web açar) */}
+      {/* 2. Outlook Ayarları */}
       {msalAccount && (
         <button
           onClick={onOutlookOpen} disabled={!hasData}
           style={{
             ...btnBase,
-            background: `linear-gradient(135deg, #0078d4, #106ebe)`,
+            background: 'linear-gradient(135deg, #0078d4, #106ebe)',
             color: '#fff',
             opacity: hasData ? 1 : 0.5,
             cursor: hasData ? 'pointer' : 'not-allowed',
@@ -62,23 +71,39 @@ const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onOut
         </button>
       )}
 
-      {/* 3. QR Üret */}
+      {/* 3. QR Kod — Yeşil/Lime (#8dc63f) */}
       <button
         onClick={onQrClick} disabled={!hasData}
         style={{
           ...btnBase,
-          background: `linear-gradient(135deg, ${C.accent}, ${C.accent}dd)`,
+          background: 'linear-gradient(135deg, #8dc63f, #a3d65a)',
           color: '#fff',
           opacity: hasData ? 1 : 0.5,
           cursor: hasData ? 'pointer' : 'not-allowed',
-          boxShadow: hasData ? `0 4px 12px ${C.accent}25` : 'none',
+          boxShadow: hasData ? '0 4px 12px rgba(141,198,63,0.25)' : 'none',
         }}
       >
         <QrIcon />
         {L.qrGen}
       </button>
 
-      {/* 4. Sıfırla */}
+      {/* 4. Kartvizit — Turkuaz (#00b4d8) */}
+      <button
+        onClick={onBcClick} disabled={!hasData}
+        style={{
+          ...btnBase,
+          background: 'linear-gradient(135deg, #00b4d8, #33c6e3)',
+          color: '#fff',
+          opacity: hasData ? 1 : 0.5,
+          cursor: hasData ? 'pointer' : 'not-allowed',
+          boxShadow: hasData ? '0 4px 12px rgba(0,180,216,0.25)' : 'none',
+        }}
+      >
+        <CardIcon />
+        {L.bcGen}
+      </button>
+
+      {/* 5. Temizle */}
       <button
         onClick={doReset}
         style={{

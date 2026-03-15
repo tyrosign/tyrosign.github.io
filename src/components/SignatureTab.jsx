@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, lazy, Suspense } from 'react';
 import { User, Phone, Eye, Download } from 'lucide-react';
 import { C } from '../constants/theme';
 import { OFFICES, OFFICE_GROUPS } from '../constants/offices';
@@ -12,7 +12,10 @@ import DesignSwitcher from './DesignSwitcher';
 import OutlookPreview from './OutlookPreview';
 import ExportSection from './ExportSection';
 import PromoBannerSection from './PromoBannerSection';
-import QrModal from './QrModal';
+
+// Lazy-load heavy modals (QR + BusinessCard contain qrcode lib)
+const QrModal = lazy(() => import('./QrModal'));
+const BusinessCardModal = lazy(() => import('./BusinessCardModal'));
 
 const SignatureTab = memo(({
   form, uf, stg, setStg, office, company, sigHTML, hasData, progress, L, lang,
@@ -22,6 +25,7 @@ const SignatureTab = memo(({
   msalAccount, toast,
 }) => {
   const [qrOpen, setQrOpen] = useState(false);
+  const [bcOpen, setBcOpen] = useState(false);
 
   const handleOutlookOpen = useCallback(() => {
     doCopy();
@@ -120,6 +124,7 @@ const SignatureTab = memo(({
             <ExportSection
               hasData={hasData} copied={copied} doCopy={doCopy} doReset={doReset}
               onQrClick={() => setQrOpen(true)}
+              onBcClick={() => setBcOpen(true)}
               onOutlookOpen={handleOutlookOpen}
               msalAccount={msalAccount}
               showSteps={showSteps} setShowSteps={setShowSteps} L={L}
@@ -131,17 +136,37 @@ const SignatureTab = memo(({
         <PromoBannerSection sigBanner={sigBanner} setSigBanner={setSigBanner} bannerFileRef={bannerFileRef} procBanner={procBanner} lang={lang} L={L} />
       </div>
 
-      {/* QR Modal */}
-      <QrModal
-        open={qrOpen}
-        onClose={() => setQrOpen(false)}
-        form={form}
-        office={office}
-        stg={stg}
-        company={company}
-        toast={toast}
-        L={L}
-      />
+      {/* QR Modal (lazy-loaded) */}
+      {qrOpen && (
+        <Suspense fallback={null}>
+          <QrModal
+            open={qrOpen}
+            onClose={() => setQrOpen(false)}
+            form={form}
+            office={office}
+            stg={stg}
+            company={company}
+            toast={toast}
+            L={L}
+          />
+        </Suspense>
+      )}
+
+      {/* Business Card Modal (lazy-loaded) */}
+      {bcOpen && (
+        <Suspense fallback={null}>
+          <BusinessCardModal
+            open={bcOpen}
+            onClose={() => setBcOpen(false)}
+            form={form}
+            office={office}
+            stg={stg}
+            company={company}
+            toast={toast}
+            L={L}
+          />
+        </Suspense>
+      )}
     </div>
   );
 });

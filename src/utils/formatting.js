@@ -21,6 +21,6 @@ export const formatGSM = (val) => {
   if (cleaned.startsWith('05')) cleaned = '+90' + cleaned;
   else if (cleaned.length === 10 && cleaned.startsWith('5')) cleaned = '+900' + cleaned;
   const match = cleaned.match(/^(\+90)?(0?)(\d{3})(\d{3})(\d{2})(\d{2})$/);
-  if (match) return `+90 0${match[3]} ${match[4]} ${match[5]} ${match[6]}`;
+  if (match) return `+90 ${match[3]} ${match[4]} ${match[5]} ${match[6]}`;
   return val;
 };

@@ -13,9 +13,9 @@ const OutlookPreview = memo(({ hasData, sigHTML, L, lang }) => (
       borderBottom: '1px solid #e0e3e8',
     }}>
       <div style={{ display: 'flex', gap: 5 }}>
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#1e3a5f' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#8dc63f' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#00b4d8' }} />
       </div>
       <span style={{ flex: 1, textAlign: 'center', fontSize: '0.65rem', color: C.text2, fontWeight: 500 }}>{L.mockTitle}</span>
     </div>

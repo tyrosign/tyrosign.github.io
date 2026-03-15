@@ -40,7 +40,6 @@ const ProgressBar = memo(({ progress, L }) => (
         fontFamily: 'Plus Jakarta Sans,sans-serif',
         fontVariantNumeric: 'tabular-nums',
         animation: 'countPop 0.3s ease',
-        key: progress.filled,
       }}>{progress.filled}{L.of}{progress.total}</span>
     </div>
     <div style={{

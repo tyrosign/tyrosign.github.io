@@ -3,6 +3,7 @@ import QRCode from 'qrcode';
 import { X, Download, Copy, Check } from 'lucide-react';
 import { C } from '../constants/theme';
 import { generateVCard } from '../utils/generateVCard';
+import { formatGSM } from '../utils/formatting';
 import Btn from './ui/Btn';
 
 const NAVY = '#1e3a5f';
@@ -123,7 +124,7 @@ async function drawCardCanvas(qrDataUrl, form, stg, company) {
   if (form.gsm) {
     ctx.fillStyle = '#777777';
     ctx.font = '11px "Inter", Arial, sans-serif';
-    ctx.fillText('📱 ' + form.gsm, W / 2, y + 11);
+    ctx.fillText('📱 ' + formatGSM(form.gsm), W / 2, y + 11);
     y += 18;
   }
 
@@ -242,9 +243,11 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
         backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         animation: 'fadeIn 0.25s ease',
+        padding: '1rem',
       }}
     >
       <div
+        className="qr-modal"
         onClick={e => e.stopPropagation()}
         style={{
           background: 'rgba(255,255,255,0.97)',
@@ -253,7 +256,7 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
           border: `1px solid ${C.borderSub}`,
           boxShadow: '0 24px 48px rgba(30,58,95,0.18), 0 8px 16px rgba(30,58,95,0.08)',
           padding: '1.8rem',
-          minWidth: 340, maxWidth: 400,
+          width: '100%', maxWidth: 400,
           textAlign: 'center',
           position: 'relative',
           animation: 'slideInUp 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
@@ -334,7 +337,7 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
           {/* GSM */}
           {form.gsm && (
             <div style={{ fontSize: '0.58rem', color: '#777', marginTop: 2 }}>
-              📱 {form.gsm}
+              📱 {formatGSM(form.gsm)}
             </div>
           )}
 

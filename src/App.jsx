@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useCallback } from 'react';
+import { useState, useRef, useMemo, useCallback, lazy, Suspense } from 'react';
 import DEFAULT_LOGO_BASE64 from './defaultLogo.js';
 import { C } from './constants/theme';
 import { OFFICES } from './constants/offices';
@@ -16,7 +16,7 @@ import LoginSplash from './components/LoginSplash';
 import AppHeader from './components/AppHeader';
 import SignatureTab from './components/SignatureTab';
 import BannerTab from './components/BannerTab';
-import SettingsModal from './components/SettingsModal';
+const SettingsModal = lazy(() => import('./components/SettingsModal'));
 import AppFooter from './components/AppFooter';
 import ToastContainer from './components/ToastContainer';
 
@@ -232,12 +232,14 @@ export default function App() {
         )}
 
         {tab === 'settings' && (
-          <SettingsModal
-            setTab={setTab} settingsTab={settingsTab} setSettingsTab={setSettingsTab}
-            stg={stg} setStg={setStg} fRef={fRef} procLogo={procLogo}
-            toast={toast} L={L} lang={lang}
-            DEFAULT_LOGO_BASE64={DEFAULT_LOGO_BASE64}
-          />
+          <Suspense fallback={null}>
+            <SettingsModal
+              setTab={setTab} settingsTab={settingsTab} setSettingsTab={setSettingsTab}
+              stg={stg} setStg={setStg} fRef={fRef} procLogo={procLogo}
+              toast={toast} L={L} lang={lang}
+              DEFAULT_LOGO_BASE64={DEFAULT_LOGO_BASE64}
+            />
+          </Suspense>
         )}
 
       </main>

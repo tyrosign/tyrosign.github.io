@@ -101,6 +101,14 @@ export const GLOBAL_CSS = `
     .settings-color-grid-2 { grid-template-columns: 1fr!important; }
     .company-grid { grid-template-columns: 1fr!important; }
     .design-mini-preview { display: none!important; }
+    /* Business Card modal — compact for small phones */
+    .bc-modal { padding: 0.85rem!important; border-radius: 16px!important; max-height: 95vh!important; }
+    .bc-modal .bc-qr-wrap { width: 150px!important; height: 150px!important; }
+    .bc-modal .bc-qr-wrap canvas { width: 138px!important; height: 138px!important; }
+    .bc-actions { flex-wrap: wrap!important; }
+    .bc-actions button { flex: 1 1 calc(50% - 0.2rem)!important; min-width: calc(50% - 0.2rem)!important; font-size: 0.62rem!important; padding: 0.5rem 0.3rem!important; }
+    /* QR modal */
+    .qr-modal { padding: 1.2rem!important; border-radius: 14px!important; }
   }
   @media(max-width:360px) {
     .nav-tab-btn { padding: 0.3rem 0.45rem!important; font-size: 0.62rem!important; }

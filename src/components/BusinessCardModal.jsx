@@ -26,7 +26,11 @@ const BLUE = '#0098d4';
 
 function titleCase(str) {
   if (!str) return '';
-  return str.replace(/\S+/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+  return str.split(' ').map(w => {
+    if (!w) return w;
+    if (w.length >= 2 && w === w.toUpperCase() && /^[A-ZÇĞİÖŞÜ]+$/.test(w)) return w;
+    return w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR');
+  }).join(' ');
 }
 
 function formatName(form) {
@@ -55,32 +59,174 @@ function loadImage(src) {
   });
 }
 
+/**
+ * Draw QR with rounded dots instead of square modules.
+ * Uses QRCode.create() for data matrix, then custom-renders circles.
+ */
+function drawRoundedQr(ctx, qrData, size, margin, darkColor, lightColor) {
+  const modules = qrData.modules;
+  const moduleCount = modules.size;
+  const totalModules = moduleCount + margin * 2;
+  const cellSize = size / totalModules;
+  const dotRadius = cellSize * 0.42;
+
+  // Fill background with rounded corners
+  ctx.fillStyle = lightColor;
+  ctx.beginPath();
+  roundRect(ctx, 0, 0, size, size, size * 0.06);
+  ctx.fill();
+
+  // Navy-to-blue gradient for data dots
+  const dotGrad = ctx.createLinearGradient(0, 0, size, size);
+  dotGrad.addColorStop(0, NAVY);
+  dotGrad.addColorStop(0.5, '#1a4a6e');
+  dotGrad.addColorStop(1, '#0098d4');
+
+  function isFinderPattern(row, col) {
+    if (row < 7 && col < 7) return true;
+    if (row < 7 && col >= moduleCount - 7) return true;
+    if (row >= moduleCount - 7 && col < 7) return true;
+    return false;
+  }
+
+  // Alignment pattern detection
+  function isAlignmentCenter(r, c) {
+    if (moduleCount < 25) return false;
+    const positions = [];
+    const ver = Math.floor((moduleCount - 17) / 4) + 1;
+    if (ver >= 2) {
+      const last = moduleCount - 7;
+      const step = ver === 2 ? 0 : Math.round((last - 6) / (Math.ceil(ver / 7) + 1));
+      const coords = [6];
+      if (step > 0) { for (let p = last; p > 6; p -= step) coords.unshift(p); }
+      else coords.push(last);
+      for (const ar of coords) for (const ac of coords) {
+        if ((ar === 6 && ac === 6) || (ar === 6 && ac === last) || (ar === last && ac === 6)) continue;
+        positions.push([ar, ac]);
+      }
+    }
+    return positions.some(([ar, ac]) => r === ar && c === ac);
+  }
+
+  function isAlignmentArea(r, c) {
+    for (let dr = -2; dr <= 2; dr++) {
+      for (let dc = -2; dc <= 2; dc++) {
+        if (isAlignmentCenter(r - dr, c - dc)) return true;
+      }
+    }
+    return false;
+  }
+
+  // Draw finder patterns with glow + gradient + gold center
+  function drawFinderPattern(startRow, startCol) {
+    const ox = (startCol + margin) * cellSize;
+    const oy = (startRow + margin) * cellSize;
+    const outerSize = 7 * cellSize;
+    const innerSize = 3 * cellSize;
+    const midSize = 5 * cellSize;
+    const r = cellSize * 0.8;
+
+    // Shadow glow
+    ctx.save();
+    ctx.shadowColor = 'rgba(30, 58, 95, 0.25)';
+    ctx.shadowBlur = cellSize * 2;
+    ctx.fillStyle = NAVY;
+    ctx.beginPath();
+    roundRect(ctx, ox, oy, outerSize, outerSize, r);
+    ctx.fill();
+    ctx.restore();
+
+    // Outer ring with gradient
+    ctx.fillStyle = dotGrad;
+    ctx.beginPath();
+    roundRect(ctx, ox, oy, outerSize, outerSize, r);
+    ctx.fill();
+
+    // White gap
+    ctx.fillStyle = lightColor;
+    ctx.beginPath();
+    roundRect(ctx, ox + cellSize, oy + cellSize, midSize, midSize, r * 0.6);
+    ctx.fill();
+
+    // Inner square with gold accent
+    ctx.fillStyle = GOLD;
+    ctx.beginPath();
+    roundRect(ctx, ox + 2 * cellSize, oy + 2 * cellSize, innerSize, innerSize, r * 0.4);
+    ctx.fill();
+  }
+
+  drawFinderPattern(0, 0);
+  drawFinderPattern(0, moduleCount - 7);
+  drawFinderPattern(moduleCount - 7, 0);
+
+  // Draw alignment patterns with matching style
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      if (isAlignmentCenter(row, col)) {
+        const ox = (col - 2 + margin) * cellSize;
+        const oy = (row - 2 + margin) * cellSize;
+        const s = 5 * cellSize;
+        const ar = cellSize * 0.6;
+        ctx.fillStyle = dotGrad;
+        ctx.beginPath();
+        roundRect(ctx, ox, oy, s, s, ar);
+        ctx.fill();
+        ctx.fillStyle = lightColor;
+        ctx.beginPath();
+        roundRect(ctx, ox + cellSize, oy + cellSize, 3 * cellSize, 3 * cellSize, ar * 0.5);
+        ctx.fill();
+        ctx.fillStyle = GOLD;
+        ctx.beginPath();
+        ctx.arc((col + margin + 0.5) * cellSize, (row + margin + 0.5) * cellSize, cellSize * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  // Draw data modules as gradient dots with visual rhythm
+  ctx.fillStyle = dotGrad;
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      if (isFinderPattern(row, col)) continue;
+      if (isAlignmentArea(row, col)) continue;
+      if (modules.get(row, col)) {
+        const cx = (col + margin + 0.5) * cellSize;
+        const cy = (row + margin + 0.5) * cellSize;
+        const dist = Math.sqrt(Math.pow(cx - size / 2, 2) + Math.pow(cy - size / 2, 2)) / (size / 2);
+        const sizeVar = dotRadius * (0.85 + dist * 0.15);
+        ctx.beginPath();
+        ctx.arc(cx, cy, sizeVar, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+}
+
 async function drawQrWithLogo(vcard, size, logoBase64) {
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
 
-  await QRCode.toCanvas(canvas, vcard, {
-    width: size,
-    margin: 2,
-    color: { dark: NAVY, light: '#ffffff' },
-    errorCorrectionLevel: 'H',
-  });
+  const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'H' });
+  const ctx = canvas.getContext('2d');
+  drawRoundedQr(ctx, qrData, size, 2, NAVY, '#ffffff');
 
   if (logoBase64) {
     const ctx = canvas.getContext('2d');
     try {
       const logoImg = await loadImage(logoBase64);
-      const logoSize = Math.round(size * 0.28);
+      const logoSize = Math.round(size * 0.30);
       const x = (size - logoSize) / 2;
       const y = (size - logoSize) / 2;
-      const pad = 8;
+      const pad = 10;
 
+      // White circle background
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.arc(size / 2, size / 2, logoSize / 2 + pad, 0, Math.PI * 2);
       ctx.fill();
 
+      // Draw logo preserving aspect ratio
       const aspect = logoImg.width / logoImg.height;
       let drawW = logoSize;
       let drawH = logoSize;
@@ -162,13 +308,13 @@ function ellipsize(ctx, text, maxWidth) {
  * Draws a premium digital business card canvas — Figma design
  * Dynamic height based on content
  */
-async function drawBusinessCard(qrCanvas, form, stg, office, company, profileBase64, L) {
+async function drawBusinessCard(qrCanvas, form, stg, office, company, profileBase64, L, lang) {
   const W = 420;
   const RADIUS = 15;
   const PAD = 24; // horizontal padding for text
 
   const fullName = formatName(form);
-  const companyName = (company && company.name) || stg.companyName || 'Tiryaki Agro';
+  const companyName = (lang === 'en' && company && company.nameEN) ? company.nameEN : ((company && company.name) || stg.companyName || 'Tiryaki Agro');
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' / ');
   const hasTwoLines = !!titleText;
 
@@ -301,15 +447,22 @@ async function drawBusinessCard(qrCanvas, form, stg, office, company, profileBas
   const qrContainerX = (W - qrContainerSize) / 2;
   const qrContainerY = y + 25;
 
-  ctx.shadowColor = 'rgba(0,0,0,0.25)';
-  ctx.shadowBlur = 25;
-  ctx.shadowOffsetY = 10;
-  ctx.fillStyle = '#ffffff';
+  // Glass QR container
+  ctx.save();
+  ctx.shadowColor = 'rgba(30, 58, 95, 0.18)';
+  ctx.shadowBlur = 20;
+  ctx.shadowOffsetY = 6;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
   ctx.beginPath();
   roundRect(ctx, qrContainerX, qrContainerY, qrContainerSize, qrContainerSize, 18);
   ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetY = 0;
+  ctx.restore();
+  // Glass border
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  roundRect(ctx, qrContainerX, qrContainerY, qrContainerSize, qrContainerSize, 18);
+  ctx.stroke();
 
   const qrDrawSize = qrContainerSize - qrPad * 2;
   ctx.drawImage(qrCanvas, qrContainerX + qrPad, qrContainerY + qrPad, qrDrawSize, qrDrawSize);
@@ -431,39 +584,147 @@ const btnGlass = {
   boxShadow: '0 2px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2)',
 };
 
-/** Generate QR SVG with properly centered logo overlay */
-async function generateQrSvg(vcard, logoBase64) {
-  let qrSvg = await QRCode.toString(vcard, {
-    type: 'svg',
-    color: { dark: NAVY, light: '#ffffff' },
-    errorCorrectionLevel: 'H',
-    margin: 2,
-    width: 220,
-  });
+/** Generate QR SVG with modern gradient dots, gold finder centers, and logo overlay */
+function generateQrSvg(vcard, logoBase64) {
+  const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'H' });
+  const modules = qrData.modules;
+  const moduleCount = modules.size;
+  const svgSize = 260;
+  const margin = 2;
+  const totalModules = moduleCount + margin * 2;
+  const cellSize = svgSize / totalModules;
+  const dotR = cellSize * 0.42;
+  const finderR = (cellSize * 0.8).toFixed(2);
 
-  if (logoBase64) {
-    // Parse viewBox to find center
-    const vbMatch = qrSvg.match(/viewBox="([^"]+)"/);
-    let cx = 110, cy = 110;
-    if (vbMatch) {
-      const parts = vbMatch[1].split(/\s+/).map(Number);
-      cx = parts[2] / 2;
-      cy = parts[3] / 2;
-    }
-    const r = Math.round(cx * 0.28);
-    const imgSize = Math.round(r * 1.7);
-    const logoOverlay =
-      '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r + 6) + '" fill="#ffffff"/>' +
-      '<clipPath id="logo-clip"><circle cx="' + cx + '" cy="' + cy + '" r="' + r + '"/></clipPath>' +
-      '<image href="' + logoBase64 + '" x="' + (cx - imgSize / 2) + '" y="' + (cy - imgSize / 2) + '" ' +
-      'width="' + imgSize + '" height="' + imgSize + '" preserveAspectRatio="xMidYMid meet" clip-path="url(#logo-clip)"/>';
-    qrSvg = qrSvg.replace('</svg>', logoOverlay + '</svg>');
+  function isFinderPattern(row, col) {
+    if (row < 7 && col < 7) return true;
+    if (row < 7 && col >= moduleCount - 7) return true;
+    if (row >= moduleCount - 7 && col < 7) return true;
+    return false;
   }
 
-  return qrSvg;
+  // Alignment pattern detection
+  function isAlignmentCenter(r, c) {
+    if (moduleCount < 25) return false;
+    const positions = [];
+    const ver = Math.floor((moduleCount - 17) / 4) + 1;
+    if (ver >= 2) {
+      const last = moduleCount - 7;
+      const step = ver === 2 ? 0 : Math.round((last - 6) / (Math.ceil(ver / 7) + 1));
+      const coords = [6];
+      if (step > 0) { for (let p = last; p > 6; p -= step) coords.unshift(p); }
+      else coords.push(last);
+      for (const ar of coords) for (const ac of coords) {
+        if ((ar === 6 && ac === 6) || (ar === 6 && ac === last) || (ar === last && ac === 6)) continue;
+        positions.push([ar, ac]);
+      }
+    }
+    return positions.some(([ar, ac]) => r === ar && c === ac);
+  }
+
+  function isAlignmentArea(r, c) {
+    for (let dr = -2; dr <= 2; dr++) {
+      for (let dc = -2; dc <= 2; dc++) {
+        if (isAlignmentCenter(r - dr, c - dc)) return true;
+      }
+    }
+    return false;
+  }
+
+  function finderPatternSvg(startRow, startCol) {
+    const ox = ((startCol + margin) * cellSize).toFixed(2);
+    const oy = ((startRow + margin) * cellSize).toFixed(2);
+    const outer = (7 * cellSize).toFixed(2);
+    const mid = (5 * cellSize).toFixed(2);
+    const inner = (3 * cellSize).toFixed(2);
+    const midOff = cellSize.toFixed(2);
+    const innerOff = (2 * cellSize).toFixed(2);
+    const r1 = finderR;
+    const r2 = (cellSize * 0.5).toFixed(2);
+    const r3 = (cellSize * 0.35).toFixed(2);
+    return '<rect x="' + ox + '" y="' + oy + '" width="' + outer + '" height="' + outer + '" rx="' + r1 + '" fill="url(#navyGrad)" filter="url(#glow)"/>' +
+      '<rect x="' + (parseFloat(ox) + parseFloat(midOff)).toFixed(2) + '" y="' + (parseFloat(oy) + parseFloat(midOff)).toFixed(2) + '" width="' + mid + '" height="' + mid + '" rx="' + r2 + '" fill="#ffffff"/>' +
+      '<rect x="' + (parseFloat(ox) + parseFloat(innerOff)).toFixed(2) + '" y="' + (parseFloat(oy) + parseFloat(innerOff)).toFixed(2) + '" width="' + inner + '" height="' + inner + '" rx="' + r3 + '" fill="' + GOLD + '"/>';
+  }
+
+  // Alignment pattern SVGs
+  let alignSvg = '';
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      if (isAlignmentCenter(row, col)) {
+        const ox = ((col - 2 + margin) * cellSize).toFixed(2);
+        const oy = ((row - 2 + margin) * cellSize).toFixed(2);
+        const s = (5 * cellSize).toFixed(2);
+        const ar = (cellSize * 0.6).toFixed(2);
+        const ar2 = (cellSize * 0.3).toFixed(2);
+        const innerS = (3 * cellSize).toFixed(2);
+        const innerOff = cellSize.toFixed(2);
+        const cx = ((col + margin + 0.5) * cellSize).toFixed(2);
+        const cy = ((row + margin + 0.5) * cellSize).toFixed(2);
+        alignSvg += '<rect x="' + ox + '" y="' + oy + '" width="' + s + '" height="' + s + '" rx="' + ar + '" fill="url(#navyGrad)"/>';
+        alignSvg += '<rect x="' + (parseFloat(ox) + parseFloat(innerOff)).toFixed(2) + '" y="' + (parseFloat(oy) + parseFloat(innerOff)).toFixed(2) + '" width="' + innerS + '" height="' + innerS + '" rx="' + ar2 + '" fill="#ffffff"/>';
+        alignSvg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (cellSize * 0.5).toFixed(2) + '" fill="' + GOLD + '"/>';
+      }
+    }
+  }
+
+  let dots = '';
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      if (isFinderPattern(row, col)) continue;
+      if (isAlignmentArea(row, col)) continue;
+      if (modules.get(row, col)) {
+        const cx = (col + margin + 0.5) * cellSize;
+        const cy = (row + margin + 0.5) * cellSize;
+        const dist = Math.sqrt(Math.pow(cx - svgSize / 2, 2) + Math.pow(cy - svgSize / 2, 2)) / (svgSize / 2);
+        const sizeVar = dotR * (0.85 + dist * 0.15);
+        dots += '<circle cx="' + cx.toFixed(2) + '" cy="' + cy.toFixed(2) + '" r="' + sizeVar.toFixed(2) + '" fill="url(#navyGrad)"/>';
+      }
+    }
+  }
+
+  // SVG with gradient defs and glow filter
+  let svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + svgSize + ' ' + svgSize + '" width="' + svgSize + '" height="' + svgSize + '">' +
+    '<defs>' +
+    '<linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
+    '<stop offset="0%" stop-color="' + NAVY + '"/>' +
+    '<stop offset="50%" stop-color="#1a4a6e"/>' +
+    '<stop offset="100%" stop-color="#0098d4"/>' +
+    '</linearGradient>' +
+    '<filter id="glow"><feGaussianBlur stdDeviation="' + (cellSize * 0.4).toFixed(1) + '" result="blur"/>' +
+    '<feFlood flood-color="' + NAVY + '" flood-opacity="0.2"/>' +
+    '<feComposite in2="blur" operator="in"/>' +
+    '<feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>' +
+    '</defs>' +
+    '<rect width="' + svgSize + '" height="' + svgSize + '" rx="' + Math.round(svgSize * 0.06) + '" fill="#ffffff"/>' +
+    finderPatternSvg(0, 0) +
+    finderPatternSvg(0, moduleCount - 7) +
+    finderPatternSvg(moduleCount - 7, 0) +
+    alignSvg +
+    dots;
+
+  if (logoBase64) {
+    const center = svgSize / 2;
+    const r = Math.round(center * 0.30);
+    const pad = 8;
+    const imgSize = Math.round(r * 1.7);
+    svg +=
+      '<circle cx="' + center + '" cy="' + center + '" r="' + (r + pad) + '" fill="#ffffff"/>' +
+      '<clipPath id="logo-clip"><circle cx="' + center + '" cy="' + center + '" r="' + r + '"/></clipPath>' +
+      '<image href="' + logoBase64 + '" x="' + (center - imgSize / 2) + '" y="' + (center - imgSize / 2) + '" ' +
+      'width="' + imgSize + '" height="' + imgSize + '" preserveAspectRatio="xMidYMid meet" clip-path="url(#logo-clip)"/>';
+  }
+
+  svg += '</svg>';
+  return svg;
 }
 
-const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toast, L }) => {
+function getCompanyName(company, stg, lang) {
+  if (!company) return stg.companyName || 'Tiryaki Agro';
+  return (lang === 'en' && company.nameEN) ? company.nameEN : company.name;
+}
+
+const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toast, L, lang }) => {
   const qrCanvasRef = useRef(null);
   const cardRef = useRef(null);
   const profileInputRef = useRef(null);
@@ -477,17 +738,17 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
     setCopyOk(false);
     setQrReady(0);
 
-    const vcard = generateVCard(form, office, stg, company);
+    const vcard = generateVCard(form, office, stg, company, lang);
 
-    drawQrWithLogo(vcard, 280, stg.logoBase64).then(qrCanvas => {
+    drawQrWithLogo(vcard, 320, stg.logoBase64).then(qrCanvas => {
       qrCanvasRef.current = qrCanvas;
       setQrReady(r => r + 1);
 
-      drawBusinessCard(qrCanvas, form, stg, office, company, profileBase64, L).then(card => {
+      drawBusinessCard(qrCanvas, form, stg, office, company, profileBase64, L, lang).then(card => {
         cardRef.current = card;
       });
     });
-  }, [open, form, office, stg, company, profileBase64, L]);
+  }, [open, form, office, stg, company, profileBase64, L, lang]);
 
   const handleDownload = useCallback(() => {
     const card = cardRef.current;
@@ -551,9 +812,9 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
   /** Generate & download standalone interactive HTML business card */
   const handleHtmlDownload = useCallback(async () => {
     const bgDataUri = await getBgBase64();
-    const vcard = generateVCard(form, office, stg, company);
+    const vcard = generateVCard(form, office, stg, company, lang);
     const fullName = formatName(form);
-    const companyName = (company && company.name) || stg.companyName || 'Tiryaki Agro';
+    const companyName = getCompanyName(company, stg, lang);
     const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' / ');
     const hasTwoLines = !!titleText;
 
@@ -645,8 +906,11 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
       'font-family:Inter,sans-serif;margin-top:6px;position:relative;z-index:1}\n' +
       '.subtitle2{text-align:center;font-size:0.78rem;color:rgba(255,255,255,0.8);' +
       'font-family:Inter,sans-serif;margin-top:3px;position:relative;z-index:1}\n' +
-      '.qr-wrap{margin:20px auto 0;width:200px;height:200px;background:#fff;border-radius:18px;' +
-      'box-shadow:0 12px 30px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;' +
+      '.qr-wrap{margin:20px auto 0;width:200px;height:200px;background:rgba(255,255,255,0.55);' +
+      'backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:18px;' +
+      'box-shadow:0 8px 32px rgba(30,58,95,0.18),inset 0 1px 0 rgba(255,255,255,0.4);' +
+      'border:1.5px solid rgba(255,255,255,0.5);' +
+      'display:flex;align-items:center;justify-content:center;' +
       'position:relative;z-index:1;padding:6px}\n' +
       '.qr-wrap svg{width:100%;height:100%}\n' +
       '.glass{margin:20px auto 0;width:calc(100% - 36px);background:rgba(255,255,255,0.28);' +
@@ -691,7 +955,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
   if (!open) return null;
 
   const fullName = formatName(form);
-  const companyName = (company && company.name) || stg.companyName || 'Tiryaki Agro';
+  const companyName = getCompanyName(company, stg, lang);
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' / ');
   const hasTwoLines = !!titleText;
 
@@ -912,9 +1176,11 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
           <div className="bc-qr-wrap" style={{
             margin: '20px auto 0',
             width: 190, height: 190,
-            background: '#ffffff',
+            background: 'rgba(255, 255, 255, 0.55)',
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 18,
-            boxShadow: '0 12px 30px rgba(0,0,0,0.2)',
+            boxShadow: '0 8px 32px rgba(30, 58, 95, 0.18), inset 0 1px 0 rgba(255,255,255,0.4)',
+            border: '1.5px solid rgba(255, 255, 255, 0.5)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             position: 'relative', zIndex: 1,
             padding: 6,

@@ -4,7 +4,7 @@ import { C } from './constants/theme';
 import { OFFICES } from './constants/offices';
 import { COMPANIES } from './constants/companies';
 import { PROGRESS_FIELDS } from './constants/progressFields';
-import { MAX_LOGO_SIZE, MAX_BANNER_SIZE, MAX_LOGO_W, MAX_LOGO_H, SIG_WIDTH } from './constants/limits';
+import { MAX_LOGO_SIZE, MAX_BANNER_SIZE, MAX_LOGO_W, MAX_LOGO_H, DEFAULT_LOGO_W, DEFAULT_LOGO_H, SIG_WIDTH } from './constants/limits';
 import { TR, EN } from './i18n/translations';
 import { genSig } from './signature/genSig';
 import { genSigCorporate } from './signature/genSigCorporate';
@@ -63,26 +63,106 @@ export default function App() {
   const { toasts, toast } = useToast();
   const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout } = useMsal({ toast, lang, setForm });
 
+  // ─── Logo loader (PNG → base64, kalite kaybı yok) ───
+  const logoCache = useRef({});
+  const loadLogo = useCallback((url) => {
+    if (!url) return Promise.resolve(null);
+    if (logoCache.current[url]) return Promise.resolve(logoCache.current[url]);
+    return fetch(url)
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result;
+          const img = new window.Image();
+          img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > MAX_LOGO_W) { const ratio = MAX_LOGO_W / w; w = MAX_LOGO_W; h = Math.round(h * ratio); }
+            if (h > MAX_LOGO_H) { const ratio = MAX_LOGO_H / h; h = Math.round(h * ratio); w = Math.round(w * ratio); }
+            // Measure left visual offset: how many px of whitespace/transparency before visible content
+            let leftOffset = 0;
+            try {
+              const cvs = document.createElement('canvas');
+              const sc = 0.25; // scan at 25% for speed
+              cvs.width = Math.round(img.naturalWidth * sc);
+              cvs.height = Math.round(img.naturalHeight * sc);
+              const cx = cvs.getContext('2d');
+              cx.drawImage(img, 0, 0, cvs.width, cvs.height);
+              const px = cx.getImageData(0, 0, cvs.width, cvs.height).data;
+              const W = cvs.width, H = cvs.height;
+              outer: for (let x = 0; x < W; x++) {
+                for (let y = 0; y < H; y++) {
+                  const i = (y * W + x) * 4;
+                  if (px[i + 3] > 30 && !(px[i] > 240 && px[i+1] > 240 && px[i+2] > 240)) {
+                    // Convert scaled px back to rendered pixels
+                    leftOffset = Math.round(x / sc * (w / img.naturalWidth));
+                    break outer;
+                  }
+                }
+              }
+            } catch (_) { leftOffset = 0; }
+            const result = { base64, w, h, leftOffset };
+            logoCache.current[url] = result;
+            resolve(result);
+          };
+          img.onerror = () => reject(new Error('img'));
+          img.src = base64;
+        };
+        reader.onerror = () => reject(new Error('read'));
+        reader.readAsDataURL(blob);
+      }))
+      .catch(() => null);
+  }, []);
+
   // ─── Derived ───
   const L = useMemo(() => lang === 'tr' ? TR : EN, [lang]);
   const hasData = form.firstName.trim().length > 0;
   const office = OFFICES.find(o => o.id === form.officeId) || null;
   const company = useMemo(() => COMPANIES.find(c => c.id === form.companyId) || COMPANIES[0], [form.companyId]);
 
+  // ─── Dynamic company logo (lang-aware) ───
+  const [companyLogo, setCompanyLogo] = useState({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H });
+  useEffect(() => {
+    const url = lang === 'tr' ? company.logoTR : company.logoEN;
+    if (!url) { setCompanyLogo({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H }); return; }
+    let cancelled = false;
+    loadLogo(url).then(result => {
+      if (cancelled) return;
+      if (result) setCompanyLogo(result);
+      else setCompanyLogo({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H });
+    });
+    return () => { cancelled = true; };
+  }, [company, lang, loadLogo]);
+
   const effectiveStg = useMemo(() => ({
     ...stg,
-    logoBase64: company.logoBase64,
-    logoW: company.logoW,
-    logoH: company.logoH,
-  }), [stg, company]);
+    logoBase64: companyLogo.base64,
+    logoW: companyLogo.w,
+    logoH: companyLogo.h,
+    logoLeftOffset: companyLogo.leftOffset || 0,
+  }), [stg, companyLogo]);
 
+  // ─── Dynamic banner logo (lang-aware) ───
   const bannerCompany = useMemo(() => COMPANIES.find(c => c.id === banner.companyId) || COMPANIES[0], [banner.companyId]);
+  const [bannerLogo, setBannerLogo] = useState({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H });
+  useEffect(() => {
+    const url = lang === 'tr' ? bannerCompany.logoTR : bannerCompany.logoEN;
+    if (!url) { setBannerLogo({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H }); return; }
+    let cancelled = false;
+    loadLogo(url).then(result => {
+      if (cancelled) return;
+      if (result) setBannerLogo(result);
+      else setBannerLogo({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H });
+    });
+    return () => { cancelled = true; };
+  }, [bannerCompany, lang, loadLogo]);
+
   const bannerStg = useMemo(() => ({
     ...stg,
-    logoBase64: bannerCompany.logoBase64,
-    logoW: bannerCompany.logoW,
-    logoH: bannerCompany.logoH,
-  }), [stg, bannerCompany]);
+    logoBase64: bannerLogo.base64,
+    logoW: bannerLogo.w,
+    logoH: bannerLogo.h,
+  }), [stg, bannerLogo]);
 
   useBannerCanvas(canvasRef, tab, banner, bannerStg);
 
@@ -218,7 +298,7 @@ export default function App() {
 
         {tab === 'signature' && (
           <SignatureTab
-            form={form} uf={uf} stg={stg} setStg={setStg} office={office} company={company}
+            form={form} uf={uf} stg={stg} effectiveStg={effectiveStg} setStg={setStg} office={office} company={company}
             sigHTML={sigHTML} hasData={hasData} progress={progress} L={L} lang={lang}
             copied={copied} doCopy={doCopy} doReset={doReset}
             showSteps={showSteps} setShowSteps={setShowSteps}
@@ -232,7 +312,7 @@ export default function App() {
         {tab === 'banner' && (
           <BannerTab
             banner={banner} setBanner={setBanner} stg={bannerStg}
-            canvasRef={canvasRef} downloadBanner={downloadBanner} L={L}
+            canvasRef={canvasRef} downloadBanner={downloadBanner} L={L} lang={lang}
           />
         )}
 

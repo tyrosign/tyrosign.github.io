@@ -12,7 +12,16 @@ export const sanitizeUrl = (url) => {
 
 export const titleCase = (str) => {
   if (!str) return '';
-  return str.split(' ').map(w => w ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR') : w).join(' ');
+  return str.split(' ').map(w => {
+    if (!w) return w;
+    // Tamamen büyük harf kelimeler kısaltmadır (AI, IT, HR, CEO, SAP vb.) — dokunma
+    if (w.length >= 2 && w === w.toUpperCase() && /^[A-ZÇĞİÖŞÜ]+$/.test(w)) return w;
+    // Kısa bağlaç/edat (ve, of, and, in vb.) — küçük bırak
+    const lowers = ['ve', 'ile', 'veya', 'of', 'and', 'in', 'the', 'for', 'to', 'at', 'by', 'on'];
+    const lower = w.toLocaleLowerCase('tr-TR');
+    if (lowers.includes(lower) && str.split(' ').indexOf(w) > 0) return lower;
+    return w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR');
+  }).join(' ');
 };
 
 export const formatGSM = (val) => {

@@ -13,7 +13,7 @@ const ChevronIcon = ({ open }) => (
 
 const SearchableSelect = memo(({
   value, onChange, placeholder, label, required,
-  options, groups, groupLabels,
+  options, groups, groupLabels, nameKey, clearLabel,
 }) => {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
@@ -39,11 +39,34 @@ const SearchableSelect = memo(({
     }
   }, [open]);
 
+  const clearRow = clearLabel ? (
+    <div
+      key="__clear__"
+      onClick={() => { onChange(''); setOpen(false); }}
+      style={{
+        padding: '0.4rem 0.55rem',
+        fontSize: '0.75rem', fontFamily: 'Inter,sans-serif',
+        color: value ? C.textM : C.primary,
+        fontStyle: 'italic',
+        fontWeight: value ? 400 : 600,
+        cursor: 'pointer',
+        background: value ? 'transparent' : `${C.primary}08`,
+        borderLeft: value ? '2.5px solid transparent' : `2.5px solid ${C.accent}`,
+        borderBottom: `1px solid ${C.borderSub}`,
+        marginBottom: '0.2rem',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.background = '#f5f7fa'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = value ? 'transparent' : `${C.primary}08`; }}
+    >
+      {clearLabel}
+    </div>
+  ) : null;
+
   const renderRows = () => {
     if (!groups) {
-      return options.map(o => row(o));
+      return [clearRow, ...options.map(o => row(o))];
     }
-    const out = [];
+    const out = clearRow ? [clearRow] : [];
     groups.forEach(g => {
       const items = options.filter(o => o.group === g);
       if (!items.length) return;
@@ -83,7 +106,7 @@ const SearchableSelect = memo(({
         onMouseEnter={e => { if (!active) e.currentTarget.style.background = '#f5f7fa'; }}
         onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
       >
-        {o.name}
+        {(nameKey && o[nameKey]) || o.name}
       </div>
     );
   };
@@ -119,7 +142,7 @@ const SearchableSelect = memo(({
           color: selected ? C.text1 : C.textM,
           fontWeight: selected ? 500 : 400,
         }}>
-          {selected ? selected.name : placeholder}
+          {selected ? ((nameKey && selected[nameKey]) || selected.name) : placeholder}
         </span>
         <ChevronIcon open={open} />
       </button>

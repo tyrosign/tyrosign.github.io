@@ -59,7 +59,7 @@ export const genSigCorporate = (f, s, office, sigBanner) => {
       `</div>` +
     `</td>` +
     `</tr>` +
-    (footer ? `<tr><td style="vertical-align:bottom;padding:0 50px 18px ${s.logoBase64 ? Math.round(s.logoW * 0.3) : 46}px;">${footer}</td></tr>` : '') +
+    (footer ? `<tr><td style="vertical-align:bottom;padding:0 0 18px 0;"><div style="text-align:left;line-height:16px;white-space:nowrap;${(s.logoLeftOffset || 0) + 6 > 0 ? `padding-left:${(s.logoLeftOffset || 0) + 6}px;` : ''}">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</div></td></tr>` : '') +
     (sigBanner?.enabled && sigBanner?.base64
       ? `<tr><td colspan="2" style="padding-top:10px;">` +
         (sigBanner.linkUrl ? `<a href="${sanitizeUrl(sigBanner.linkUrl)}" target="_blank" style="text-decoration:none;">` : '') +

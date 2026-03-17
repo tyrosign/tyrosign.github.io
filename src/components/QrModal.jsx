@@ -12,7 +12,11 @@ const BLUE = '#0098d4';
 
 function titleCase(str) {
   if (!str) return '';
-  return str.replace(/\S+/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+  return str.split(' ').map(w => {
+    if (!w) return w;
+    if (w.length >= 2 && w === w.toUpperCase() && /^[A-ZÇĞİÖŞÜ]+$/.test(w)) return w;
+    return w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR');
+  }).join(' ');
 }
 
 function formatName(form) {
@@ -22,14 +26,14 @@ function formatName(form) {
 /**
  * Draws a vertical business card: QR top, info below — matches modal preview
  */
-async function drawCardCanvas(qrDataUrl, form, stg, company) {
+async function drawCardCanvas(qrDataUrl, form, stg, company, lang) {
   const W = 420;
   const qrSize = 220;
   const qrPad = 12;
   const qrBoxSize = qrSize + qrPad * 2;
 
   const fullName = formatName(form);
-  const companyName = (company && company.name) || stg.companyName || 'Tiryaki Agro';
+  const companyName = (lang === 'en' && company && company.nameEN) ? company.nameEN : ((company && company.name) || stg.companyName || 'Tiryaki Agro');
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' / ');
 
   // Height calc — matches modal spacing exactly
@@ -69,17 +73,28 @@ async function drawCardCanvas(qrDataUrl, form, stg, company) {
   ctx.textAlign = 'center';
   let y = 6 + 24; // after top bar + padding
 
-  // QR background box
+  // QR background box (glass effect)
   const qrBoxX = (W - qrBoxSize) / 2;
-  ctx.fillStyle = '#f8f9fc';
+  ctx.save();
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
   ctx.beginPath();
-  roundRect(ctx, qrBoxX, y, qrBoxSize, qrBoxSize, 10);
+  roundRect(ctx, qrBoxX, y, qrBoxSize, qrBoxSize, 14);
   ctx.fill();
-  ctx.strokeStyle = '#e2e8f0';
-  ctx.lineWidth = 1;
+  // Inner highlight (top edge glow)
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  roundRect(ctx, qrBoxX, y, qrBoxSize, qrBoxSize, 10);
+  roundRect(ctx, qrBoxX, y, qrBoxSize, qrBoxSize, 14);
   ctx.stroke();
+  // Outer shadow
+  ctx.shadowColor = 'rgba(30, 58, 95, 0.12)';
+  ctx.shadowBlur = 16;
+  ctx.shadowOffsetY = 4;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.0)';
+  ctx.beginPath();
+  roundRect(ctx, qrBoxX, y, qrBoxSize, qrBoxSize, 14);
+  ctx.fill();
+  ctx.restore();
 
   // Draw QR — wait for image to load
   const qrImgX = qrBoxX + qrPad;
@@ -157,7 +172,7 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) => {
+const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lang }) => {
   const canvasRef = useRef(null);
   const cardRef = useRef(null); // Pre-rendered card canvas
   const [copyOk, setCopyOk] = useState(false);
@@ -165,18 +180,165 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
   // Generate QR code + pre-render card canvas
   useEffect(() => {
     if (!open || !canvasRef.current) return;
-    const vcard = generateVCard(form, office, stg, company);
-    QRCode.toCanvas(canvasRef.current, vcard, {
-      width: 280,
-      margin: 2,
-      color: { dark: NAVY, light: '#ffffff' },
-      errorCorrectionLevel: 'M',
-    }).then(() => {
+    const vcard = generateVCard(form, office, stg, company, lang);
+
+    // Draw rounded-dot QR
+    const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'M' });
+    const qrModules = qrData.modules;
+    const moduleCount = qrModules.size;
+    const qrSize = 280;
+    const qrMargin = 2;
+    const totalMods = moduleCount + qrMargin * 2;
+    const cell = qrSize / totalMods;
+    const dotR = cell * 0.42;
+    const finderCornerR = cell * 0.8;
+
+    const cvs = canvasRef.current;
+    cvs.width = qrSize;
+    cvs.height = qrSize;
+    const qCtx = cvs.getContext('2d');
+
+    // Background with rounded corners
+    qCtx.fillStyle = '#ffffff';
+    qCtx.beginPath();
+    roundRect(qCtx, 0, 0, qrSize, qrSize, qrSize * 0.06);
+    qCtx.fill();
+
+    // Navy gradient for dots
+    const dotGrad = qCtx.createLinearGradient(0, 0, qrSize, qrSize);
+    dotGrad.addColorStop(0, NAVY);
+    dotGrad.addColorStop(0.5, '#1a4a6e');
+    dotGrad.addColorStop(1, '#0098d4');
+
+    function isFinderArea(r, c) {
+      if (r < 7 && c < 7) return true;
+      if (r < 7 && c >= moduleCount - 7) return true;
+      if (r >= moduleCount - 7 && c < 7) return true;
+      return false;
+    }
+
+    // Alignment pattern detection
+    function isAlignmentCenter(r, c) {
+      if (moduleCount < 25) return false; // no alignment patterns for small QR
+      const positions = [];
+      // Version-dependent alignment pattern positions (simplified)
+      const ver = Math.floor((moduleCount - 17) / 4) + 1;
+      if (ver >= 2) {
+        const last = moduleCount - 7;
+        const step = ver === 2 ? 0 : Math.round((last - 6) / (Math.ceil(ver / 7) + 1));
+        const coords = [6];
+        if (step > 0) { for (let p = last; p > 6; p -= step) coords.unshift(p); }
+        else coords.push(last);
+        for (const ar of coords) for (const ac of coords) {
+          if ((ar === 6 && ac === 6) || (ar === 6 && ac === last) || (ar === last && ac === 6)) continue;
+          positions.push([ar, ac]);
+        }
+      }
+      return positions.some(([ar, ac]) => r === ar && c === ac);
+    }
+
+    function drawFinder(sr, sc) {
+      const ox = (sc + qrMargin) * cell;
+      const oy = (sr + qrMargin) * cell;
+
+      // Shadow glow behind finder
+      qCtx.save();
+      qCtx.shadowColor = 'rgba(30, 58, 95, 0.25)';
+      qCtx.shadowBlur = cell * 2;
+      qCtx.fillStyle = NAVY;
+      qCtx.beginPath();
+      roundRect(qCtx, ox, oy, 7 * cell, 7 * cell, finderCornerR);
+      qCtx.fill();
+      qCtx.restore();
+
+      // Outer ring with gradient
+      qCtx.fillStyle = dotGrad;
+      qCtx.beginPath();
+      roundRect(qCtx, ox, oy, 7 * cell, 7 * cell, finderCornerR);
+      qCtx.fill();
+
+      // White gap
+      qCtx.fillStyle = '#ffffff';
+      qCtx.beginPath();
+      roundRect(qCtx, ox + cell, oy + cell, 5 * cell, 5 * cell, finderCornerR * 0.6);
+      qCtx.fill();
+
+      // Inner square with gold accent
+      qCtx.fillStyle = GOLD;
+      qCtx.beginPath();
+      roundRect(qCtx, ox + 2 * cell, oy + 2 * cell, 3 * cell, 3 * cell, finderCornerR * 0.4);
+      qCtx.fill();
+    }
+
+    drawFinder(0, 0);
+    drawFinder(0, moduleCount - 7);
+    drawFinder(moduleCount - 7, 0);
+
+    // Draw alignment patterns with matching style
+    function drawAlignment(cr, cc) {
+      const ox = (cc - 2 + qrMargin) * cell;
+      const oy = (cr - 2 + qrMargin) * cell;
+      const s = 5 * cell;
+      const r = cell * 0.6;
+      qCtx.fillStyle = dotGrad;
+      qCtx.beginPath();
+      roundRect(qCtx, ox, oy, s, s, r);
+      qCtx.fill();
+      qCtx.fillStyle = '#ffffff';
+      qCtx.beginPath();
+      roundRect(qCtx, ox + cell, oy + cell, 3 * cell, 3 * cell, r * 0.5);
+      qCtx.fill();
+      qCtx.fillStyle = GOLD;
+      qCtx.beginPath();
+      const dotCx = (cc + qrMargin + 0.5) * cell;
+      const dotCy = (cr + qrMargin + 0.5) * cell;
+      qCtx.arc(dotCx, dotCy, cell * 0.5, 0, Math.PI * 2);
+      qCtx.fill();
+    }
+
+    // Find and draw alignment patterns
+    for (let r = 0; r < moduleCount; r++) {
+      for (let c = 0; c < moduleCount; c++) {
+        if (isAlignmentCenter(r, c)) drawAlignment(r, c);
+      }
+    }
+
+    // Check if a cell is part of alignment pattern (5x5 area)
+    function isAlignmentArea(r, c) {
+      for (let dr = -2; dr <= 2; dr++) {
+        for (let dc = -2; dc <= 2; dc++) {
+          if (isAlignmentCenter(r - dr, c - dc)) return true;
+        }
+      }
+      return false;
+    }
+
+    // Data modules as gradient dots
+    qCtx.fillStyle = dotGrad;
+    for (let r = 0; r < moduleCount; r++) {
+      for (let c = 0; c < moduleCount; c++) {
+        if (isFinderArea(r, c)) continue;
+        if (isAlignmentArea(r, c)) continue;
+        if (qrModules.get(r, c)) {
+          const cx = (c + qrMargin + 0.5) * cell;
+          const cy = (r + qrMargin + 0.5) * cell;
+          // Slightly varied dot sizes for visual rhythm
+          const dist = Math.sqrt(Math.pow(cx - qrSize / 2, 2) + Math.pow(cy - qrSize / 2, 2)) / (qrSize / 2);
+          const sizeVar = dotR * (0.85 + dist * 0.15);
+          qCtx.beginPath();
+          qCtx.arc(cx, cy, sizeVar, 0, Math.PI * 2);
+          qCtx.fill();
+        }
+      }
+    }
+
+    // Continue with card rendering
+    Promise.resolve().then(() => {
       // Pre-render the styled card so copy is instant
       const qrDataUrl = canvasRef.current.toDataURL('image/png');
-      drawCardCanvas(qrDataUrl, form, stg, company).then(c => { cardRef.current = c; });
+      drawCardCanvas(qrDataUrl, form, stg, company, lang).then(c => { cardRef.current = c; });
     }).catch(() => {});
-  }, [open, form, office, stg, company]);
+  }, [open, form, office, stg, company, lang]);
 
   // Reset copy state when modal opens
   useEffect(() => { if (open) setCopyOk(false); }, [open]);
@@ -231,7 +393,7 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
   if (!open) return null;
 
   const fullName = formatName(form);
-  const companyName = (company && company.name) || 'Tiryaki Agro';
+  const companyName = (lang === 'en' && company && company.nameEN) ? company.nameEN : ((company && company.name) || 'Tiryaki Agro');
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' · ');
 
   return (
@@ -303,10 +465,12 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L }) =
           {/* QR */}
           <div style={{
             display: 'inline-flex',
-            background: '#f8f9fc',
-            borderRadius: 8,
-            padding: 8,
-            border: '1px solid #e2e8f0',
+            background: 'rgba(255, 255, 255, 0.55)',
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+            borderRadius: 14,
+            padding: 10,
+            border: '1.5px solid rgba(255, 255, 255, 0.5)',
+            boxShadow: '0 8px 32px rgba(30, 58, 95, 0.12), inset 0 1px 0 rgba(255,255,255,0.4)',
             marginBottom: '0.8rem',
           }}>
             <canvas ref={canvasRef} style={{ display: 'block', width: 160, height: 160 }} />

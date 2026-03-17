@@ -2,7 +2,7 @@ import { memo, useState, useCallback, lazy, Suspense } from 'react';
 import { User, Phone, Eye, Download } from 'lucide-react';
 import { C } from '../constants/theme';
 import { OFFICES, OFFICE_GROUPS } from '../constants/offices';
-import { COMPANIES, COMPANY_GROUPS } from '../constants/companies';
+import { COMPANIES, COMPANY_GROUPS, COMPANY_GROUP_LABELS_EN } from '../constants/companies';
 import GlassCard from './ui/GlassCard';
 import SectionTitle from './ui/SectionTitle';
 import FormField from './ui/FormField';
@@ -18,7 +18,7 @@ const QrModal = lazy(() => import('./QrModal'));
 const BusinessCardModal = lazy(() => import('./BusinessCardModal'));
 
 const SignatureTab = memo(({
-  form, uf, stg, setStg, office, company, sigHTML, hasData, progress, L, lang,
+  form, uf, stg, effectiveStg, setStg, office, company, sigHTML, hasData, progress, L, lang,
   copied, doCopy, doReset, showSteps, setShowSteps,
   designOpen, setDesignOpen,
   sigBanner, setSigBanner, bannerFileRef, procBanner,
@@ -53,10 +53,10 @@ const SignatureTab = memo(({
             <FormField label={L.ten} value={form.titleEN} onChange={e => uf('titleEN', e.target.value)} placeholder="Enterprise Systems Executive" />
             <SearchableSelect
               label={L.ofc}
-              required
               value={form.officeId}
               onChange={v => uf('officeId', v)}
               placeholder={L.so}
+              clearLabel={L.so}
               options={OFFICES}
               groups={OFFICE_GROUPS}
               groupLabels={lang === 'en' ? { 'Türkiye': L.grpTR, 'Uluslararası': L.grpIntl } : undefined}
@@ -69,6 +69,8 @@ const SignatureTab = memo(({
               placeholder={L.sco}
               options={COMPANIES}
               groups={COMPANY_GROUPS}
+              nameKey={lang === 'en' ? 'nameEN' : undefined}
+              groupLabels={lang === 'en' ? COMPANY_GROUP_LABELS_EN : undefined}
             />
 
             <div style={{ height: 1, background: C.borderSub, margin: '0.5rem 0 0.6rem' }} />
@@ -144,10 +146,11 @@ const SignatureTab = memo(({
             onClose={() => setQrOpen(false)}
             form={form}
             office={office}
-            stg={stg}
+            stg={effectiveStg}
             company={company}
             toast={toast}
             L={L}
+            lang={lang}
           />
         </Suspense>
       )}
@@ -160,10 +163,11 @@ const SignatureTab = memo(({
             onClose={() => setBcOpen(false)}
             form={form}
             office={office}
-            stg={stg}
+            stg={effectiveStg}
             company={company}
             toast={toast}
             L={L}
+            lang={lang}
           />
         </Suspense>
       )}

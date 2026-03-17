@@ -2,7 +2,7 @@ import { memo, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Eye, Download, Upload, X } from 'lucide-react';
 import { C } from '../constants/theme';
 import { BANNER_TEMPLATES, BANNER_SIZES } from '../constants/bannerConfig';
-import { COMPANIES, COMPANY_GROUPS } from '../constants/companies';
+import { COMPANIES, COMPANY_GROUPS, COMPANY_GROUP_LABELS_EN } from '../constants/companies';
 import GlassCard from './ui/GlassCard';
 import SectionTitle from './ui/SectionTitle';
 import FormField from './ui/FormField';
@@ -26,7 +26,7 @@ const posLabel = (id, L) => ({
   'center': L.banPosCenter,
 }[id] || id);
 
-const BannerTab = memo(({ banner, setBanner, stg, canvasRef, downloadBanner, L }) => {
+const BannerTab = memo(({ banner, setBanner, stg, canvasRef, downloadBanner, L, lang }) => {
   const selectedCompany = useMemo(() => COMPANIES.find(c => c.id === banner.companyId) || COMPANIES[0], [banner.companyId]);
   const fileInputRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
@@ -64,6 +64,8 @@ const BannerTab = memo(({ banner, setBanner, stg, canvasRef, downloadBanner, L }
               placeholder={L.sco}
               options={COMPANIES}
               groups={COMPANY_GROUPS}
+              nameKey={lang === 'en' ? 'nameEN' : undefined}
+              groupLabels={lang === 'en' ? COMPANY_GROUP_LABELS_EN : undefined}
             />
 
             {/* Template Selection */}

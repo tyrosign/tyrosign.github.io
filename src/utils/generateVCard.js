@@ -5,7 +5,7 @@
  */
 import { formatGSM } from './formatting';
 
-export function generateVCard(form, office, stg, company) {
+export function generateVCard(form, office, stg, company, lang) {
   const lines = [
     'BEGIN:VCARD',
     'VERSION:3.0',
@@ -19,7 +19,7 @@ export function generateVCard(form, office, stg, company) {
   }
 
   // Organization — şirket seçiminden gelir, yoksa ayarlardaki şirket adı
-  const orgName = (company && company.name) || stg.companyName || 'Tiryaki Agro';
+  const orgName = (lang === 'en' && company && company.nameEN) ? company.nameEN : ((company && company.name) || stg.companyName || 'Tiryaki Agro');
   lines.push('ORG:' + orgName);
 
   // Title (TR + EN)

@@ -5,6 +5,32 @@ import TabBtn from './ui/TabBtn';
 import LinkedInIcon from './ui/LinkedInIcon';
 import ProfileDropdown from './ProfileDropdown';
 
+/* ── Tyrosign Stream Logo — theme-aware ── */
+const LOGO_COLORS = {
+  light:    { gold1: '#e0a832', gold2: '#a67820', mid: '#1e3a5f', main: '#0098d4', overlay: '#152d4a' },
+  navy:     { gold1: '#e0a832', gold2: '#a67820', mid: '#d1d5db', main: '#0098d4', overlay: '#b8bec6' },
+  gradient: { gold1: '#e0a832', gold2: '#a67820', mid: '#d1d5db', main: '#0098d4', overlay: '#b8bec6' },
+  charcoal: { gold1: '#e0a832', gold2: '#a67820', mid: '#d1d5db', main: '#0098d4', overlay: '#b8bec6' },
+};
+const StreamLogo = memo(({ size = 28, themeId = 'light' }) => {
+  const c = LOGO_COLORS[themeId] || LOGO_COLORS.light;
+  const gId = 'slG_' + themeId; // unique gradient id per theme
+  return (
+    <svg viewBox="0 0 150 150" fill="none" width={size} height={size} style={{ flexShrink: 0 }}>
+      <defs>
+        <linearGradient id={gId} x1="61.29" y1="33.97" x2="14.04" y2="103.35" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor={c.gold1} />
+          <stop offset="1" stopColor={c.gold2} />
+        </linearGradient>
+      </defs>
+      <path fill={`url(#${gId})`} d="M14.52,68.93v33.41s-.28,6.49,3.59,4.28c10.49-6.21,21.95-12.7,26.51-15.05,9.39-4.69,8.01-10.49,8.01-10.49V48.77c0-8.42-5.8-4.69-5.8-4.69l-28.16,16.15s-4.14,2.35-4.14,8.7Z" />
+      <path fill={c.mid} d="M97.77,70.17v40.31s1.52,10.91-7.45,15.88l-25.68,15.19s-6.9,3.31-6.49-2.76l1.66-48.73,37.96-19.88Z" />
+      <path fill={c.main} d="M58.15,137.95V66.72s-1.52-13.67,18.5-24.99l54.94-31.61s5.8-3.59,5.8,4.69V47.12s1.52,5.8-8.01,10.49c-9.53,4.69-47.9,27.61-47.9,27.61,0,0-23.33,11.87-23.33,52.74Z" />
+      <path fill={c.overlay} d="M84.52,91.98s5.52-3.31,13.25-7.87v-8.28c-9.11,5.25-16.43,9.66-16.43,9.66,0,0-20.29,10.35-22.92,45.14v1.1c7.32-30.23,26.09-39.76,26.09-39.76Z" />
+    </svg>
+  );
+});
+
 /* ── Header Theme Configs ── */
 const THEMES = {
   'navy': {
@@ -31,7 +57,7 @@ const THEMES = {
     tabActive: 'rgba(255,255,255,0.2)',
     tabText: 'rgba(255,255,255,0.6)',
     tabActiveText: '#fff',
-    tabActiveIcon: '#c8922a',
+    tabActiveIcon: '#fff',
     border: 'rgba(255,255,255,0.1)',
     langBg: 'rgba(255,255,255,0.1)',
     langSlider: 'rgba(255,255,255,0.2)',
@@ -118,8 +144,8 @@ const ThemedTabBtn = memo(({ active, onClick, icon: Icon, label, theme }) => (
   </button>
 ));
 
-const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto, headerTheme = 'navy' }) => {
-  const theme = THEMES[headerTheme] || THEMES['navy'];
+const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto, headerTheme = 'light' }) => {
+  const theme = THEMES[headerTheme] || THEMES['light'];
   const isGradient = headerTheme === 'gradient';
 
   return (
@@ -131,15 +157,17 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
       padding: '0 2rem', height: 56,
       display: 'flex', alignItems: 'center', gap: '1rem',
     }}>
-      {/* Logo — tyrosign text only */}
-      <span style={{
-        fontFamily: "'Baloo 2', 'Plus Jakarta Sans', Inter, sans-serif",
-        fontSize: 25, fontWeight: 700, letterSpacing: -1, lineHeight: 1,
-        cursor: 'pointer', flexShrink: 0,
-      }} onClick={() => setTab('signature')}>
-        <span style={{ color: theme.tyroColor }}>tyro</span>
-        <span style={{ color: theme.signColor }}>sign</span>
-      </span>
+      {/* Logo — stream icon + tyrosign text */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', flexShrink: 0 }} onClick={() => setTab('signature')}>
+        <StreamLogo size={26} themeId={headerTheme} />
+        <span style={{
+          fontFamily: "'Baloo 2', 'Plus Jakarta Sans', Inter, sans-serif",
+          fontSize: 23, fontWeight: 700, letterSpacing: -1, lineHeight: 1,
+        }}>
+          <span style={{ color: theme.tyroColor }}>tyro</span>
+          <span style={{ color: theme.signColor }}>sign</span>
+        </span>
+      </div>
 
       {/* Nav tabs */}
       <nav className="app-header-nav" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>

@@ -58,7 +58,7 @@ export default function App() {
     companyTextColor: '#333333', contactLabelColor: '#888888', contactValueColor: '#555555',
     bannerAccentColor: '',
     designId: 'corporate',
-    headerTheme: 'navy',
+    headerTheme: 'light',
   };
   const [stg, setStg] = useState(() => {
     try {

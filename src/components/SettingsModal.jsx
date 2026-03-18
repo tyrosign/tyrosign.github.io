@@ -156,11 +156,12 @@ const SettingsModal = memo(({
           <div style={{ animation: 'fadeIn 0.2s ease' }}>
             {/* Header Theme Selection */}
             <p style={{ fontSize: '0.7rem', fontWeight: 700, color: C.primary, marginBottom: '0.6rem' }}>{lang === 'tr' ? 'Başlık Teması' : 'Header Theme'}</p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginBottom: '1.2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1.2rem' }}>
               {[
-                { id: 'navy-dots', bg: '#1e3a5f', label: 'Navy' },
-                { id: 'gradient', bg: 'linear-gradient(135deg, #1e3a5f, #0098d4)', label: 'Gradient' },
-                { id: 'charcoal', bg: '#0f172a', label: 'Charcoal' },
+                { id: 'navy-dots', bg: '#1e3a5f', label: 'Navy', tyro: '#fff' },
+                { id: 'gradient', bg: 'linear-gradient(135deg, #1e3a5f, #0098d4)', label: 'Gradient', tyro: '#fff' },
+                { id: 'charcoal', bg: '#0f172a', label: 'Charcoal', tyro: '#fff' },
+                { id: 'light', bg: '#fff', label: 'Light', tyro: '#1e3a5f', border: true },
               ].map(t => {
                 const active = stg.headerTheme === t.id;
                 return (
@@ -172,9 +173,10 @@ const SettingsModal = memo(({
                     <div style={{
                       background: t.bg, borderRadius: 8, padding: '0.6rem 0.4rem',
                       textAlign: 'center',
+                      border: t.border ? `1px solid ${C.borderSub}` : 'none',
                     }}>
                       <span style={{ fontFamily: "'Baloo 2',Inter,sans-serif", fontSize: '0.85rem', fontWeight: 700, letterSpacing: -0.5 }}>
-                        <span style={{ color: '#fff' }}>tyro</span>
+                        <span style={{ color: t.tyro || '#fff' }}>tyro</span>
                         <span style={{ color: '#c8922a' }}>sign</span>
                       </span>
                       {t.id === 'navy-dots' && (

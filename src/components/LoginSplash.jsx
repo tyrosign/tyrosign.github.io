@@ -1,6 +1,20 @@
 import { memo } from 'react';
 import { C } from '../constants/theme';
-import PixelDropLogo from './ui/PixelDropLogo';
+/* StreamLogo — same as AppHeader */
+const StreamLogoLogin = () => (
+  <svg viewBox="0 0 150 150" fill="none" width={52} height={52}>
+    <defs>
+      <linearGradient id="slGoldL" x1="61.29" y1="33.97" x2="14.04" y2="103.35" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stopColor="#e0a832" />
+        <stop offset="1" stopColor="#a67820" />
+      </linearGradient>
+    </defs>
+    <path fill="url(#slGoldL)" d="M14.52,68.93v33.41s-.28,6.49,3.59,4.28c10.49-6.21,21.95-12.7,26.51-15.05,9.39-4.69,8.01-10.49,8.01-10.49V48.77c0-8.42-5.8-4.69-5.8-4.69l-28.16,16.15s-4.14,2.35-4.14,8.7Z" />
+    <path fill="#1e3a5f" d="M97.77,70.17v40.31s1.52,10.91-7.45,15.88l-25.68,15.19s-6.9,3.31-6.49-2.76l1.66-48.73,37.96-19.88Z" />
+    <path fill="#0098d4" d="M58.15,137.95V66.72s-1.52-13.67,18.5-24.99l54.94-31.61s5.8-3.59,5.8,4.69V47.12s1.52,5.8-8.01,10.49c-9.53,4.69-47.9,27.61-47.9,27.61,0,0-23.33,11.87-23.33,52.74Z" />
+    <path fill="#152d4a" d="M84.52,91.98s5.52-3.31,13.25-7.87v-8.28c-9.11,5.25-16.43,9.66-16.43,9.66,0,0-20.29,10.35-22.92,45.14v1.1c7.32-30.23,26.09-39.76,26.09-39.76Z" />
+  </svg>
+);
 
 import { GLOBAL_CSS } from '../styles/globalCss';
 
@@ -57,9 +71,16 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
       animation: 'splashFadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
       position: 'relative', zIndex: 2,
     }}>
-      {/* Animated Pixel Drop Logo */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.8rem' }}>
-        <PixelDropLogo height={70} textSize={34} />
+      {/* Stream Logo + tyrosign */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginBottom: '0.8rem' }}>
+        <StreamLogoLogin />
+        <span style={{
+          fontFamily: "'Baloo 2', 'Plus Jakarta Sans', Inter, sans-serif",
+          fontSize: 32, fontWeight: 700, letterSpacing: -1.5, lineHeight: 1,
+        }}>
+          <span style={{ color: '#1e3a5f' }}>tyro</span>
+          <span style={{ color: '#c8922a' }}>sign</span>
+        </span>
       </div>
 
       <p style={{

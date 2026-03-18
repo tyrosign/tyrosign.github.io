@@ -112,9 +112,10 @@ export default function NotifyManagerModal({ open, onClose, form, sigHTML, toast
     }
     setSending(true);
 
-    // Build HTML body: user text + signature
+    // Build HTML body: user text + signature (strip <style> tags for email clients)
     const textHtml = body.split('\n').map(line => `<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;color:#333;">${line || '&nbsp;'}</p>`).join('');
-    const htmlBody = textHtml + '<br/>' + sigHTML;
+    const cleanSig = sigHTML.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+    const htmlBody = `<html><head><meta charset="utf-8"/></head><body style="margin:0;padding:0;font-family:Arial,sans-serif;">${textHtml}<br/>${cleanSig}</body></html>`;
 
     const ok = await sendMail({ to: toEmail.trim(), subject, htmlBody });
     setSending(false);

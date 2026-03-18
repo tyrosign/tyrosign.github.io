@@ -19,6 +19,7 @@ export function useMsal({ toast, lang, setForm }) {
   const [msalReady, setMsalReady] = useState(false);
   const [msalAccount, setMsalAccount] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const fetchGraphProfile = useCallback(async (account) => {
     try {
@@ -36,6 +37,18 @@ export function useMsal({ toast, lang, setForm }) {
         titleTR: p.jobTitle || prev.titleTR,
         gsm: p.mobilePhone || prev.gsm,
       }));
+      // Fetch profile photo (separate try-catch — photo is optional)
+      try {
+        const photoRes = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+          headers: { Authorization: `Bearer ${tokenResponse.accessToken}` },
+        });
+        if (photoRes.ok) {
+          const blob = await photoRes.blob();
+          const reader = new FileReader();
+          reader.onloadend = () => setProfilePhoto(reader.result);
+          reader.readAsDataURL(blob);
+        }
+      } catch (_) { /* no photo available */ }
     } catch (err) {
       if (err instanceof InteractionRequiredAuthError) {
         try {
@@ -158,5 +171,5 @@ export function useMsal({ toast, lang, setForm }) {
     }
   }, [msalAccount]);
 
-  return { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, fetchManager, sendMail };
+  return { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, fetchManager, sendMail, profilePhoto };
 }

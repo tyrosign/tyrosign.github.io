@@ -715,14 +715,19 @@ function getCompanyName(company, stg, lang) {
   return (lang === 'en' && company.nameEN) ? company.nameEN : company.name;
 }
 
-const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toast, L, lang }) => {
+const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toast, L, lang, profilePhoto }) => {
   const qrCanvasRef = useRef(null);
   const cardRef = useRef(null);
   const profileInputRef = useRef(null);
 
   const [copyOk, setCopyOk] = useState(false);
   const [qrReady, setQrReady] = useState(0);
-  const [profileBase64, setProfileBase64] = useState(null);
+  const [profileBase64, setProfileBase64] = useState(profilePhoto || null);
+
+  // Sync Graph photo when it becomes available
+  useEffect(() => {
+    if (profilePhoto && !profileBase64) setProfileBase64(profilePhoto);
+  }, [profilePhoto]);
 
   useEffect(() => {
     if (!open) return;

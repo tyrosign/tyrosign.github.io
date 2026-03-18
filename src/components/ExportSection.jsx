@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Copy, Check, Info, Mail } from 'lucide-react';
 import { C } from '../constants/theme';
 
@@ -26,104 +26,102 @@ const CardIcon = () => (
   </svg>
 );
 
-// Palette-mapped Apple-style solid buttons (uses theme constants)
-const PAL = {
-  navy:  { solid: C.primary,     shadow: `${C.primary}52`     },
-  blue:  { solid: C.divider,     shadow: `${C.divider}52`     },
-  gold:  { solid: C.accent,      shadow: `${C.accent}52`      },
-  soft:  { solid: C.primarySoft, shadow: `${C.primarySoft}52` },
-  gray:  { solid: C.textM,       shadow: `${C.textM}33`       },
-  green: { solid: C.ok,          shadow: `${C.ok}52`          },
+// Color palette for each action
+const COLORS = {
+  copy:    C.primary,      // navy
+  copied:  C.ok,           // green
+  outlook: C.divider,      // blue
+  notify:  C.accent,       // gold
+  qr:      '#475569',      // slate
+  bc:      '#0d9488',      // teal
 };
 
-const btnBase = {
-  flex: 1,
-  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.28rem',
-  padding: '0.5rem 0.35rem',
-  borderRadius: 10,
-  border: 'none',
-  fontSize: '0.67rem', fontWeight: 600, fontFamily: 'Inter,sans-serif',
-  letterSpacing: '-0.15px',
-  transition: 'all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-  cursor: 'pointer', whiteSpace: 'nowrap',
-  color: '#fff',
+// Apple segmented control — ghost segment button
+const SegBtn = ({ icon, label, color, onClick, disabled, tip }) => {
+  const [hovered, setHovered] = useState(false);
+  const active = hovered && !disabled;
+
+  return (
+    <div className="tip-wrap" style={{ flex: 1, display: 'flex', minWidth: 0 }}>
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          flex: 1,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
+          padding: '0.55rem 0.3rem',
+          background: active ? color : 'transparent',
+          color: active ? '#fff' : disabled ? C.textM : color,
+          border: 'none',
+          borderRadius: 8,
+          fontSize: '0.67rem', fontWeight: 600, fontFamily: 'Inter,sans-serif',
+          letterSpacing: '-0.15px',
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          opacity: disabled ? 0.35 : 1,
+          whiteSpace: 'nowrap',
+          transition: 'all 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          boxShadow: active ? `0 2px 12px ${color}40` : 'none',
+          transform: active ? 'scale(1.02)' : 'scale(1)',
+        }}
+      >
+        {icon}
+        {label}
+      </button>
+      <span className="tip-box">{tip}</span>
+    </div>
+  );
 };
-
-const mkBtn = (pal, hasData) => ({
-  ...btnBase,
-  background: pal.solid,
-  opacity: hasData ? 1 : 0.38,
-  cursor: hasData ? 'pointer' : 'not-allowed',
-  boxShadow: hasData
-    ? `0 1px 2px rgba(0,0,0,0.08), 0 3px 10px ${pal.shadow}`
-    : 'none',
-});
-
-const Tip = ({ text, children }) => (
-  <div className="tip-wrap" style={{ flex: 1, display: 'flex' }}>
-    {children}
-    <span className="tip-box">{text}</span>
-  </div>
-);
 
 const ExportSection = memo(({ hasData, copied, doCopy, onQrClick, onBcClick, onOutlookOpen, onNotifyClick, msalAccount, showSteps, setShowSteps, L }) => (
   <>
-    <div className="export-btns" style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.6rem' }}>
+    {/* Apple Segmented Control container */}
+    <div
+      className="export-btns"
+      style={{
+        display: 'flex', gap: '2px',
+        padding: '3px',
+        background: `linear-gradient(135deg, ${C.primaryGhost}, rgba(30,58,95,0.03))`,
+        borderRadius: 11,
+        border: `1px solid ${C.borderSub}`,
+        marginBottom: '0.6rem',
+      }}
+    >
+      <SegBtn
+        icon={copied ? <Check size={13} /> : <Copy size={13} />}
+        label={copied ? L.cpd : L.cp}
+        color={copied ? COLORS.copied : COLORS.copy}
+        onClick={doCopy} disabled={!hasData} tip={L.tipCopy}
+      />
 
-      {/* 1. İmza Kopyala — Navy */}
-      <Tip text={L.tipCopy}>
-        <button onClick={doCopy} disabled={!hasData}
-          style={{ ...mkBtn(copied ? PAL.green : PAL.navy, hasData), width: '100%' }}
-        >
-          {copied ? <Check size={13} /> : <Copy size={13} />}
-          {copied ? L.cpd : L.cp}
-        </button>
-      </Tip>
-
-      {/* 2. Outlook — Blue */}
       {msalAccount && (
-        <Tip text={L.tipOutlook}>
-          <button onClick={onOutlookOpen} disabled={!hasData}
-            style={{ ...mkBtn(PAL.blue, hasData), width: '100%' }}
-          >
-            <OutlookIcon />
-            {L.olOpen}
-          </button>
-        </Tip>
+        <SegBtn
+          icon={<OutlookIcon />} label={L.olOpen}
+          color={COLORS.outlook}
+          onClick={onOutlookOpen} disabled={!hasData} tip={L.tipOutlook}
+        />
       )}
 
-      {/* 3. Yöneticime Bildir — Gold (only with MSAL) */}
       {msalAccount && (
-        <Tip text={L.tipNotifyMgr}>
-          <button onClick={onNotifyClick} disabled={!hasData}
-            style={{ ...mkBtn(PAL.gold, hasData), width: '100%' }}
-          >
-            <Mail size={13} />
-            {L.notifyMgr}
-          </button>
-        </Tip>
+        <SegBtn
+          icon={<Mail size={13} />} label={L.notifyMgr}
+          color={COLORS.notify}
+          onClick={onNotifyClick} disabled={!hasData} tip={L.tipNotifyMgr}
+        />
       )}
 
-      {/* 4. QR Kod — Soft Navy */}
-      <Tip text={L.tipQr}>
-        <button onClick={onQrClick} disabled={!hasData}
-          style={{ ...mkBtn(PAL.soft, hasData), width: '100%' }}
-        >
-          <QrIcon />
-          {L.qrGen}
-        </button>
-      </Tip>
+      <SegBtn
+        icon={<QrIcon />} label={L.qrGen}
+        color={COLORS.qr}
+        onClick={onQrClick} disabled={!hasData} tip={L.tipQr}
+      />
 
-      {/* 4. Kartvizit — Gold */}
-      <Tip text={L.tipBc}>
-        <button onClick={onBcClick} disabled={!hasData}
-          style={{ ...mkBtn(PAL.gold, hasData), width: '100%' }}
-        >
-          <CardIcon />
-          {L.bcGen}
-        </button>
-      </Tip>
-
+      <SegBtn
+        icon={<CardIcon />} label={L.bcGen}
+        color={COLORS.bc}
+        onClick={onBcClick} disabled={!hasData} tip={L.tipBc}
+      />
     </div>
 
     <div style={{ borderTop: `1px solid ${C.borderSub}`, paddingTop: '0.5rem' }}>

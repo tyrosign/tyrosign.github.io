@@ -4,6 +4,8 @@ export const GLOBAL_CSS = `
   @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap");
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { overflow-y: scroll; }
+  .sec-icon { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  .sec-icon:hover { transform: scale(1.18) rotate(-8deg); }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes toastIn { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }

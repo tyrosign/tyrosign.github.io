@@ -23,7 +23,7 @@ const SignatureTab = memo(({
   copied, doCopy, doReset, showSteps, setShowSteps,
   designOpen, setDesignOpen,
   sigBanner, setSigBanner, bannerFileRef, procBanner,
-  msalAccount, toast, fetchManager, sendMail,
+  msalAccount, toast, fetchManager, sendMail, profilePhoto,
 }) => {
   const [qrOpen, setQrOpen] = useState(false);
   const [bcOpen, setBcOpen] = useState(false);
@@ -136,7 +136,7 @@ const SignatureTab = memo(({
         <div className="sig-sec-preview" style={{ animation: 'slideInRight 0.4s ease-out', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <GlassCard accent style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '1rem' }}>
-              <Eye size={15} style={{ color: C.accent }} />
+              <Eye size={16} className="sec-icon" style={{ color: C.accent }} />
               <span style={{ fontSize: '0.78rem', fontWeight: 700, color: C.primary, fontFamily: 'Plus Jakarta Sans,sans-serif' }}>{L.lv}</span>
               {hasData && <span style={{
                 display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
@@ -202,6 +202,7 @@ const SignatureTab = memo(({
             toast={toast}
             L={L}
             lang={lang}
+            profilePhoto={profilePhoto}
           />
         </Suspense>
       )}

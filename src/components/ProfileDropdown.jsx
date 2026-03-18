@@ -1,7 +1,25 @@
 import { memo } from 'react';
 import { C } from '../constants/theme';
 
-const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, handleLogout }) => {
+const Avatar = ({ size, photo, initials }) => (
+  <div style={{
+    width: size, height: size, borderRadius: '50%',
+    background: photo ? 'transparent' : `linear-gradient(135deg, ${C.primary}, #2a5f9e)`,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: '#fff', fontSize: size < 30 ? '0.55rem' : size < 44 ? '0.7rem' : '0.85rem',
+    fontWeight: 700, fontFamily: 'Plus Jakarta Sans,sans-serif',
+    letterSpacing: '0.5px',
+    boxShadow: `0 2px ${size < 30 ? 6 : 8}px rgba(30,58,95,0.25)`,
+    flexShrink: 0, overflow: 'hidden',
+  }}>
+    {photo
+      ? <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      : initials
+    }
+  </div>
+);
+
+const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, handleLogout, profilePhoto }) => {
   const initials = (msalAccount.name || '').split(' ').map(n => n?.[0] || '').join('').slice(0, 2).toLocaleUpperCase('tr-TR');
 
   return (
@@ -20,17 +38,7 @@ const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, 
         onMouseEnter={e => { if (!profileOpen) { e.currentTarget.style.background = `${C.primary}08`; e.currentTarget.style.borderColor = C.primary + '20'; } }}
         onMouseLeave={e => { if (!profileOpen) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = C.borderSub; } }}
       >
-        <div className="profile-avatar" style={{
-          width: 26, height: 26, borderRadius: '50%',
-          background: `linear-gradient(135deg, ${C.primary}, #2a5f9e)`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#fff', fontSize: '0.55rem', fontWeight: 700,
-          fontFamily: 'Plus Jakarta Sans,sans-serif',
-          letterSpacing: '0.5px',
-          boxShadow: '0 2px 6px rgba(30,58,95,0.25)',
-        }}>
-          {initials}
-        </div>
+        <Avatar size={26} photo={profilePhoto} initials={initials} />
         <svg className="profile-chevron" width="8" height="5" viewBox="0 0 10 6" fill="none" style={{
           transition: 'transform 0.2s ease',
           transform: profileOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -58,18 +66,7 @@ const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, 
               background: '#f8f9fb',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{
-                  width: 36, height: 36, borderRadius: '50%',
-                  background: `linear-gradient(135deg, ${C.primary}, #2a5f9e)`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontSize: '0.7rem', fontWeight: 700,
-                  fontFamily: 'Plus Jakarta Sans,sans-serif',
-                  letterSpacing: '0.5px',
-                  boxShadow: '0 2px 8px rgba(30,58,95,0.25)',
-                  flexShrink: 0,
-                }}>
-                  {initials}
-                </div>
+                <Avatar size={48} photo={profilePhoto} initials={initials} />
                 <div style={{ minWidth: 0 }}>
                   <div style={{
                     fontSize: '0.76rem', fontWeight: 700, color: '#1a1a2e',

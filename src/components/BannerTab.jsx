@@ -227,7 +227,7 @@ const BannerTab = memo(({ banner, setBanner, stg, canvasRef, downloadBanner, L, 
         <div className="sig-right" style={{ flex: 1, minWidth: 0, animation: 'slideInRight 0.4s ease-out' }}>
           <GlassCard accent>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.85rem' }}>
-              <Eye size={15} style={{ color: C.accent }} />
+              <Eye size={16} className="sec-icon" style={{ color: C.accent }} />
               <span style={{ fontSize: '0.78rem', fontWeight: 700, color: C.primary, fontFamily: 'Plus Jakarta Sans,sans-serif' }}>{L.banPrev}</span>
             </div>
             <canvas ref={canvasRef} style={{ width: '100%', maxWidth: 660, height: 'auto', borderRadius: '8px', border: `1px solid ${C.borderSub}`, display: 'block' }} />

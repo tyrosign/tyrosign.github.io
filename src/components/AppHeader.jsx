@@ -1,4 +1,4 @@
-import { memo, useRef, useState, useEffect, useCallback } from 'react';
+import { memo } from 'react';
 import { Edit3, Settings } from 'lucide-react';
 import { C } from '../constants/theme';
 import TyroLogo from './ui/TyroLogo';
@@ -6,35 +6,7 @@ import TabBtn from './ui/TabBtn';
 import LinkedInIcon from './ui/LinkedInIcon';
 import ProfileDropdown from './ProfileDropdown';
 
-const TAB_IDS = ['signature', 'banner', 'settings'];
-
-const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout }) => {
-  const navRef = useRef(null);
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
-
-  const updateIndicator = useCallback(() => {
-    if (!navRef.current) return;
-    const idx = TAB_IDS.indexOf(tab);
-    const btns = navRef.current.querySelectorAll('.nav-tab-btn');
-    if (!btns[idx]) return;
-    const btn = btns[idx];
-    setIndicator({ left: btn.offsetLeft, width: btn.offsetWidth });
-  }, [tab]);
-
-  useEffect(() => {
-    updateIndicator();
-    window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
-  }, [updateIndicator]);
-
-  // Re-measure after fonts load
-  useEffect(() => {
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(updateIndicator);
-    }
-  }, [updateIndicator]);
-
-  return (
+const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto }) => (
     <header className="app-header" style={{
       position: 'sticky', top: 0, zIndex: 100,
       background: C.glassSolid, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
@@ -51,18 +23,11 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
       </div>
 
       <nav className="app-header-nav" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-        <div ref={navRef} className="nav-tabs-inner" style={{
-          position: 'relative', display: 'flex', gap: '2px',
-          background: 'transparent', borderRadius: 10, padding: 3, border: 'none',
+        <div className="nav-tabs-inner" style={{
+          display: 'flex', gap: '2px',
+          padding: 3, borderRadius: 11,
+          background: `${C.primaryGhost}`,
         }}>
-          <span style={{
-            position: 'absolute', top: 3, bottom: 3,
-            left: indicator.left,
-            width: indicator.width,
-            background: '#fff', borderRadius: 8,
-            boxShadow: '0 1px 3px rgba(30,58,95,0.1), 0 1px 2px rgba(30,58,95,0.06)',
-            transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          }} />
           <TabBtn active={tab === 'signature'} onClick={() => setTab('signature')} icon={Edit3} label={L.sigTab} />
           <TabBtn active={tab === 'banner'} onClick={() => setTab('banner')} icon={LinkedInIcon} label={L.banTab} />
           <TabBtn active={tab === 'settings'} onClick={() => setTab('settings')} icon={Settings} label={L.setTab} />
@@ -97,10 +62,10 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
           profileOpen={profileOpen}
           setProfileOpen={setProfileOpen}
           handleLogout={handleLogout}
+          profilePhoto={profilePhoto}
         />
       )}
     </header>
-  );
-});
+));
 
 export default AppHeader;

@@ -39,6 +39,23 @@ const THEMES = {
     langInactive: 'rgba(255,255,255,0.45)',
     showDots: false,
   },
+  light: {
+    bg: 'rgba(255,255,255,0.82)',
+    backdrop: 'blur(20px)',
+    tyroColor: '#1e3a5f',
+    signColor: '#c8922a',
+    tabBg: 'rgba(30,58,95,0.04)',
+    tabActive: '#fff',
+    tabText: 'rgba(30,58,95,0.5)',
+    tabActiveText: '#1e3a5f',
+    tabActiveIcon: '#c8922a',
+    border: 'rgba(30,58,95,0.08)',
+    langBg: 'rgba(30,58,95,0.06)',
+    langSlider: '#fff',
+    langActive: '#1e3a5f',
+    langInactive: 'rgba(148,163,184,1)',
+    showDots: false,
+  },
   charcoal: {
     bg: '#0f172a',
     tyroColor: '#fff',
@@ -109,6 +126,7 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
     <header className="app-header" style={{
       position: 'sticky', top: 0, zIndex: 100,
       background: theme.bg,
+      backdropFilter: theme.backdrop || 'none', WebkitBackdropFilter: theme.backdrop || 'none',
       borderBottom: `1px solid ${theme.border}`,
       padding: '0 2rem', height: 56,
       display: 'flex', alignItems: 'center', gap: '1rem',
@@ -124,7 +142,7 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
         )}
         <span style={{
           fontFamily: "'Baloo 2', 'Plus Jakarta Sans', Inter, sans-serif",
-          fontSize: 27, fontWeight: 700, letterSpacing: -1, lineHeight: 1,
+          fontSize: 25, fontWeight: 700, letterSpacing: -1, lineHeight: 1,
           cursor: 'pointer',
         }} onClick={() => setTab('signature')}>
           <span style={{ color: theme.tyroColor }}>tyro</span>

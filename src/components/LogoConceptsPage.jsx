@@ -600,6 +600,52 @@ const LogoF = () => {
   );
 };
 
+/* ── Konsept H: DinTech Style — Rounded çerçeve + S-curve kalem ── */
+const LogoH = () => (
+  <svg viewBox="0 0 320 60" fill="none" width="100%" height="100%">
+    <defs>
+      <linearGradient id="lgHgold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#e0a832" />
+        <stop offset="100%" stopColor="#c8922a" />
+      </linearGradient>
+      <linearGradient id="lgHblue" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#0098d4" />
+        <stop offset="100%" stopColor="#00b4e6" />
+      </linearGradient>
+    </defs>
+
+    <g transform="translate(4, 4)">
+      {/* === Beyaz/Navy rounded kare çerçeve === */}
+      {/* Dış çerçeve — navy thick stroke, sol üst/alt kapalı, sağ üst açık */}
+      <path d="M14,4 L32,4 Q44,4 44,16 L44,36 Q44,48 32,48 L14,48 Q4,48 4,36 L4,16 Q4,4 14,4 Z"
+        fill="none" stroke="#1e3a5f" strokeWidth="4.5" />
+
+      {/* === İç S-curve dalga — kalem silüeti === */}
+      {/* S-curve path — sağ üstten sol alta doğru kıvrılıyor */}
+      <path d="M30,10 Q36,10 36,18 Q36,26 24,26 Q12,26 12,34 Q12,42 18,42"
+        fill="none" stroke="#1e3a5f" strokeWidth="4" strokeLinecap="round" />
+
+      {/* === Sağ üst aksan — turkuaz kare (kalem cap) === */}
+      <rect x="34" y="-2" width="12" height="12" rx="3" fill="url(#lgHblue)" />
+      {/* Parlama */}
+      <rect x="34" y="-2" width="5" height="12" rx="3" fill="#00c8f0" opacity="0.3" />
+
+      {/* === Sol alt aksan — gold kare (kalem nib) === */}
+      <rect x="2" y="38" width="12" height="12" rx="3" fill="url(#lgHgold)" />
+      {/* Parlama */}
+      <rect x="2" y="38" width="5" height="12" rx="3" fill="#e0a832" opacity="0.3" />
+
+      {/* === Kalem ucu detayı — gold nib sol altta === */}
+      <polygon points="8,38 4,44 12,44" fill="#c8922a" opacity="0.5" />
+    </g>
+
+    {/* Wordmark */}
+    <text x="64" y="38" fontFamily="'Baloo 2','Plus Jakarta Sans',Inter,sans-serif" fontSize="30" fontWeight="700" letterSpacing="-1">
+      <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+    </text>
+  </svg>
+);
+
 const CONCEPTS = [
   { id: 6, name: 'Nib Drop Matrix', nameEN: 'Dijital Mürekkep', desc: 'Fiziksel kalem yazma pozisyonunda, mürekkep dijital piksellere dönüşüp fade oluyor. Analog → Digital geçişi.', Logo: Logo6, wide: false },
   { id: 9, name: 'Geometric Pen Mark', nameEN: 'Geometrik Kalem İşareti', desc: 'Açılı navy gövde + turkuaz üçgen + gold diamond. 3D derinlikli geometrik kalem ikonu + tyrosign wordmark.', Logo: Logo9, wide: true },
@@ -610,6 +656,7 @@ const CONCEPTS = [
   { id: 14, name: 'Gradient Flow', nameEN: 'Gradient Akış', desc: 'Noktalar yerine tek yatay gradient pill. Navy→Turkuaz→Gold geçişi.', Logo: LogoE, wide: true },
   { id: 15, name: 'Pixel Ink Drop', nameEN: 'Piksel Mürekkep', desc: 'Mürekkep damlası piksellerden oluşuyor. Üst navy, orta turkuaz, alt gold dissolve.', Logo: LogoF, wide: true },
   { id: 16, name: 'Pixel T Mark', nameEN: 'Piksel T Harfi', desc: 'BrandTech tarzı geometrik T harfi. Navy+turkuaz bloklar + yukarıya dağılan gold pikseller.', Logo: LogoG, wide: true },
+  { id: 17, name: 'DinTech Pen', nameEN: 'Rounded Çerçeve + Kalem', desc: 'DinTech tarzı rounded kare çerçeve + S-curve kalem silüeti. Turkuaz cap (sağ üst) + Gold nib (sol alt).', Logo: LogoH, wide: true },
 ];
 
 /* ── Main gallery page ─────────────────────────── */

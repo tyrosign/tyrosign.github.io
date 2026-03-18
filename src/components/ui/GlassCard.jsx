@@ -9,7 +9,7 @@ const GlassCard = memo(({ children, style = {}, accent = false }) => (
     ...style,
   }}>
     {accent && <div style={{ height: 2.5, background: `linear-gradient(90deg, ${C.primary}, ${C.divider}, ${C.accent})` }} />}
-    <div className="glass-card-inner" style={{ padding: '1rem 1.25rem' }}>{children}</div>
+    <div className="glass-card-inner" style={{ padding: '1.25rem 1.5rem' }}>{children}</div>
   </div>
 ));
 

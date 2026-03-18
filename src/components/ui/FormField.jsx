@@ -5,24 +5,8 @@ import { C } from '../../constants/theme';
 const FormField = memo(({ label, value, onChange, placeholder, required, error, success, type }) => {
   const [focused, setFocused] = useState(false);
 
-  const borderColor = error
-    ? C.err + '80'
-    : success
-      ? C.ok + '60'
-      : focused
-        ? C.accent + '60'
-        : C.borderSub;
-
-  const ringColor = error
-    ? `0 0 0 3px ${C.err}12`
-    : success
-      ? `0 0 0 3px ${C.ok}12`
-      : focused
-        ? `0 0 0 3px ${C.accent}15, ${C.shadow}`
-        : 'none';
-
   return (
-    <div style={{ marginBottom: '0.7rem' }}>
+    <div style={{ marginBottom: '0.85rem' }}>
       <label style={{
         display: 'flex', alignItems: 'center', gap: '0.35rem',
         fontSize: '0.7rem', fontWeight: 600,
@@ -46,14 +30,18 @@ const FormField = memo(({ label, value, onChange, placeholder, required, error, 
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         style={{
-          width: '100%', padding: '0.45rem 0.65rem',
-          border: `1px solid ${borderColor}`,
-          borderRadius: '8px', fontSize: '0.78rem', fontFamily: 'Inter,sans-serif',
-          background: focused ? '#fff' : C.glass, color: C.text1,
+          width: '100%', padding: '0.55rem 0.75rem',
+          border: error ? `1.5px solid ${C.err}60` : '1px solid transparent',
+          borderRadius: 12, fontSize: '0.78rem', fontFamily: 'Inter,sans-serif',
+          background: focused ? '#fff' : '#f2f3f5',
+          color: C.text1,
           outline: 'none', boxSizing: 'border-box',
-          transition: 'all 0.25s ease',
-          boxShadow: ringColor,
-          backdropFilter: 'blur(8px)',
+          transition: 'all 0.2s ease',
+          boxShadow: focused
+            ? `0 0 0 3.5px ${C.accent}20, 0 1px 3px rgba(0,0,0,0.06)`
+            : error
+              ? `0 0 0 3px ${C.err}10`
+              : 'none',
         }}
       />
       {error && (

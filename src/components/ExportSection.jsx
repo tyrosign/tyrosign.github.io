@@ -82,9 +82,9 @@ const ExportSection = memo(({ hasData, copied, doCopy, onQrClick, onBcClick, onO
       style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))', gap: '2px',
         padding: '3px',
-        background: `linear-gradient(135deg, ${C.primaryGhost}, rgba(30,58,95,0.03))`,
+        background: 'rgba(30,58,95,0.025)',
         borderRadius: 11,
-        border: `1px solid ${C.borderSub}`,
+        border: '1px solid rgba(30,58,95,0.06)',
         marginBottom: '0.6rem',
       }}
     >

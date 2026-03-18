@@ -145,7 +145,8 @@ export const GLOBAL_CSS = `
     .app-header-nav { display: none!important; }
     .lang-toggle { margin-left: auto!important; transform: scale(0.85)!important; transform-origin: right center!important; }
     .bottom-tab-bar { display: flex!important; }
-    .app-main { padding-bottom: 5rem!important; }
+    .app-main { padding-bottom: 1rem!important; }
+    .app-footer { padding-bottom: 4.5rem!important; }
     .app-header-auth { order: 2!important; }
     .app-header-auth .profile-trigger { padding: 0.1rem 0.25rem 0.1rem 0.1rem!important; gap: 0.2rem!important; border-radius: 16px!important; }
     .app-header-auth .profile-avatar { width: 22px!important; height: 22px!important; font-size: 0.48rem!important; }
@@ -169,8 +170,9 @@ export const GLOBAL_CSS = `
     .social-grid { grid-template-columns: 1fr!important; }
     .progress-bar { padding: 0.5rem 0.65rem!important; gap: 0.5rem!important; }
     .glass-card-inner { padding: 0.75rem 0.85rem!important; }
-    .export-btns { flex-direction: column!important; }
-    .export-btns button { width: 100%!important; justify-content: center!important; }
+    .export-btns { grid-template-columns: 1fr!important; }
+    .export-btns .tip-wrap { min-width: 0!important; }
+    .export-btns button { justify-content: flex-start!important; padding-left: 1.2rem!important; }
     .sig-html-wrap > div { zoom: 0.52!important; }
     .sig-body { padding: 0.5rem!important; overflow: hidden!important; }
   }

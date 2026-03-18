@@ -54,7 +54,7 @@ const SignatureTab = memo(({
 
       <div className="sig-layout sig-grid" style={{
         display: 'grid', gridTemplateColumns: 'minmax(0, 480px) 1fr',
-        gap: '1rem', alignItems: 'stretch',
+        gap: '1.25rem', alignItems: 'stretch',
       }}>
         {/* LEFT: Kişisel Bilgiler + İletişim (tek kart) */}
         <div className="sig-sec-personal" style={{ animation: 'slideInLeft 0.4s ease-out' }}>
@@ -77,11 +77,11 @@ const SignatureTab = memo(({
               </button>
             </div>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <div style={{ flex: 1 }}><FormField label={L.fn} value={form.firstName} onChange={e => uf('firstName', e.target.value)} placeholder="Cenk" required success={!!v.firstName?.ok} /></div>
-              <div style={{ flex: 1 }}><FormField label={L.ln} value={form.lastName} onChange={e => uf('lastName', e.target.value)} placeholder="Şaylı" required success={!!v.lastName?.ok} /></div>
+              <div style={{ flex: 1 }}><FormField label={L.fn} value={form.firstName} onChange={e => uf('firstName', e.target.value)} placeholder="Ahmet" required success={!!v.firstName?.ok} /></div>
+              <div style={{ flex: 1 }}><FormField label={L.ln} value={form.lastName} onChange={e => uf('lastName', e.target.value)} placeholder="Yılmaz" required success={!!v.lastName?.ok} /></div>
             </div>
-            <FormField label={L.ttr} value={form.titleTR} onChange={e => uf('titleTR', e.target.value)} placeholder="Kurumsal Sistemler Yöneticisi" />
-            <FormField label={L.ten} value={form.titleEN} onChange={e => uf('titleEN', e.target.value)} placeholder="Enterprise Systems Executive" />
+            <FormField label={L.ttr} value={form.titleTR} onChange={e => uf('titleTR', e.target.value)} placeholder="Satış Müdürü" />
+            <FormField label={L.ten} value={form.titleEN} onChange={e => uf('titleEN', e.target.value)} placeholder="Sales Manager" />
             <SearchableSelect
               label={L.ofc}
               value={form.officeId}
@@ -107,15 +107,15 @@ const SignatureTab = memo(({
             <div style={{ height: 1, background: C.borderSub, margin: '0.5rem 0 0.6rem' }} />
 
             <SectionTitle icon={Phone}>{L.ci}</SectionTitle>
-            <FormField label={L.gsm} value={form.gsm} onChange={e => uf('gsm', e.target.value)} placeholder="0530 914 45 91" error={v.gsm?.err} success={!!v.gsm?.ok} />
-            <FormField label={L.email} value={form.email} onChange={e => uf('email', e.target.value.toLowerCase())} placeholder="cenk.sayli@tiryaki.com.tr" required error={v.email?.err} success={!!v.email?.ok} type="email" />
+            <FormField label={L.gsm} value={form.gsm} onChange={e => uf('gsm', e.target.value)} placeholder="05XX XXX XX XX" error={v.gsm?.err} success={!!v.gsm?.ok} />
+            <FormField label={L.email} value={form.email} onChange={e => uf('email', e.target.value.toLowerCase())} placeholder="ad.soyad@tiryaki.com.tr" required error={v.email?.err} success={!!v.email?.ok} type="email" />
             <div style={{ marginBottom: '0.4rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.7rem', fontWeight: 600, color: C.text2, marginBottom: '0.25rem' }}>
                 LinkedIn
               </label>
               <input
                 type="text" value={form.linkedinPersonal} onChange={e => uf('linkedinPersonal', e.target.value)}
-                placeholder="https://linkedin.com/in/cenksayli"
+                placeholder="https://linkedin.com/in/adsoyadiniz"
                 style={{
                   width: '100%', padding: '0.45rem 0.65rem',
                   border: `1px solid ${C.borderSub}`, borderRadius: '8px',

@@ -20,6 +20,7 @@ import BannerTab from './components/BannerTab';
 const SettingsModal = lazy(() => import('./components/SettingsModal'));
 const LogoConceptsPage = lazy(() => import('./components/LogoConceptsPage'));
 const FontDemoPage = lazy(() => import('./components/FontDemoPage'));
+const LogoLabPage = lazy(() => import('./components/LogoLabPage'));
 import AppFooter from './components/AppFooter';
 import ToastContainer from './components/ToastContainer';
 import CopySuccess from './components/CopySuccess';
@@ -34,6 +35,7 @@ export default function App() {
     const h = window.location.hash;
     if (h === '#concepts') return 'concepts';
     if (h === '#fonts') return 'fonts';
+    if (h === '#lab') return 'lab';
     return 'signature';
   });
   const [copied, setCopied] = useState(false);
@@ -56,6 +58,7 @@ export default function App() {
     companyTextColor: '#333333', contactLabelColor: '#888888', contactValueColor: '#555555',
     bannerAccentColor: '',
     designId: 'corporate',
+    headerTheme: (() => { try { return localStorage.getItem('tyro-headerTheme') || 'navy-dots'; } catch { return 'navy-dots'; } })(),
   });
   const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '', companyId: 'tiryaki-agro', logoPosition: 'top-right', showLogo: true });
   const [sigBanner, setSigBanner] = useState({ enabled: false, base64: '', width: 0, height: 0, linkUrl: '', alt: '' });
@@ -67,8 +70,9 @@ export default function App() {
   const canvasRef = useRef(null);
   const bannerFileRef = useRef(null);
 
-  // ─── Persist lang ───
+  // ─── Persist lang + header theme ───
   useEffect(() => { try { localStorage.setItem('tyro-lang', lang); } catch { /* private mode */ } }, [lang]);
+  useEffect(() => { try { localStorage.setItem('tyro-headerTheme', stg.headerTheme); } catch {} }, [stg.headerTheme]);
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();
@@ -314,6 +318,7 @@ export default function App() {
         lang={lang} setLang={setLang} L={L}
         msalAccount={msalAccount} profileOpen={profileOpen} setProfileOpen={setProfileOpen}
         handleLogout={handleLogout} profilePhoto={profilePhoto}
+        headerTheme={stg.headerTheme}
       />
 
       {/* Animated gradient accent line */}
@@ -368,6 +373,12 @@ export default function App() {
         {tab === 'fonts' && (
           <Suspense fallback={null}>
             <FontDemoPage onBack={() => setTab('signature')} />
+          </Suspense>
+        )}
+
+        {tab === 'lab' && (
+          <Suspense fallback={null}>
+            <LogoLabPage onBack={() => setTab('signature')} />
           </Suspense>
         )}
 

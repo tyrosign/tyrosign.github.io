@@ -6,8 +6,8 @@ import { generateVCard } from '../utils/generateVCard';
 import DEFAULT_LOGO_BASE64 from '../defaultLogo.js';
 
 /** Get QR center logo — only companies whose NAME starts with Tiryaki/T-Tech get default logo */
-function getQrLogo(stg) {
-  const name = (stg.companyName || '').toLowerCase().trim();
+function getQrLogo(stg, company) {
+  const name = (company?.name || stg.companyName || '').toLowerCase().trim();
   if (name.startsWith('tiryaki') || name.startsWith('t-tech')) return DEFAULT_LOGO_BASE64;
   return stg.logoBase64;
 }
@@ -744,7 +744,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
 
     const vcard = generateVCard(form, office, stg, company, lang);
 
-    drawQrWithLogo(vcard, 320, getQrLogo(stg)).then(qrCanvas => {
+    drawQrWithLogo(vcard, 320, getQrLogo(stg, company)).then(qrCanvas => {
       qrCanvasRef.current = qrCanvas;
       setQrReady(r => r + 1);
 
@@ -836,7 +836,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
     // Generate QR SVG with centered logo
     let qrSvg = '';
     try {
-      qrSvg = await generateQrSvg(vcard, getQrLogo(stg));
+      qrSvg = await generateQrSvg(vcard, getQrLogo(stg, company));
     } catch (e) { /* QR generation failed */ }
 
     // Avatar HTML (profile photo or logo)

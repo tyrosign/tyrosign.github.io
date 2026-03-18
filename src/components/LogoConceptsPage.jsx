@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import { C } from '../constants/theme';
+import tyrosignLogo from '../assets/tyrosign-logo.png';
 
 /* ── Shared gradient defs ─────────────────────── */
 const GradientDefs = () => (
@@ -397,100 +398,218 @@ const Logo8 = () => (
   </svg>
 );
 
-/* ── Konsept 9: TechLogo Style — Geometric pen + wordmark ── */
+/* ── Konsept 9: Geometric Pen Mark — PNG logo ── */
 const Logo9 = () => (
-  <svg viewBox="0 0 400 160" fill="none" width="100%" height="100%">
-    <defs>
-      <linearGradient id="lg9navy" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#1e3a5f" />
-        <stop offset="100%" stopColor="#2c5282" />
-      </linearGradient>
-      <linearGradient id="lg9gold" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#e0a832" />
-        <stop offset="100%" stopColor="#c8922a" />
-      </linearGradient>
-      <linearGradient id="lg9blue" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#0098d4" />
-        <stop offset="100%" stopColor="#1e3a5f" />
-      </linearGradient>
-    </defs>
-
-    {/* === Premium fountain pen — right-hand writing angle === */}
-    <g transform="translate(72, 48) scale(0.48)">
-      <g transform="rotate(32, 50, 65)">
-        {/* ── CAP — NAVY ── */}
-        <rect x="40" y="0" width="20" height="16" rx="6" fill="#1e3a5f" />
-        {/* Cap shine */}
-        <rect x="40" y="0" width="9" height="16" rx="6" fill="#2e4d72" opacity="0.5" />
-        {/* Cap top rounded */}
-        <ellipse cx="50" cy="2" rx="10" ry="3" fill="#2c5282" />
-        {/* Gold clip */}
-        <rect x="58" y="2" width="3.5" height="24" rx="1.5" fill="url(#lg9gold)" />
-        <circle cx="59.5" cy="26" r="2.2" fill="#c8922a" />
-
-        {/* ── GOLD RING ── */}
-        <rect x="38" y="15" width="24" height="4.5" rx="2" fill="url(#lg9gold)" />
-        <rect x="38" y="15" width="24" height="2" rx="1" fill="#e0a832" opacity="0.4" />
-
-        {/* ── BARREL — NAVY (main body) ── */}
-        <rect x="40" y="19" width="20" height="56" rx="3" fill="#1e3a5f" />
-        {/* Barrel left shine */}
-        <rect x="40" y="19" width="8" height="56" rx="3" fill="#2e4d72" opacity="0.45" />
-        {/* Right edge shadow */}
-        <rect x="56" y="19" width="4" height="56" rx="2" fill="#152d4a" opacity="0.3" />
-        {/* Subtle highlight line */}
-        <line x1="44" y1="22" x2="44" y2="72" stroke="#fff" strokeWidth="0.6" opacity="0.08" />
-
-        {/* ── SILVER RING ── */}
-        <rect x="39" y="70" width="22" height="3.5" rx="1.5" fill="#94a3b8" opacity="0.5" />
-        <rect x="39" y="70" width="22" height="1.5" rx="0.8" fill="#c0cad8" opacity="0.3" />
-
-        {/* ── GRIP — TURKUAZ ── */}
-        <rect x="41" y="74" width="18" height="18" rx="2.5" fill="#0098d4" />
-        {/* Grip shine */}
-        <rect x="41" y="74" width="7.5" height="18" rx="2.5" fill="#00b4e6" opacity="0.35" />
-        {/* Right shadow */}
-        <rect x="55" y="74" width="4" height="18" rx="2" fill="#007a9e" opacity="0.3" />
-        {/* Grip texture */}
-        <line x1="42" y1="78.5" x2="58" y2="78.5" stroke="#fff" strokeWidth="0.5" opacity="0.1" />
-        <line x1="42" y1="82.5" x2="58" y2="82.5" stroke="#fff" strokeWidth="0.5" opacity="0.08" />
-        <line x1="42" y1="86.5" x2="58" y2="86.5" stroke="#fff" strokeWidth="0.5" opacity="0.06" />
-
-        {/* ── NIB — GOLD ── */}
-        <polygon points="50,92 41,92 50,122 59,92" fill="url(#lg9gold)" />
-        {/* Nib left shine */}
-        <polygon points="50,92 41,92 47,115" fill="#e0a832" opacity="0.45" />
-        {/* Nib right shadow */}
-        <polygon points="50,92 59,92 53,115" fill="#a67820" opacity="0.3" />
-        {/* Ink slit */}
-        <line x1="50" y1="95" x2="50" y2="118" stroke="#8a6a18" strokeWidth="0.7" />
-        {/* Breather hole */}
-        <circle cx="50" cy="96" r="1.2" fill="#1e3a5f" opacity="0.4" />
-        {/* Nib tip */}
-        <circle cx="50" cy="121" r="1.5" fill="#e0a832" />
-      </g>
-
-      {/* signature stroke removed */}
-    </g>
-
-    {/* === "tyrosign" wordmark — joined === */}
-    <g>
-      <text x="138" y="95" fontFamily="'Plus Jakarta Sans', Inter, sans-serif" fontSize="56" fontWeight="800" letterSpacing="-2">
-        <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
-      </text>
-    </g>
-
-    {/* Bottom accent dots — navy, turkuaz, gold */}
-    <circle cx="230" cy="115" r="3.5" fill="#1e3a5f" />
-    <circle cx="241" cy="115" r="3.5" fill="#0098d4" />
-    <circle cx="252" cy="115" r="3.5" fill="#c8922a" />
-  </svg>
+  <img src={tyrosignLogo} alt="tyrosign" style={{ width: '100%', maxHeight: '100%', objectFit: 'contain' }} />
 );
 
 /* ── Concept data ─────────────────────────────── */
+/* ── Header Logo Konseptleri ─────────────────── */
+
+/* G — Pixel T: BrandTech tarzı geometrik T harfi + piksel dağılım */
+const LogoG = () => (
+  <svg viewBox="0 0 300 50" fill="none" width="100%" height="100%">
+    <g transform="translate(2, 2) scale(0.9)">
+      {/* Dağılan pikseller — yukarı sağa doğru */}
+      <rect x="28" y="0" width="3" height="3" rx="0.4" fill="#c8922a" />
+      <rect x="24" y="5" width="4" height="4" rx="0.5" fill="#c8922a" opacity="0.85" />
+      <rect x="20" y="10" width="5" height="5" rx="0.6" fill="#c8922a" opacity="0.7" />
+
+      {/* T harfi — üst çizgi (navy → turkuaz gradient) */}
+      {/* Sol blok — navy */}
+      <rect x="4" y="16" width="12" height="10" rx="1.5" fill="#1e3a5f" />
+      {/* Orta bağlantı — overlap */}
+      <rect x="14" y="16" width="8" height="10" rx="0" fill="#0098d4" />
+      {/* Sağ blok — turkuaz */}
+      <rect x="20" y="16" width="12" height="10" rx="1.5" fill="#0098d4" />
+
+      {/* T harfi — dikey çizgi (turkuaz → navy gradient) */}
+      <rect x="12" y="24" width="10" height="8" rx="0" fill="#0098d4" />
+      <rect x="12" y="30" width="10" height="12" rx="1.5" fill="#1e3a5f" />
+
+      {/* İç boşluk efekti — sağ alt köşede rounded cutout */}
+      <rect x="20" y="28" width="8" height="8" rx="3" fill="#0098d4" opacity="0.3" />
+    </g>
+
+    {/* Wordmark */}
+    <text x="48" y="35" fontFamily="'Plus Jakarta Sans',Inter,sans-serif" fontSize="26" fontWeight="800" letterSpacing="-1">
+      <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+    </text>
+  </svg>
+);
+
+/* A — Signature Stroke Dots: noktalar arası eğri çizgi */
+const LogoA = () => (
+  <svg viewBox="0 0 280 50" fill="none" width="100%" height="100%">
+    <path d="M12,25 Q22,10 32,25 Q42,40 52,25" stroke="#c8922a" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.5" />
+    <circle cx="12" cy="25" r="5.5" fill="#1e3a5f" />
+    <circle cx="32" cy="25" r="5.5" fill="#0098d4" />
+    <circle cx="52" cy="25" r="5.5" fill="#c8922a" />
+    <text x="68" y="32" fontFamily="'Plus Jakarta Sans',Inter,sans-serif" fontSize="26" fontWeight="800" letterSpacing="-1">
+      <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+    </text>
+  </svg>
+);
+
+/* B — Pen Nib Dot: üçüncü nokta diamond/nib şekli */
+const LogoB = () => (
+  <svg viewBox="0 0 280 50" fill="none" width="100%" height="100%">
+    <circle cx="12" cy="25" r="5.5" fill="#1e3a5f" />
+    <circle cx="30" cy="25" r="5.5" fill="#0098d4" />
+    <polygon points="48,19 42,25 48,31 54,25" fill="#c8922a" />
+    <text x="66" y="32" fontFamily="'Plus Jakarta Sans',Inter,sans-serif" fontSize="26" fontWeight="800" letterSpacing="-1">
+      <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+    </text>
+  </svg>
+);
+
+/* C — Animated Pulse: noktalar sırayla parlıyor */
+const LogoC = () => (
+  <svg viewBox="0 0 280 50" fill="none" width="100%" height="100%">
+    <defs>
+      <style>{`
+        @keyframes lcPulse1 { 0%,100% { r: 5.5; opacity: 1; } 33% { r: 7.5; opacity: 0.7; } }
+        @keyframes lcPulse2 { 0%,100% { r: 5.5; opacity: 1; } 66% { r: 7.5; opacity: 0.7; } }
+        @keyframes lcPulse3 { 0%,33% { r: 5.5; opacity: 1; } 100% { r: 7.5; opacity: 0.7; } }
+        .lc-d1 { animation: lcPulse1 3s ease-in-out infinite; }
+        .lc-d2 { animation: lcPulse2 3s ease-in-out infinite; }
+        .lc-d3 { animation: lcPulse3 3s ease-in-out infinite; }
+      `}</style>
+    </defs>
+    <circle className="lc-d1" cx="12" cy="25" r="5.5" fill="#1e3a5f" />
+    <circle className="lc-d2" cx="30" cy="25" r="5.5" fill="#0098d4" />
+    <circle className="lc-d3" cx="48" cy="25" r="5.5" fill="#c8922a" />
+    <text x="64" y="32" fontFamily="'Plus Jakarta Sans',Inter,sans-serif" fontSize="26" fontWeight="800" letterSpacing="-1">
+      <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+    </text>
+  </svg>
+);
+
+/* D — Stacked Mark: üçgen piramit dizilim */
+const LogoD = () => {
+  const p = 0.9, g = 0.25, s = p + g;
+  const cx = 28, cy = 25, pixels = [];
+  let idx = 0;
+  const rows = [
+    { y: -8, w: 0.5 },
+    { y: -7, w: 1 },
+    { y: -6, w: 1.5 },
+    { y: -5, w: 2 },
+    { y: -4, w: 2.8 },
+    { y: -3, w: 3.5 },
+    { y: -2, w: 4.2 },
+    { y: -1, w: 4.8 },
+    { y: 0, w: 5.2 },
+    { y: 1, w: 5.5 },
+    { y: 2, w: 5.5 },
+    { y: 3, w: 5.2 },
+    { y: 4, w: 4.5 },
+    { y: 5, w: 3.5 },
+    { y: 6, w: 2 },
+  ];
+  const startX = 8; // sol başlangıç
+  const textX = 40; // metnin x konumu
+  for (const { y, w } of rows) {
+    for (let x = -Math.floor(w); x <= Math.floor(w); x++) {
+      if (Math.abs(x) <= w) {
+        const delay = (idx * 0.02).toFixed(2);
+        const dropX = (cx + x * s - p / 2).toFixed(1);
+        const dropY = (cy + y * s - p / 2).toFixed(1);
+        // Solda dağınık başla → damla oluş → sağa metne doğru git → solda tekrar başla
+        const leftX = (startX + (idx * 7 % 6) - 3).toFixed(1);
+        const leftY = (cy + (idx * 13 % 16 - 8)).toFixed(1);
+        const rightX = (textX + (idx * 11 % 4)).toFixed(1);
+        const rightY = (cy + y * s * 0.3 - p / 2).toFixed(1);
+        pixels.push(
+          <rect key={idx++} className="ld-px" width={p} height={p} rx={0.15} opacity="1">
+            <animate attributeName="x" values={`${leftX};${dropX};${dropX};${rightX};${leftX}`} dur="5s" begin={`${delay}s`} repeatCount="indefinite" keyTimes="0;0.25;0.55;0.85;1" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1" />
+            <animate attributeName="y" values={`${leftY};${dropY};${dropY};${rightY};${leftY}`} dur="5s" begin={`${delay}s`} repeatCount="indefinite" keyTimes="0;0.25;0.55;0.85;1" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1" />
+            <animate attributeName="opacity" values="0.3;1;1;0.4;0.3" dur="5s" begin={`${delay}s`} repeatCount="indefinite" keyTimes="0;0.25;0.55;0.85;1" />
+          </rect>
+        );
+      }
+    }
+  }
+  return (
+    <svg viewBox="0 0 280 50" fill="none" width="100%" height="100%">
+      <defs><style>{`
+        @keyframes ldColor2 {
+          0%,40% { fill: #1e3a5f; }
+          50%,90% { fill: #c8922a; }
+          100% { fill: #1e3a5f; }
+        }
+        .ld-px { animation: ldColor2 6s ease-in-out infinite; }
+      `}</style></defs>
+      {pixels}
+      <text x="42" y="32" fontFamily="'Plus Jakarta Sans',Inter,sans-serif" fontSize="26" fontWeight="800" letterSpacing="-1">
+        <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+      </text>
+    </svg>
+  );
+};
+
+/* E — Gradient Flow: tek yatay gradient pill */
+const LogoE = () => (
+  <svg viewBox="0 0 280 50" fill="none" width="100%" height="100%">
+    <defs>
+      <linearGradient id="lgEflow" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stopColor="#1e3a5f" />
+        <stop offset="50%" stopColor="#0098d4" />
+        <stop offset="100%" stopColor="#c8922a" />
+      </linearGradient>
+    </defs>
+    <rect x="4" y="18" width="44" height="14" rx="7" fill="url(#lgEflow)" />
+    <text x="58" y="32" fontFamily="'Plus Jakarta Sans',Inter,sans-serif" fontSize="26" fontWeight="800" letterSpacing="-1">
+      <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+    </text>
+  </svg>
+);
+
+/* F — Pixel Matrix Ink Drop: sade piksel mürekkep damlası */
+/* F — Pixel Matrix Ink Drop: daha fazla navy, küçük ikon */
+const LogoF = () => {
+  const px = (x, y, c, o) => <rect key={`${x}-${y}`} x={x} y={y} width="3" height="3" rx="0.4" fill={c} opacity={o || 1} />;
+  return (
+    <svg viewBox="0 0 280 50" fill="none" width="100%" height="100%">
+      {/* Ink drop — more navy at top, compact size */}
+      <g transform="translate(10, 10) scale(0.55)">
+        {/* Ink drop — aşağıdan yukarı: gold → turkuaz → navy */}
+        {/* Sivri uç — GOLD */}
+        {px(19, 0, '#c8922a')}
+        {px(17, 4, '#c8922a')}{px(21, 4, '#c8922a')}
+        {px(15, 8, '#c8922a')}{px(19, 8, '#c8922a')}{px(23, 8, '#c8922a')}
+        {/* Gold → Turkuaz geçiş */}
+        {px(13, 12, '#c8922a')}{px(17, 12, '#0098d4')}{px(21, 12, '#0098d4')}{px(25, 12, '#c8922a')}
+        {/* Turkuaz bölge */}
+        {px(11, 16, '#0098d4')}{px(15, 16, '#0098d4')}{px(19, 16, '#0098d4')}{px(23, 16, '#0098d4')}{px(27, 16, '#0098d4')}
+        {px(7, 20, '#0098d4')}{px(11, 20, '#0098d4')}{px(15, 20, '#0098d4')}{px(19, 20, '#0098d4')}{px(23, 20, '#0098d4')}{px(27, 20, '#0098d4')}{px(31, 20, '#0098d4')}
+        {/* Turkuaz → Navy geçiş */}
+        {px(5, 24, '#0098d4')}{px(9, 24, '#1e3a5f')}{px(13, 24, '#1e3a5f')}{px(17, 24, '#1e3a5f')}{px(21, 24, '#1e3a5f')}{px(25, 24, '#1e3a5f')}{px(29, 24, '#1e3a5f')}{px(33, 24, '#0098d4')}
+        {/* Navy gövde — en geniş */}
+        {px(5, 28, '#1e3a5f')}{px(9, 28, '#1e3a5f')}{px(13, 28, '#1e3a5f')}{px(17, 28, '#1e3a5f')}{px(21, 28, '#1e3a5f')}{px(25, 28, '#1e3a5f')}{px(29, 28, '#1e3a5f')}{px(33, 28, '#1e3a5f')}
+        {px(5, 32, '#1e3a5f')}{px(9, 32, '#1e3a5f')}{px(13, 32, '#1e3a5f')}{px(17, 32, '#1e3a5f')}{px(21, 32, '#1e3a5f')}{px(25, 32, '#1e3a5f')}{px(29, 32, '#1e3a5f')}{px(33, 32, '#1e3a5f')}
+        {/* Daralma — navy oval alt */}
+        {px(7, 36, '#1e3a5f')}{px(11, 36, '#1e3a5f')}{px(15, 36, '#1e3a5f')}{px(19, 36, '#1e3a5f')}{px(23, 36, '#1e3a5f')}{px(27, 36, '#1e3a5f')}{px(31, 36, '#1e3a5f')}
+        {px(11, 40, '#1e3a5f')}{px(15, 40, '#1e3a5f')}{px(19, 40, '#1e3a5f')}{px(23, 40, '#1e3a5f')}{px(27, 40, '#1e3a5f')}
+        {px(15, 44, '#1e3a5f')}{px(19, 44, '#1e3a5f')}{px(23, 44, '#1e3a5f')}
+      </g>
+      <text x="48" y="32" fontFamily="'Plus Jakarta Sans',Inter,sans-serif" fontSize="26" fontWeight="800" letterSpacing="-1">
+        <tspan fill="#1e3a5f">tyro</tspan><tspan fill="#c8922a">sign</tspan>
+      </text>
+    </svg>
+  );
+};
+
 const CONCEPTS = [
   { id: 6, name: 'Nib Drop Matrix', nameEN: 'Dijital Mürekkep', desc: 'Fiziksel kalem yazma pozisyonunda, mürekkep dijital piksellere dönüşüp fade oluyor. Analog → Digital geçişi.', Logo: Logo6, wide: false },
-  { id: 9, name: 'TechLogo Geometric', nameEN: 'Geometrik Kalem + Wordmark', desc: 'Açılı geometrik kalem ikonu + "tyrosign" wordmark. Modern tech startup tarzı.', Logo: Logo9, wide: true },
+  { id: 9, name: 'Geometric Pen Mark', nameEN: 'Geometrik Kalem İşareti', desc: 'Açılı navy gövde + turkuaz üçgen + gold diamond. 3D derinlikli geometrik kalem ikonu + tyrosign wordmark.', Logo: Logo9, wide: true },
+  { id: 10, name: 'Signature Stroke', nameEN: 'İmza Çizgisi', desc: 'Noktalar arası eğri imza darbesi ile bağlı. Organik, el yazısı hissi.', Logo: LogoA, wide: true },
+  { id: 11, name: 'Pen Nib Dot', nameEN: 'Kalem Ucu Nokta', desc: 'Üçüncü nokta gold diamond/nib şekli. İlk ikisi yuvarlak, son geometrik.', Logo: LogoB, wide: true },
+  { id: 12, name: 'Animated Pulse', nameEN: 'Nabız Animasyonu', desc: 'Noktalar sırayla subtle pulse/glow animasyonu yapıyor. Canlı, dinamik.', Logo: LogoC, wide: true },
+  { id: 13, name: 'Pixel Drop Assemble', nameEN: 'Piksel Damla Birleşim', desc: 'Pikseller dağınık başlıyor, yavaşça birleşerek mürekkep damlası oluşturuyor. 3 renk döngüsü: navy → turkuaz → gold.', Logo: LogoD, wide: true },
+  { id: 14, name: 'Gradient Flow', nameEN: 'Gradient Akış', desc: 'Noktalar yerine tek yatay gradient pill. Navy→Turkuaz→Gold geçişi.', Logo: LogoE, wide: true },
+  { id: 15, name: 'Pixel Ink Drop', nameEN: 'Piksel Mürekkep', desc: 'Mürekkep damlası piksellerden oluşuyor. Üst navy, orta turkuaz, alt gold dissolve.', Logo: LogoF, wide: true },
+  { id: 16, name: 'Pixel T Mark', nameEN: 'Piksel T Harfi', desc: 'BrandTech tarzı geometrik T harfi. Navy+turkuaz bloklar + yukarıya dağılan gold pikseller.', Logo: LogoG, wide: true },
 ];
 
 /* ── Main gallery page ─────────────────────────── */

@@ -87,7 +87,7 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
         fontSize: '0.78rem', color: '#8e8e93', margin: '0.25rem 0 2rem',
         fontWeight: 400,
       }}>
-        {lang === 'tr' ? 'Kurumsal E-Posta İmza Oluşturucu' : 'Corporate Email Signature Studio'}
+        {lang === 'tr' ? 'Kurumsal Mail İmza & Kart Yönetimi' : 'Corporate Email Signature & Card Management'}
       </p>
 
       <button className="splash-btn-ios" onClick={handleLogin} disabled={authLoading || !msalReady} style={{

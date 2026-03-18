@@ -1,11 +1,13 @@
 import { memo } from 'react';
 import {
-  Settings, X, Image, Home, Eye, Star, Globe,
+  Settings, Image, Home, Eye, Star, Globe,
   Upload, RefreshCw, Linkedin, Twitter, Facebook, Instagram,
 } from 'lucide-react';
 import { C } from '../constants/theme';
 import { debouncedColor } from '../utils/debouncedColor';
 import FormField from './ui/FormField';
+import GlassCard from './ui/GlassCard';
+import SectionTitle from './ui/SectionTitle';
 import ToggleSwitch from './ui/ToggleSwitch';
 import ColorPicker from './ui/ColorPicker';
 
@@ -25,47 +27,18 @@ const SOCIAL_FIELDS = [
 ];
 
 const SettingsModal = memo(({
-  setTab, settingsTab, setSettingsTab, stg, setStg, fRef, procLogo, toast, lang, L,
+  settingsTab, setSettingsTab, stg, setStg, fRef, procLogo, toast, lang, L,
   DEFAULT_LOGO_BASE64,
 }) => (
-  <>
-    {/* Backdrop */}
-    <div onClick={() => setTab('signature')} style={{
-      position: 'fixed', inset: 0, zIndex: 900,
-      background: 'rgba(15,25,40,0.35)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
-      animation: 'fadeIn 0.25s ease',
-    }} />
-    {/* Modal */}
-    <div className="settings-modal" role="dialog" aria-modal="true" style={{
-      position: 'fixed', zIndex: 901, top: '50%', left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: '92vw', maxWidth: 720, height: '70vh',
-      background: C.surfaceSolid, borderRadius: 18,
-      boxShadow: '0 24px 80px rgba(15,25,40,0.25), 0 8px 24px rgba(15,25,40,0.12)',
-      display: 'flex', flexDirection: 'column', overflow: 'hidden',
-      animation: 'fadeIn 0.2s ease',
-    }}>
-      {/* Modal Header */}
-      <div style={{
-        display: 'flex', alignItems: 'center', padding: '1rem 1.25rem',
-        borderBottom: `1px solid ${C.borderSub}`,
-        background: `linear-gradient(180deg, #fff, ${C.bgFlat})`,
-      }}>
-        <Settings size={16} style={{ color: C.accent, marginRight: '0.5rem' }} />
-        <span style={{ fontSize: '0.9rem', fontWeight: 800, color: C.primary, fontFamily: 'Plus Jakarta Sans,sans-serif', flex: 1 }}>{L.setTab}</span>
-        <button onClick={() => setTab('signature')} aria-label="Close" style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          width: 28, height: 28, borderRadius: 8, border: `1px solid ${C.borderSub}`,
-          background: 'transparent', cursor: 'pointer', color: C.textM,
-          transition: 'all 0.2s',
-        }}><X size={14} /></button>
-      </div>
+  <div style={{ animation: 'fadeIn 0.3s ease' }}>
+    <GlassCard accent>
+      <SectionTitle icon={Settings}>{L.setTab}</SectionTitle>
 
-      {/* Modal Tabs */}
-      <div style={{ padding: '0.6rem 1.25rem', borderBottom: `1px solid ${C.borderSub}` }}>
+      {/* Settings Sub-tabs */}
+      <div style={{ marginBottom: '1rem' }}>
         <div className="settings-tabs-inner" style={{
           position: 'relative', display: 'flex', gap: '2px',
-          background: 'transparent', borderRadius: 10, padding: 3,
+          background: C.primaryGhost, borderRadius: 11, padding: 3,
         }}>
           <span style={{
             position: 'absolute', top: 3, bottom: 3,
@@ -87,16 +60,15 @@ const SettingsModal = memo(({
                 fontSize: '0.66rem', fontWeight: act ? 700 : 500, fontFamily: 'Inter,sans-serif',
                 transition: 'color 0.25s ease',
               }}>
-                <t.icon size={11} style={{ color: act ? C.accent : C.textM, transition: 'color 0.25s' }} />{L[t.labelKey]}
+                <t.icon size={11} className="sec-icon" style={{ color: act ? C.accent : C.textM, transition: 'color 0.25s' }} />{L[t.labelKey]}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Modal Content */}
-      <div className="settings-content" style={{ flex: 1, overflowY: 'auto', padding: '1.25rem' }}>
-
+      {/* Content */}
+      <div>
         {/* LOGO TAB */}
         {settingsTab === 'logo' && (
           <div style={{ animation: 'fadeIn 0.2s ease' }}>
@@ -237,8 +209,8 @@ const SettingsModal = memo(({
           </div>
         )}
       </div>
-    </div>
-  </>
+    </GlassCard>
+  </div>
 ));
 
 export default SettingsModal;

@@ -6,6 +6,7 @@ export const GLOBAL_CSS = `
   body { overflow-y: scroll; }
   .sec-icon { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
   .sec-icon:hover { transform: scale(1.18) rotate(-8deg); }
+  .bottom-tab-bar { display: none; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes toastIn { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
@@ -132,17 +133,19 @@ export const GLOBAL_CSS = `
   @media(min-width:769px) and (max-width:1024px) {
     .sig-grid { grid-template-columns: 1fr 1fr!important; gap: 0.85rem!important; }
     .sig-sec-banner { grid-column: 1 / -1!important; }
-    .app-header-lang button { padding: 0.18rem 0.4rem!important; font-size: 0.56rem!important; }
+    .lang-toggle { width: 76px!important; height: 30px!important; }
+    .lang-toggle button { font-size: 0.58rem!important; }
   }
   @media(max-width:768px) {
     .tip-wrap .tip-box { display: none!important; }
-    .app-header { padding: 0 0.75rem!important; height: auto!important; min-height: 48px!important; flex-wrap: wrap!important; gap: 0.3rem!important; padding-top: 0.4rem!important; padding-bottom: 0.4rem!important; }
+    .app-header { padding: 0 0.75rem!important; height: 44px!important; gap: 0.4rem!important; }
     .app-header-logo { display: none!important; }
     .app-header-title { font-size: 0.82rem!important; }
     .app-header-title-accent { font-size: 0.82rem!important; }
-    .app-header-nav { order: 3!important; width: 100%!important; justify-content: center!important; }
-    .app-header-lang { order: 2!important; margin-left: auto!important; }
-    .app-header-lang button { padding: 0.15rem 0.35rem!important; font-size: 0.52rem!important; min-height: 20px!important; min-width: 24px!important; border-radius: 5px!important; }
+    .app-header-nav { display: none!important; }
+    .lang-toggle { margin-left: auto!important; transform: scale(0.85)!important; transform-origin: right center!important; }
+    .bottom-tab-bar { display: flex!important; }
+    .app-main { padding-bottom: 5rem!important; }
     .app-header-auth { order: 2!important; }
     .app-header-auth .profile-trigger { padding: 0.1rem 0.25rem 0.1rem 0.1rem!important; gap: 0.2rem!important; border-radius: 16px!important; }
     .app-header-auth .profile-avatar { width: 22px!important; height: 22px!important; font-size: 0.48rem!important; }
@@ -160,10 +163,8 @@ export const GLOBAL_CSS = `
     .sig-sec-banner { order: 5!important; }
     .banner-flex { flex-direction: column!important; }
     .banner-left { flex: 1 1 auto!important; min-width: 0!important; max-width: 100%!important; width: 100%!important; }
-    .settings-modal { width: 100vw!important; max-width: 100vw!important; height: 100vh!important; max-height: 100vh!important; border-radius: 0!important; top: 0!important; left: 0!important; transform: none!important; }
-    .settings-tabs-inner { gap: 0!important; }
+    .settings-tabs-inner { gap: 0!important; overflow-x: auto!important; }
     .settings-tab-btn { font-size: 0.6rem!important; padding: 0.38rem 0.3rem!important; gap: 0.15rem!important; min-height: 32px!important; }
-    .settings-content { padding: 0.85rem!important; }
     .settings-color-grid-3 { grid-template-columns: 1fr 1fr!important; }
     .social-grid { grid-template-columns: 1fr!important; }
     .progress-bar { padding: 0.5rem 0.65rem!important; gap: 0.5rem!important; }

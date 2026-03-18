@@ -42,15 +42,12 @@ export const genSigCorporate = (f, s, office, sigBanner) => {
   if (s.showLinkedin !== false && linkedinUrl) footerItems.push(`<a href="${linkedinUrl}" target="_blank" style="text-decoration:none;vertical-align:baseline;"><img src="${linkedinBlueSvg}" width="14" height="14" alt="in" style="vertical-align:-2px;border:0;margin-right:4px;" /><span style="color:${footerC};font-size:11px;font-style:italic;font-weight:bold;vertical-align:baseline;">${linkedinHandle || 'LinkedIn'}</span></a>`);
   const footer = footerItems.length > 0 ? `<div style="line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</div>` : '';
 
-  const sigCSS = `<style>.sig-corp-band{border-top-left-radius:130px!important}</style>`;
-
-  return sigCSS +
-    `<table class="sig-corp-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
+  return `<table class="sig-corp-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
     `<td class="sig-corp-logo" style="vertical-align:top;padding:34px 50px 0 0;">` +
       logo +
     `</td>` +
-    `<td class="sig-corp-band" rowspan="${footer ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:0;">` +
+    `<td class="sig-corp-band" rowspan="${footer ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:0;border-top-left-radius:130px;">` +
       `<div style="padding:22px 24px 18px 105px;color:#fff;">` +
         `<div style="font-size:16px;font-weight:bold;margin-bottom:1px;color:#fff;">${name || 'Ad SOYAD'}</div>` +
         (titleEN ? `<div style="font-size:12px;margin-bottom:0;color:rgba(255,255,255,0.85);font-style:italic;">${titleEN}</div>` : '') +

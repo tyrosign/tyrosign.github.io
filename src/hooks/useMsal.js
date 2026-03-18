@@ -130,27 +130,26 @@ export function useMsal({ toast, lang, setForm }) {
     }
   }, [msalAccount]);
 
-  const sendMail = useCallback(async ({ to, subject, htmlBody }) => {
+  const sendMail = useCallback(async ({ to, subject, htmlBody, attachments }) => {
     if (!msalInstance || !msalAccount) return false;
     try {
       const tokenResponse = await msalInstance.acquireTokenSilent({
         scopes: ['Mail.Send'],
         account: msalAccount,
       });
+      const message = {
+        subject,
+        body: { contentType: 'HTML', content: htmlBody },
+        toRecipients: [{ emailAddress: { address: to } }],
+      };
+      if (attachments && attachments.length > 0) message.attachments = attachments;
       const res = await fetch('https://graph.microsoft.com/v1.0/me/sendMail', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${tokenResponse.accessToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          message: {
-            subject,
-            body: { contentType: 'HTML', content: htmlBody },
-            toRecipients: [{ emailAddress: { address: to } }],
-          },
-          saveToSentItems: true,
-        }),
+        body: JSON.stringify({ message, saveToSentItems: true }),
       });
       if (!res.ok) {
         if (import.meta.env.DEV) {

@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Mail, Send, User } from 'lucide-react';
 import { C } from '../constants/theme';
+import html2canvas from 'html2canvas';
 
 const overlay = {
   position: 'fixed', inset: 0, zIndex: 1100,
@@ -81,6 +82,7 @@ export default function NotifyManagerModal({ open, onClose, form, sigHTML, toast
   const [body, setBody] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const sigRef = useRef(null);
 
   const fullName = `${form.firstName} ${form.lastName}`.trim();
 
@@ -112,16 +114,42 @@ export default function NotifyManagerModal({ open, onClose, form, sigHTML, toast
     }
     setSending(true);
 
-    // Build HTML body: user text + raw signature (same as copy-paste)
-    const textHtml = body.split('\n').map(line => `<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;color:#333;">${line || '&nbsp;'}</p>`).join('');
-    const htmlBody = textHtml + '<br/>' + sigHTML;
+    try {
+      // Capture signature preview as PNG
+      let sigImgHtml = sigHTML;
+      const attachments = [];
 
-    const ok = await sendMail({ to: toEmail.trim(), subject, htmlBody });
-    setSending(false);
-    if (ok) {
-      toast(L.notifySent, 'ok');
-      onClose();
-    } else {
+      if (sigRef.current) {
+        const canvas = await html2canvas(sigRef.current, {
+          scale: 2, backgroundColor: '#ffffff', useCORS: true,
+        });
+        const dataUrl = canvas.toDataURL('image/png');
+        const base64Data = dataUrl.split(',')[1];
+        attachments.push({
+          '@odata.type': '#microsoft.graph.fileAttachment',
+          name: 'signature.png',
+          contentType: 'image/png',
+          contentBytes: base64Data,
+          contentId: 'sig-preview',
+          isInline: true,
+        });
+        sigImgHtml = '<img src="cid:sig-preview" alt="Email Signature" style="display:block;max-width:680px;width:100%;height:auto;border:0;" />';
+      }
+
+      const textHtml = body.split('\n').map(line => `<p style="margin:0 0 4px;font-family:Arial,sans-serif;font-size:14px;color:#333;">${line || '&nbsp;'}</p>`).join('');
+      const htmlBody = textHtml + '<br/>' + sigImgHtml;
+
+      const ok = await sendMail({ to: toEmail.trim(), subject, htmlBody, attachments });
+      setSending(false);
+      if (ok) {
+        toast(L.notifySent, 'ok');
+        onClose();
+      } else {
+        toast(L.notifyFail, 'err');
+      }
+    } catch (err) {
+      if (import.meta.env.DEV) console.error('Send error:', err);
+      setSending(false);
       toast(L.notifyFail, 'err');
     }
   }, [toEmail, subject, body, sigHTML, sendMail, toast, L, onClose]);
@@ -198,7 +226,7 @@ export default function NotifyManagerModal({ open, onClose, form, sigHTML, toast
                 </span>
               </div>
               <div style={sigBox}>
-                <div dangerouslySetInnerHTML={{ __html: sigHTML }} />
+                <div ref={sigRef} dangerouslySetInnerHTML={{ __html: sigHTML }} />
               </div>
             </div>
 

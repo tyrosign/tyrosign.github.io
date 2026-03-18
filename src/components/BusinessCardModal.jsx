@@ -3,6 +3,14 @@ import QRCode from 'qrcode';
 import { X, Copy, Check, Download, FileDown, Share2, Upload } from 'lucide-react';
 import { C } from '../constants/theme';
 import { generateVCard } from '../utils/generateVCard';
+import DEFAULT_LOGO_BASE64 from '../defaultLogo.js';
+
+/** Get QR center logo — Tiryaki/T-Tech companies get default Tiryaki logo */
+function getQrLogo(stg) {
+  const name = (stg.companyName || '').toLowerCase().trim();
+  if (name.startsWith('tiryaki') || name.startsWith('t-tech')) return DEFAULT_LOGO_BASE64;
+  return stg.logoBase64;
+}
 import { formatGSM, titleCase } from '../utils/formatting';
 // Background image lazy-loaded from public/ only when HTML download is triggered (saves ~710KB from bundle)
 const BG_CARD_URL = (import.meta.env.BASE_URL || '/') + 'bg-card.jpg';
@@ -736,7 +744,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
 
     const vcard = generateVCard(form, office, stg, company, lang);
 
-    drawQrWithLogo(vcard, 320, stg.logoBase64).then(qrCanvas => {
+    drawQrWithLogo(vcard, 320, getQrLogo(stg)).then(qrCanvas => {
       qrCanvasRef.current = qrCanvas;
       setQrReady(r => r + 1);
 
@@ -828,7 +836,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
     // Generate QR SVG with centered logo
     let qrSvg = '';
     try {
-      qrSvg = await generateQrSvg(vcard, stg.logoBase64);
+      qrSvg = await generateQrSvg(vcard, getQrLogo(stg));
     } catch (e) { /* QR generation failed */ }
 
     // Avatar HTML (profile photo or logo)

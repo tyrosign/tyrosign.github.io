@@ -45,7 +45,7 @@ export default function App() {
     firstName: '', lastName: '', titleTR: '', titleEN: '',
     officeId: '', companyId: 'tiryaki-agro', gsm: '', email: '', linkedinPersonal: '',
   });
-  const [stg, setStg] = useState({
+  const DEFAULT_STG = {
     companyName: 'Tiryaki Agro', website: 'www.tiryaki.com.tr',
     slogan: 'Good people. Good earth.', logoColor: '#1e3a5f', accentColor: '#0098d4',
     logoBase64: DEFAULT_LOGO_BASE64, logoW: 140, logoH: 45,
@@ -58,7 +58,17 @@ export default function App() {
     companyTextColor: '#333333', contactLabelColor: '#888888', contactValueColor: '#555555',
     bannerAccentColor: '',
     designId: 'corporate',
-    headerTheme: (() => { try { return localStorage.getItem('tyro-headerTheme') || 'navy'; } catch { return 'navy'; } })(),
+    headerTheme: 'navy',
+  };
+  const [stg, setStg] = useState(() => {
+    try {
+      const saved = localStorage.getItem('tyro-stg');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...DEFAULT_STG, ...parsed, social: { ...DEFAULT_STG.social, ...(parsed.social || {}) } };
+      }
+    } catch { /* ignore */ }
+    return DEFAULT_STG;
   });
   const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '', companyId: 'tiryaki-agro', logoPosition: 'top-right', showLogo: true });
   const [sigBanner, setSigBanner] = useState({ enabled: false, base64: '', width: 0, height: 0, linkUrl: '', alt: '' });
@@ -70,9 +80,9 @@ export default function App() {
   const canvasRef = useRef(null);
   const bannerFileRef = useRef(null);
 
-  // ─── Persist lang + header theme ───
+  // ─── Persist lang + all settings ───
   useEffect(() => { try { localStorage.setItem('tyro-lang', lang); } catch { /* private mode */ } }, [lang]);
-  useEffect(() => { try { localStorage.setItem('tyro-headerTheme', stg.headerTheme); } catch {} }, [stg.headerTheme]);
+  useEffect(() => { try { localStorage.setItem('tyro-stg', JSON.stringify(stg)); } catch {} }, [stg]);
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();

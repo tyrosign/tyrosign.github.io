@@ -54,7 +54,7 @@ const SignatureTab = memo(({
 
       <div className="sig-layout sig-grid" style={{
         display: 'grid', gridTemplateColumns: 'minmax(0, 480px) 1fr',
-        gap: '1rem', alignItems: 'stretch',
+        gap: '1.25rem', alignItems: 'stretch',
       }}>
         {/* LEFT: Kişisel Bilgiler + İletişim (tek kart) */}
         <div className="sig-sec-personal" style={{ animation: 'slideInLeft 0.4s ease-out' }}>

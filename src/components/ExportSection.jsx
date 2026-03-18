@@ -3,35 +3,61 @@ import { Copy, Check, RefreshCw, Info } from 'lucide-react';
 import { C } from '../constants/theme';
 
 const QrIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="8" height="8" rx="1" /><rect x="14" y="2" width="8" height="8" rx="1" /><rect x="2" y="14" width="8" height="8" rx="1" />
     <path d="M14 14h2v2h-2zM20 14h2v2h-2zM14 20h2v2h-2zM20 20h2v2h-2zM17 17h2v2h-2z" fill="currentColor" stroke="none" />
   </svg>
 );
 
 const OutlookIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-    <path d="M22 6.5V17.5C22 18.33 21.33 19 20.5 19H8.5C7.67 19 7 18.33 7 17.5V6.5C7 5.67 7.67 5 8.5 5H20.5C21.33 5 22 5.67 22 6.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M7 8L14.5 13L22 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M2 7V18C2 18.55 2.45 19 3 19H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+    <path d="M22 6.5V17.5C22 18.33 21.33 19 20.5 19H8.5C7.67 19 7 18.33 7 17.5V6.5C7 5.67 7.67 5 8.5 5H20.5C21.33 5 22 5.67 22 6.5Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M7 8L14.5 13L22 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M2 7V18C2 18.55 2.45 19 3 19H7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const btnBase = {
-  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-  padding: '0.5rem 0.4rem', borderRadius: 10, border: 'none',
-  fontSize: '0.68rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
-  transition: 'all 0.3s ease', cursor: 'pointer', whiteSpace: 'nowrap',
-};
-
 const CardIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <circle cx="8" cy="11" r="2" />
     <path d="M14 9h4M14 13h3" />
     <path d="M5 18c0-2 1.5-3 3-3s3 1 3 3" />
   </svg>
 );
+
+// Palette-mapped Apple-style solid buttons (uses theme constants)
+const PAL = {
+  navy:  { solid: C.primary,     shadow: `${C.primary}52`     },
+  blue:  { solid: C.divider,     shadow: `${C.divider}52`     },
+  gold:  { solid: C.accent,      shadow: `${C.accent}52`      },
+  soft:  { solid: C.primarySoft, shadow: `${C.primarySoft}52` },
+  gray:  { solid: C.textM,       shadow: `${C.textM}33`       },
+  green: { solid: C.ok,          shadow: `${C.ok}52`          },
+};
+
+const btnBase = {
+  flex: 1,
+  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.28rem',
+  padding: '0.5rem 0.35rem',
+  borderRadius: 10,
+  border: 'none',
+  fontSize: '0.67rem', fontWeight: 600, fontFamily: 'Inter,sans-serif',
+  letterSpacing: '-0.15px',
+  transition: 'all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  cursor: 'pointer', whiteSpace: 'nowrap',
+  color: '#fff',
+};
+
+const mkBtn = (pal, hasData) => ({
+  ...btnBase,
+  background: pal.solid,
+  opacity: hasData ? 1 : 0.38,
+  cursor: hasData ? 'pointer' : 'not-allowed',
+  boxShadow: hasData
+    ? `0 1px 2px rgba(0,0,0,0.08), 0 3px 10px ${pal.shadow}`
+    : 'none',
+});
 
 const Tip = ({ text, children }) => (
   <div className="tip-wrap" style={{ flex: 1, display: 'flex' }}>
@@ -42,39 +68,23 @@ const Tip = ({ text, children }) => (
 
 const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcClick, onOutlookOpen, msalAccount, showSteps, setShowSteps, L }) => (
   <>
-    {/* All buttons in one row */}
-    <div className="export-btns" style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.6rem' }}>
-      {/* 1. İmza Kopyala — Navy (#1e3a5f) */}
+    <div className="export-btns" style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.6rem' }}>
+
+      {/* 1. İmza Kopyala — Navy */}
       <Tip text={L.tipCopy}>
-        <button
-          onClick={doCopy} disabled={!hasData}
-          style={{
-            ...btnBase, width: '100%',
-            background: copied ? `linear-gradient(135deg, ${C.ok}, #22c55e)` : `linear-gradient(135deg, #1e3a5f, #2c5282)`,
-            color: '#fff',
-            opacity: hasData ? 1 : 0.5,
-            cursor: hasData ? 'pointer' : 'not-allowed',
-            boxShadow: hasData ? '0 4px 12px rgba(30,58,95,0.25)' : 'none',
-          }}
+        <button onClick={doCopy} disabled={!hasData}
+          style={{ ...mkBtn(copied ? PAL.green : PAL.navy, hasData), width: '100%' }}
         >
-          {copied ? <Check size={14} /> : <Copy size={14} />}
+          {copied ? <Check size={13} /> : <Copy size={13} />}
           {copied ? L.cpd : L.cp}
         </button>
       </Tip>
 
-      {/* 2. Outlook Ayarları — Turkuaz (#00b4d8) */}
+      {/* 2. Outlook — Blue */}
       {msalAccount && (
         <Tip text={L.tipOutlook}>
-          <button
-            onClick={onOutlookOpen} disabled={!hasData}
-            style={{
-              ...btnBase, width: '100%',
-              background: 'linear-gradient(135deg, #00b4d8, #33c6e3)',
-              color: '#fff',
-              opacity: hasData ? 1 : 0.5,
-              cursor: hasData ? 'pointer' : 'not-allowed',
-              boxShadow: hasData ? '0 4px 12px rgba(0,180,216,0.25)' : 'none',
-            }}
+          <button onClick={onOutlookOpen} disabled={!hasData}
+            style={{ ...mkBtn(PAL.blue, hasData), width: '100%' }}
           >
             <OutlookIcon />
             {L.olOpen}
@@ -82,55 +92,32 @@ const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcC
         </Tip>
       )}
 
-      {/* 3. QR Kod — Yeşil/Lime (#8dc63f) */}
+      {/* 3. QR Kod — Soft Navy */}
       <Tip text={L.tipQr}>
-        <button
-          onClick={onQrClick} disabled={!hasData}
-          style={{
-            ...btnBase, width: '100%',
-            background: 'linear-gradient(135deg, #8dc63f, #a3d65a)',
-            color: '#fff',
-            opacity: hasData ? 1 : 0.5,
-            cursor: hasData ? 'pointer' : 'not-allowed',
-            boxShadow: hasData ? '0 4px 12px rgba(141,198,63,0.25)' : 'none',
-          }}
+        <button onClick={onQrClick} disabled={!hasData}
+          style={{ ...mkBtn(PAL.soft, hasData), width: '100%' }}
         >
           <QrIcon />
           {L.qrGen}
         </button>
       </Tip>
 
-      {/* 4. Kartvizit — Koyu Turuncu (#d4760a) */}
+      {/* 4. Kartvizit — Gold */}
       <Tip text={L.tipBc}>
-        <button
-          onClick={onBcClick} disabled={!hasData}
-          style={{
-            ...btnBase, width: '100%',
-            background: 'linear-gradient(135deg, #d4760a, #e8922e)',
-            color: '#fff',
-            opacity: hasData ? 1 : 0.5,
-            cursor: hasData ? 'pointer' : 'not-allowed',
-            boxShadow: hasData ? '0 4px 12px rgba(212,118,10,0.25)' : 'none',
-          }}
+        <button onClick={onBcClick} disabled={!hasData}
+          style={{ ...mkBtn(PAL.gold, hasData), width: '100%' }}
         >
           <CardIcon />
           {L.bcGen}
         </button>
       </Tip>
 
-      {/* 5. Temizle */}
+      {/* 5. Temizle — Gray */}
       <Tip text={L.tipReset}>
-        <button
-          onClick={doReset}
-          style={{
-            ...btnBase, width: '100%',
-            background: '#fff',
-            color: C.text2,
-            border: `1px solid ${C.borderSub}`,
-            boxShadow: 'none',
-          }}
+        <button onClick={doReset}
+          style={{ ...mkBtn(PAL.gray, true), width: '100%' }}
         >
-          <RefreshCw size={13} />
+          <RefreshCw size={12} />
           {L.rst}
         </button>
       </Tip>

@@ -42,12 +42,12 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
       padding: '0 2rem', height: 56,
       display: 'flex', alignItems: 'center', gap: '1rem',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-        <span className="app-header-title" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.primary }}>TYRO</span>
-        <span className="app-header-title-accent" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.accent }}>Sign Snap</span>
-        <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '-0.35rem', marginBottom: '0.05rem' }}>
-          <TyroLogo size={30} />
-        </span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+        <TyroLogo size={34} />
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.2rem' }}>
+          <span className="app-header-title" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.primary }}>TYRO</span>
+          <span className="app-header-title-accent" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.accent }}>SignSnap</span>
+        </div>
       </div>
 
       <nav className="app-header-nav" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
@@ -74,14 +74,14 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
         border: `1.5px solid ${C.borderSub}`, background: C.glass,
         backdropFilter: 'blur(10px)', boxShadow: '0 1px 4px rgba(30,58,95,0.06)',
       }}>
-        <button onClick={() => setLang('tr')} style={{
+        <button onClick={() => setLang('tr')} aria-label="Türkçe" style={{
           padding: '0.3rem 0.6rem', border: 'none', cursor: 'pointer',
           fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
           background: lang === 'tr' ? `linear-gradient(135deg, ${C.accent}, #d4a43a)` : 'transparent',
           color: lang === 'tr' ? '#fff' : C.textM,
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}>TR</button>
-        <button onClick={() => setLang('en')} style={{
+        <button onClick={() => setLang('en')} aria-label="English" style={{
           padding: '0.3rem 0.6rem', border: 'none', cursor: 'pointer',
           fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
           background: lang === 'en' ? `linear-gradient(135deg, ${C.accent}, #d4a43a)` : 'transparent',

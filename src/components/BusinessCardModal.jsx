@@ -3,7 +3,7 @@ import QRCode from 'qrcode';
 import { X, Copy, Check, Download, FileDown, Share2, Upload } from 'lucide-react';
 import { C } from '../constants/theme';
 import { generateVCard } from '../utils/generateVCard';
-import { formatGSM } from '../utils/formatting';
+import { formatGSM, titleCase } from '../utils/formatting';
 // Background image lazy-loaded from public/ only when HTML download is triggered (saves ~710KB from bundle)
 const BG_CARD_URL = (import.meta.env.BASE_URL || '/') + 'bg-card.jpg';
 let _bgBase64Cache = null;
@@ -20,18 +20,9 @@ async function getBgBase64() {
   } catch (e) { return ''; }
 }
 
-const NAVY = '#1e3a5f';
-const GOLD = '#c8922a';
-const BLUE = '#0098d4';
-
-function titleCase(str) {
-  if (!str) return '';
-  return str.split(' ').map(w => {
-    if (!w) return w;
-    if (w.length >= 2 && w === w.toUpperCase() && /^[A-ZÇĞİÖŞÜ]+$/.test(w)) return w;
-    return w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR');
-  }).join(' ');
-}
+const NAVY = C.primary;
+const GOLD = C.accent;
+const BLUE = C.divider;
 
 function formatName(form) {
   return [titleCase(form.firstName), titleCase(form.lastName)].filter(Boolean).join(' ') || '—';

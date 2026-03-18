@@ -1,6 +1,38 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // THEME (Light-only premium glass)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ─── SPACING (4px base grid) ───
+export const S = {
+  xs:  '0.25rem',  //  4px
+  sm:  '0.5rem',   //  8px
+  md:  '0.75rem',  // 12px
+  lg:  '1rem',     // 16px
+  xl:  '1.5rem',   // 24px
+  xxl: '2rem',     // 32px
+  xxxl:'3rem',     // 48px
+};
+
+// ─── TYPOGRAPHY ───
+export const T = {
+  // Font families
+  body: 'Inter, sans-serif',
+  heading: "'Plus Jakarta Sans', sans-serif",
+  // Size scale
+  micro:   '0.625rem', // 10px — badges, meta
+  caption: '0.75rem',  // 12px — captions, labels
+  body:    '0.875rem',  // 14px — body text
+  subhead: '1rem',     // 16px — section headers
+  title:   '1.125rem', // 18px — page titles
+  display: '1.5rem',   // 24px — hero text
+  // Weights
+  regular: 400,
+  medium:  500,
+  semi:    600,
+  bold:    700,
+  extra:   800,
+};
+
 export const C = {
   primary: '#1e3a5f',
   primarySoft: '#2c5282',

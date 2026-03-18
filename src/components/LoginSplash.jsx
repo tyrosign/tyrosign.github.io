@@ -8,6 +8,8 @@ const SPLASH_CSS = `
   @keyframes liquidB { 0%,100% { transform: translate(0,0) scale(1) rotate(0deg); } 33% { transform: translate(-50px,40px) scale(1.15) rotate(-8deg); } 66% { transform: translate(30px,-20px) scale(0.9) rotate(12deg); } }
   @keyframes liquidC { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(25px,35px) scale(1.08); } }
   @keyframes splashFadeUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes splashLogoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  @keyframes splashPenWrite { 0% { stroke-dashoffset: 200; opacity: 0; } 30% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
   .splash-btn-ios:hover { transform: scale(1.02); box-shadow: 0 8px 30px rgba(30,58,95,0.2)!important; }
   .splash-btn-ios:active { transform: scale(0.98); }
 `;
@@ -47,25 +49,30 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
     <div style={{
       textAlign: 'center', padding: '2.5rem 2.5rem 2rem',
       background: 'rgba(255,255,255,0.55)',
-      borderRadius: 28, maxWidth: 400, width: '88%',
+      borderRadius: 28, maxWidth: 420, width: '88%',
       border: '1px solid rgba(255,255,255,0.6)',
       backdropFilter: 'blur(40px) saturate(180%)', WebkitBackdropFilter: 'blur(40px) saturate(180%)',
       boxShadow: '0 20px 60px rgba(30,58,95,0.08), 0 1px 3px rgba(30,58,95,0.05)',
       animation: 'splashFadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
       position: 'relative', zIndex: 2,
     }}>
+      {/* Big Logo with float animation */}
+      <div style={{
+        display: 'flex', justifyContent: 'center', marginBottom: '0.8rem',
+        animation: 'splashLogoFloat 4s ease-in-out infinite',
+      }}>
+        <TyroLogo size={88} />
+      </div>
+
+      {/* App name */}
       <h1 style={{
-        fontSize: '1.6rem', fontWeight: 800, color: '#1e3a5f',
-        fontFamily: 'Plus Jakarta Sans,sans-serif', margin: '0 0 0.1rem',
-        letterSpacing: '-0.5px', wordSpacing: '0.15rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem',
-        paddingLeft: '1rem',
+        fontSize: '1.7rem', fontWeight: 800, color: C.primary,
+        fontFamily: 'Plus Jakarta Sans,sans-serif', margin: '0 0 0.15rem',
+        letterSpacing: '-0.5px',
       }}>
         <span>TYRO</span>{' '}
-        <span style={{ color: '#c8922a', letterSpacing: '-0.3px', wordSpacing: '0.15rem' }}>Sign Snap</span>
-        <span style={{ display: 'inline-flex', alignItems: 'flex-end', marginLeft: '-0.5rem', marginBottom: '0.15rem' }}>
-          <TyroLogo size={44} />
-        </span>
+        <span style={{ color: C.accent }}>Sign</span>
+        <span style={{ color: C.primary }}>Snap</span>
       </h1>
 
       <p style={{

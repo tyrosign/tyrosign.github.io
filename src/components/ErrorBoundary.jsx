@@ -1,6 +1,11 @@
 import { Component } from 'react';
 import { C } from '../constants/theme';
 
+const TEXTS = {
+  tr: { title: 'Bir hata oluştu', body: 'Uygulama beklenmedik bir hatayla karşılaştı. Lütfen sayfayı yenileyin.', btn: 'Sayfayı Yenile' },
+  en: { title: 'Something went wrong', body: 'The application encountered an unexpected error. Please refresh the page.', btn: 'Refresh Page' },
+};
+
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +24,9 @@ export default class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      let lang = 'tr';
+      try { lang = localStorage.getItem('tyro-lang') || 'tr'; } catch (e) { /* private mode */ }
+      const t = TEXTS[lang] || TEXTS.tr;
       return (
         <div style={{
           minHeight: '100vh', display: 'flex', flexDirection: 'column',
@@ -34,10 +42,10 @@ export default class ErrorBoundary extends Component {
           }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>⚠</div>
             <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: C.primary, marginBottom: '0.5rem' }}>
-              Bir hata oluştu
+              {t.title}
             </h2>
             <p style={{ fontSize: '0.8rem', color: C.text2, marginBottom: '1.5rem', lineHeight: 1.5 }}>
-              Uygulama beklenmedik bir hatayla karşılaştı. Lütfen sayfayı yenileyin.
+              {t.body}
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -48,7 +56,7 @@ export default class ErrorBoundary extends Component {
                 cursor: 'pointer', fontFamily: 'Inter,sans-serif',
               }}
             >
-              Sayfayı Yenile
+              {t.btn}
             </button>
           </div>
         </div>

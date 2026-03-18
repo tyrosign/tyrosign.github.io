@@ -19,12 +19,14 @@ import BannerTab from './components/BannerTab';
 const SettingsModal = lazy(() => import('./components/SettingsModal'));
 import AppFooter from './components/AppFooter';
 import ToastContainer from './components/ToastContainer';
+import CopySuccess from './components/CopySuccess';
+import OnboardingGuide from './components/OnboardingGuide';
 
 export default function App() {
   // ─── State ───
-  const [lang, _setLang] = useState(() => localStorage.getItem('tyro-lang') || 'tr');
+  const [lang, _setLang] = useState(() => { try { return localStorage.getItem('tyro-lang') || 'tr'; } catch { return 'tr'; } });
   // Synchronous localStorage write — prevents loss during MSAL loginRedirect
-  const setLang = useCallback((l) => { localStorage.setItem('tyro-lang', l); _setLang(l); }, []);
+  const setLang = useCallback((l) => { try { localStorage.setItem('tyro-lang', l); } catch { /* private mode */ } _setLang(l); }, []);
   const [tab, setTab] = useState('signature');
   const [copied, setCopied] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
@@ -52,12 +54,13 @@ export default function App() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [designOpen, setDesignOpen] = useState(false);
 
+  const [showCelebration, setShowCelebration] = useState(false);
   const fRef = useRef(null);
   const canvasRef = useRef(null);
   const bannerFileRef = useRef(null);
 
   // ─── Persist lang ───
-  useEffect(() => { localStorage.setItem('tyro-lang', lang); }, [lang]);
+  useEffect(() => { try { localStorage.setItem('tyro-lang', lang); } catch { /* private mode */ } }, [lang]);
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();
@@ -223,6 +226,11 @@ export default function App() {
   }, [toast, lang]);
 
   const doCopy = useCallback(async () => {
+    const onSuccess = () => {
+      setCopied(true); setShowCelebration(true); toast(L.cpd);
+      setTimeout(() => setCopied(false), 2500);
+      setTimeout(() => setShowCelebration(false), 1800);
+    };
     try {
       if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
         await navigator.clipboard.write([
@@ -231,8 +239,7 @@ export default function App() {
             'text/plain': new Blob([sigHTML.replace(/<[^>]*>/g, '')], { type: 'text/plain' }),
           }),
         ]);
-        setCopied(true); toast(L.cpd);
-        setTimeout(() => setCopied(false), 2500);
+        onSuccess();
         return;
       }
     } catch { /* fallback below */ }
@@ -247,11 +254,26 @@ export default function App() {
     sel.removeAllRanges(); sel.addRange(range);
     try {
       document.execCommand('copy');
-      setCopied(true); toast(L.cpd);
-      setTimeout(() => setCopied(false), 2500);
+      onSuccess();
     } catch { toast('Error', 'err'); }
     sel.removeAllRanges(); document.body.removeChild(div);
   }, [sigHTML, L, toast]);
+
+  // ─── Keyboard Shortcuts ───
+  useEffect(() => {
+    const handler = (e) => {
+      // Ctrl+C (not in input/textarea) → copy signature
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && hasData) {
+        const tag = document.activeElement?.tagName;
+        const sel = window.getSelection();
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || (sel && sel.toString().length > 0)) return;
+        e.preventDefault();
+        doCopy();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [hasData, doCopy]);
 
   const doReset = useCallback(() => {
     setForm({ firstName: '', lastName: '', titleTR: '', titleEN: '', officeId: '', companyId: 'tiryaki-agro', gsm: '', email: '', linkedinPersonal: '' });
@@ -277,6 +299,7 @@ export default function App() {
   return (
     <div style={{ fontFamily: 'Inter,sans-serif', background: C.bg, color: C.text1, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <style>{GLOBAL_CSS}</style>
+      <a href="#main-content" className="skip-link">{lang === 'tr' ? 'İçeriğe geç' : 'Skip to content'}</a>
 
       <AppHeader
         tab={tab} setTab={setTab}
@@ -294,7 +317,7 @@ export default function App() {
         opacity: 0.7,
       }} />
 
-      <main className="app-main" style={{ flex: 1, padding: '1rem 2rem', maxWidth: 1400, width: '100%', margin: '0 auto' }}>
+      <main id="main-content" className="app-main" role="main" style={{ flex: 1, padding: '1rem 2rem', maxWidth: 1400, width: '100%', margin: '0 auto' }}>
 
         {tab === 'signature' && (
           <SignatureTab
@@ -330,6 +353,8 @@ export default function App() {
       </main>
 
       <AppFooter />
+      <CopySuccess show={showCelebration} />
+      {tab === 'signature' && <OnboardingGuide L={L} />}
       <ToastContainer toasts={toasts} />
     </div>
   );

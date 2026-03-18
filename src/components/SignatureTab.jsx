@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, lazy, Suspense } from 'react';
+import { memo, useState, useCallback, useMemo, lazy, Suspense } from 'react';
 import { User, Phone, Eye, Download } from 'lucide-react';
 import { C } from '../constants/theme';
 import { OFFICES, OFFICE_GROUPS } from '../constants/offices';
@@ -27,6 +27,19 @@ const SignatureTab = memo(({
   const [qrOpen, setQrOpen] = useState(false);
   const [bcOpen, setBcOpen] = useState(false);
 
+  // ─── Form Validation ───
+  const v = useMemo(() => {
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const e = form.email.trim();
+    const g = form.gsm.trim();
+    return {
+      email: !e ? null : emailRe.test(e) ? { ok: true } : { err: lang === 'tr' ? 'Geçersiz e-posta formatı' : 'Invalid email format' },
+      gsm: !g ? null : g.replace(/\D/g, '').length >= 10 ? { ok: true } : { err: lang === 'tr' ? 'En az 10 haneli olmalıdır' : 'Must be at least 10 digits' },
+      firstName: form.firstName.trim().length > 0 ? { ok: true } : null,
+      lastName: form.lastName.trim().length > 0 ? { ok: true } : null,
+    };
+  }, [form.email, form.gsm, form.firstName, form.lastName, lang]);
+
   const handleOutlookOpen = useCallback(() => {
     doCopy();
     window.open('https://outlook.office.com/mail/options/accounts-category/signatures-subcategory', '_blank');
@@ -46,8 +59,8 @@ const SignatureTab = memo(({
           <GlassCard accent style={{ height: '100%' }}>
             <SectionTitle icon={User}>{L.pi}</SectionTitle>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <div style={{ flex: 1 }}><FormField label={L.fn} value={form.firstName} onChange={e => uf('firstName', e.target.value)} placeholder="Cenk" required /></div>
-              <div style={{ flex: 1 }}><FormField label={L.ln} value={form.lastName} onChange={e => uf('lastName', e.target.value)} placeholder="Şaylı" required /></div>
+              <div style={{ flex: 1 }}><FormField label={L.fn} value={form.firstName} onChange={e => uf('firstName', e.target.value)} placeholder="Cenk" required success={!!v.firstName?.ok} /></div>
+              <div style={{ flex: 1 }}><FormField label={L.ln} value={form.lastName} onChange={e => uf('lastName', e.target.value)} placeholder="Şaylı" required success={!!v.lastName?.ok} /></div>
             </div>
             <FormField label={L.ttr} value={form.titleTR} onChange={e => uf('titleTR', e.target.value)} placeholder="Kurumsal Sistemler Yöneticisi" />
             <FormField label={L.ten} value={form.titleEN} onChange={e => uf('titleEN', e.target.value)} placeholder="Enterprise Systems Executive" />
@@ -76,8 +89,8 @@ const SignatureTab = memo(({
             <div style={{ height: 1, background: C.borderSub, margin: '0.5rem 0 0.6rem' }} />
 
             <SectionTitle icon={Phone}>{L.ci}</SectionTitle>
-            <FormField label={L.gsm} value={form.gsm} onChange={e => uf('gsm', e.target.value)} placeholder="0530 914 45 91" />
-            <FormField label={L.email} value={form.email} onChange={e => uf('email', e.target.value)} placeholder="cenk.sayli@tiryaki.com.tr" required />
+            <FormField label={L.gsm} value={form.gsm} onChange={e => uf('gsm', e.target.value)} placeholder="0530 914 45 91" error={v.gsm?.err} success={!!v.gsm?.ok} />
+            <FormField label={L.email} value={form.email} onChange={e => uf('email', e.target.value)} placeholder="cenk.sayli@tiryaki.com.tr" required error={v.email?.err} success={!!v.email?.ok} type="email" />
             <div style={{ marginBottom: '0.4rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.7rem', fontWeight: 600, color: C.text2, marginBottom: '0.25rem' }}>
                 LinkedIn
@@ -121,6 +134,7 @@ const SignatureTab = memo(({
             </p>
           </GlassCard>
 
+          <div className="sig-sec-export">
           <GlassCard accent>
             <SectionTitle icon={Download}>{L.exportTitle}</SectionTitle>
             <ExportSection
@@ -132,9 +146,10 @@ const SignatureTab = memo(({
               showSteps={showSteps} setShowSteps={setShowSteps} L={L}
             />
           </GlassCard>
+          </div>
         </div>
 
-        {/* FULL-WIDTH: Promosyon Banneri */}
+        {/* FULL-WIDTH: Promosyon Banner */}
         <PromoBannerSection sigBanner={sigBanner} setSigBanner={setSigBanner} bannerFileRef={bannerFileRef} procBanner={procBanner} lang={lang} L={L} />
       </div>
 

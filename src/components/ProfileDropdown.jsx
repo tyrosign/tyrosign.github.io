@@ -8,6 +8,7 @@ const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, 
     <div className="app-header-auth" style={{ position: 'relative' }}>
       <button
         className="profile-trigger"
+        aria-label={lang === 'tr' ? 'Profil menüsü' : 'Profile menu'}
         onClick={() => setProfileOpen(p => !p)}
         style={{
           display: 'flex', alignItems: 'center', gap: '0.35rem',

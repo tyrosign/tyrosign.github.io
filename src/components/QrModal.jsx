@@ -3,21 +3,12 @@ import QRCode from 'qrcode';
 import { X, Download, Copy, Check } from 'lucide-react';
 import { C } from '../constants/theme';
 import { generateVCard } from '../utils/generateVCard';
-import { formatGSM } from '../utils/formatting';
+import { formatGSM, titleCase } from '../utils/formatting';
 import Btn from './ui/Btn';
 
-const NAVY = '#1e3a5f';
-const GOLD = '#c8922a';
-const BLUE = '#0098d4';
-
-function titleCase(str) {
-  if (!str) return '';
-  return str.split(' ').map(w => {
-    if (!w) return w;
-    if (w.length >= 2 && w === w.toUpperCase() && /^[A-ZÇĞİÖŞÜ]+$/.test(w)) return w;
-    return w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR');
-  }).join(' ');
-}
+const NAVY = C.primary;
+const GOLD = C.accent;
+const BLUE = C.divider;
 
 function formatName(form) {
   return [titleCase(form.firstName), titleCase(form.lastName)].filter(Boolean).join(' ') || '—';
@@ -154,7 +145,7 @@ async function drawCardCanvas(qrDataUrl, form, stg, company, lang) {
   // Bottom hint
   ctx.fillStyle = '#bbbbbb';
   ctx.font = 'italic 9px "Inter", Arial, sans-serif';
-  ctx.fillText('Scan QR to save contact', W / 2, H - 12);
+  ctx.fillText(lang === 'tr' ? 'Rehbere eklemek için QR okutun' : 'Scan QR to save contact', W / 2, H - 12);
 
   return canvas;
 }
@@ -176,6 +167,10 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lan
   const canvasRef = useRef(null);
   const cardRef = useRef(null); // Pre-rendered card canvas
   const [copyOk, setCopyOk] = useState(false);
+  const copyTimerRef = useRef(null);
+
+  // Cleanup copy timer on unmount
+  useEffect(() => () => { if (copyTimerRef.current) clearTimeout(copyTimerRef.current); }, []);
 
   // Generate QR code + pre-render card canvas
   useEffect(() => {
@@ -371,14 +366,15 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lan
       navigator.clipboard.write([item]).then(() => {
         setCopyOk(true);
         if (toast) toast(L.qrCopied);
-        setTimeout(() => setCopyOk(false), 2500);
+        if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+        copyTimerRef.current = setTimeout(() => setCopyOk(false), 2500);
       }).catch(err => {
         console.warn('Clipboard write failed:', err);
-        if (toast) toast('Kopyalama başarısız — tarayıcı izni gerekebilir');
+        if (toast) toast(L.bcCopyFail || 'Copy failed');
       });
     } catch (err) {
       console.warn('QR copy failed:', err);
-      if (toast) toast('Kopyalama desteklenmiyor');
+      if (toast) toast(L.bcCopyUnsupported || 'Copy not supported');
     }
   }, [toast, L]);
 
@@ -427,6 +423,7 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lan
         {/* Close */}
         <button
           onClick={onClose}
+          aria-label="Close"
           style={{
             position: 'absolute', top: 12, right: 12,
             background: 'none', border: 'none', cursor: 'pointer',

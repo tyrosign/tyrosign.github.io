@@ -12,6 +12,19 @@ export const GLOBAL_CSS = `
   @keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
   @keyframes ripple { 0% { box-shadow: 0 0 0 0 rgba(200,146,42,0.35); } 100% { box-shadow: 0 0 0 14px rgba(200,146,42,0); } }
   @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translateY(60px) rotate(360deg) scale(0); opacity: 0; }
+  }
+  @keyframes successPop {
+    0%   { transform: scale(0); opacity: 0; }
+    50%  { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes successRing {
+    0%   { box-shadow: 0 0 0 0 rgba(22,163,74,0.5); }
+    100% { box-shadow: 0 0 0 20px rgba(22,163,74,0); }
+  }
   @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
   @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-6px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
@@ -48,6 +61,34 @@ export const GLOBAL_CSS = `
   ::-webkit-scrollbar-thumb { background: rgba(30,58,95,0.12); border-radius: 3px; }
   ::selection { background: ${C.accent}30; }
 
+  /* ═══ ACCESSIBILITY ═══ */
+  :focus-visible {
+    outline: 2px solid ${C.accent};
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  input:focus-visible, button:focus-visible, select:focus-visible {
+    outline: 2px solid ${C.accent};
+    outline-offset: 1px;
+  }
+  /* Skip-to-content link */
+  .skip-link {
+    position: absolute; top: -100%; left: 16px; z-index: 99999;
+    padding: 0.5rem 1rem; background: ${C.primary}; color: #fff;
+    border-radius: 0 0 8px 8px; font-size: 0.75rem; font-weight: 600;
+    text-decoration: none; transition: top 0.2s ease;
+  }
+  .skip-link:focus { top: 0; }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   /* ═══ TOOLTIP (CSS-only) ═══ */
   .tip-wrap { position: relative; }
   .tip-wrap .tip-box {
@@ -82,6 +123,12 @@ export const GLOBAL_CSS = `
   @media(max-width:900px) {
     .sig-layout { flex-direction: column!important; }
     .sig-right { position: relative!important; top: auto!important; }
+    .sig-grid { grid-template-columns: 1fr!important; gap: 0.85rem!important; }
+  }
+  @media(min-width:769px) and (max-width:1024px) {
+    .sig-grid { grid-template-columns: 1fr 1fr!important; gap: 0.85rem!important; }
+    .sig-sec-banner { grid-column: 1 / -1!important; }
+    .app-header-lang button { padding: 0.18rem 0.4rem!important; font-size: 0.56rem!important; }
   }
   @media(max-width:768px) {
     .tip-wrap .tip-box { display: none!important; }
@@ -106,6 +153,7 @@ export const GLOBAL_CSS = `
     .sig-sec-contact { order: 2!important; }
     .sig-sec-preview { order: 3!important; }
     .sig-sec-export { order: 4!important; }
+    .sig-sec-banner { order: 5!important; }
     .banner-flex { flex-direction: column!important; }
     .banner-left { flex: 1 1 auto!important; min-width: 0!important; max-width: 100%!important; width: 100%!important; }
     .settings-modal { width: 100vw!important; max-width: 100vw!important; height: 100vh!important; max-height: 100vh!important; border-radius: 0!important; top: 0!important; left: 0!important; transform: none!important; }

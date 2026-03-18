@@ -17,6 +17,13 @@ const SETTINGS_TABS = [
   { id: 'social', icon: Globe, labelKey: 'sTabSocial' },
 ];
 
+const SOCIAL_FIELDS = [
+  { icon: Linkedin, label: 'LinkedIn', key: 'linkedin' },
+  { icon: Twitter, label: 'X (Twitter)', key: 'twitter' },
+  { icon: Facebook, label: 'Facebook', key: 'facebook' },
+  { icon: Instagram, label: 'Instagram', key: 'instagram' },
+];
+
 const SettingsModal = memo(({
   setTab, settingsTab, setSettingsTab, stg, setStg, fRef, procLogo, toast, lang, L,
   DEFAULT_LOGO_BASE64,
@@ -46,7 +53,7 @@ const SettingsModal = memo(({
       }}>
         <Settings size={16} style={{ color: C.accent, marginRight: '0.5rem' }} />
         <span style={{ fontSize: '0.9rem', fontWeight: 800, color: C.primary, fontFamily: 'Plus Jakarta Sans,sans-serif', flex: 1 }}>{L.setTab}</span>
-        <button onClick={() => setTab('signature')} style={{
+        <button onClick={() => setTab('signature')} aria-label="Close" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           width: 28, height: 28, borderRadius: 8, border: `1px solid ${C.borderSub}`,
           background: 'transparent', cursor: 'pointer', color: C.textM,
@@ -211,7 +218,7 @@ const SettingsModal = memo(({
                 {stg.bannerAccentColor && (
                   <button onClick={() => setStg(p => ({ ...p, bannerAccentColor: '' }))} style={{
                     fontSize: '0.55rem', color: C.textM, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', marginTop: '0.3rem',
-                  }}>reset</button>
+                  }}>{L.lr}</button>
                 )}
               </div>
             </div>
@@ -222,12 +229,7 @@ const SettingsModal = memo(({
         {settingsTab === 'social' && (
           <div style={{ animation: 'fadeIn 0.2s ease' }}>
             <div className="social-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 0.75rem' }}>
-              {[
-                { icon: Linkedin, label: 'LinkedIn', key: 'linkedin' },
-                { icon: Twitter, label: 'X (Twitter)', key: 'twitter' },
-                { icon: Facebook, label: 'Facebook', key: 'facebook' },
-                { icon: Instagram, label: 'Instagram', key: 'instagram' },
-              ].map(({ label, key }) => (
+              {SOCIAL_FIELDS.map(({ label, key }) => (
                 <FormField key={key} label={label} value={stg.social[key]}
                   onChange={e => setStg(p => ({ ...p, social: { ...p.social, [key]: e.target.value } }))} />
               ))}

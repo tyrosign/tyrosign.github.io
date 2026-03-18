@@ -1,14 +1,20 @@
-import { useState, memo } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { C } from '../../constants/theme';
 
 const Btn = memo(({ icon: Ic, onClick, disabled, isGreen, hoverColor, children }) => {
   const [hov, setHov] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const timerRef = useRef(null);
   const hc = hoverColor || C.primary;
+
+  // Cleanup timeout on unmount
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+
   const handleClick = (e) => {
     if (disabled) return;
     setClicked(true);
-    setTimeout(() => setClicked(false), 400);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setClicked(false), 400);
     onClick?.(e);
   };
   return (

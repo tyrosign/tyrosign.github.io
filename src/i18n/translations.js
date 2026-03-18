@@ -41,10 +41,10 @@ export const TR = {
   bannerAccentL: 'Banner Aksan Rengi', textColorsTitle: 'İmza Metin Renkleri', bannerColorsTitle: 'Banner Renkleri',
   msLogin: 'Microsoft Giriş', msLogging: 'Giriş yapılıyor...', msLogout: 'Çıkış',
   msLoginOk: 'Giriş başarılı', msLoginFail: 'Giriş başarısız', msProfileFail: 'Profil alınamadı',
-  proBanner: 'Promosyon Banneri', proBannerDesc: 'İmzanızın altına etkinlik, fuar veya kampanya görseli ekleyin',
+  proBanner: 'Promosyon Banner', proBannerDesc: 'İmzanızın altına etkinlik, fuar veya kampanya görseli ekleyin',
   proBannerUpload: 'Banner Yükle', proBannerHint: 'PNG/JPG/GIF max 2MB, önerilen genişlik: 600px',
   proBannerLink: 'Tıklama Linki (opsiyonel)', proBannerAlt: 'Alternatif Metin',
-  proBannerRemove: 'Banneri Kaldır', proBannerEnabled: 'Promosyon Banneri Ekle',
+  proBannerRemove: 'Banner Kaldır', proBannerEnabled: 'Promosyon Banner Ekle',
   qrGen: 'QR Kod', qrTitle: 'Kartvizit QR Kodu', qrDl: 'QR İndir', qrCopy: 'QR Kopyala', qrCopied: 'QR panoya kopyalandı!', qrScan: 'Telefonunuzla okutarak rehbere kaydedin',
   olOpen: 'Outlook Ayarlar',
   bcGen: 'Kartvizit', bcTitle: 'Dijital Kartvizit', bcDl: 'Görsel İndir', bcCopy: 'Kopyala', bcCopied: 'Kartvizit kopyalandı!', bcHtml: 'Dijital Kart İndir', bcScan: 'Taratarak rehbere ekleyin',
@@ -61,6 +61,17 @@ export const TR = {
   tipQr: 'Rehbere ekleme QR kodu oluşturur, telefon ile okutulabilir',
   tipBc: 'Dijital kartvizit oluşturur — görsel, HTML ve paylaşım seçenekleri',
   tipReset: 'Tüm form alanlarını temizler ve sıfırdan başlatır',
+  // Onboarding
+  obWelcome: 'Hoş geldiniz! 👋',
+  obStep1: 'Bilgilerinizi buraya girin — adınız, ünvanınız ve iletişim bilgileriniz.',
+  obStep2: 'İmzanız gerçek zamanlı olarak burada görünür.',
+  obStep3: 'Hazır olunca tek tıkla kopyalayıp Outlook\'a yapıştırın!',
+  obStep4: 'QR Kod ile rehbere ekleme, Kartvizit ile dijital kart oluşturabilir, Outlook Ayarları ile doğrudan imza ayarlarını açabilirsiniz.',
+  obStep5: 'İmzanızın altına etkinlik, fuar veya kampanya görseli ekleyerek promosyon yapabilirsiniz.',
+  obNext: 'İleri', obDone: 'Başlayalım!', obSkip: 'Geç',
+  obLabel1: 'Form Alanları', obLabel2: 'Canlı Önizleme', obLabel3: 'Kopyala & Yapıştır',
+  obLabel4: 'Dışa Aktarma Araçları', obLabel5: 'Promosyon Banner',
+  kbShortcut: 'Ctrl+C ile de kopyalayabilirsiniz',
 };
 
 export const EN = {
@@ -126,4 +137,15 @@ export const EN = {
   tipQr: 'Generates a QR code for adding contact info to phone',
   tipBc: 'Creates a digital business card — image, HTML and sharing options',
   tipReset: 'Clears all form fields and starts fresh',
+  // Onboarding
+  obWelcome: 'Welcome! 👋',
+  obStep1: 'Enter your info here — name, title and contact details.',
+  obStep2: 'Your signature appears here in real-time.',
+  obStep3: 'When ready, copy with one click and paste into Outlook!',
+  obStep4: 'Generate a QR code for contacts, create a digital business card, or open Outlook settings directly.',
+  obStep5: 'Add event, fair or campaign visuals below your signature as a promotional banner.',
+  obNext: 'Next', obDone: "Let's go!", obSkip: 'Skip',
+  obLabel1: 'Form Fields', obLabel2: 'Live Preview', obLabel3: 'Copy & Paste',
+  obLabel4: 'Export Tools', obLabel5: 'Promo Banner',
+  kbShortcut: 'You can also copy with Ctrl+C',
 };

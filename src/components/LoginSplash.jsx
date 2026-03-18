@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { C } from '../constants/theme';
+import PixelDropLogo from './ui/PixelDropLogo';
 
 import { GLOBAL_CSS } from '../styles/globalCss';
 
@@ -56,25 +57,10 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
       animation: 'splashFadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
       position: 'relative', zIndex: 2,
     }}>
-      {/* Three dots logo with float animation */}
-      <div style={{
-        display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '1.2rem',
-        animation: 'splashLogoFloat 4s ease-in-out infinite',
-      }}>
-        <span style={{ width: 18, height: 18, borderRadius: '50%', background: '#1e3a5f', display: 'block' }} />
-        <span style={{ width: 18, height: 18, borderRadius: '50%', background: '#0098d4', display: 'block' }} />
-        <span style={{ width: 18, height: 18, borderRadius: '50%', background: '#c8922a', display: 'block' }} />
+      {/* Animated Pixel Drop Logo */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.8rem' }}>
+        <PixelDropLogo height={70} textSize={34} />
       </div>
-
-      {/* App name */}
-      <h1 style={{
-        fontSize: '2rem', fontWeight: 800, color: C.primary,
-        fontFamily: "'Plus Jakarta Sans',sans-serif", margin: '0 0 0.15rem',
-        letterSpacing: '-1px',
-      }}>
-        <span>tyro</span>
-        <span style={{ color: C.accent }}>sign</span>
-      </h1>
 
       <p style={{
         fontSize: '0.78rem', color: '#8e8e93', margin: '0.25rem 0 2rem',

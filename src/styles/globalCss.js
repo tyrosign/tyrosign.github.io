@@ -1,7 +1,7 @@
 import { C } from '../constants/theme';
 
 export const GLOBAL_CSS = `
-  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Baloo+2:wght@600;700;800&display=swap");
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { overflow-y: scroll; }
   .sec-icon { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }

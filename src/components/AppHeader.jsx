@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Edit3, Settings } from 'lucide-react';
 import { C } from '../constants/theme';
 import TyroLogo from './ui/TyroLogo';
+import PixelDropLogo from './ui/PixelDropLogo';
 import TabBtn from './ui/TabBtn';
 import LinkedInIcon from './ui/LinkedInIcon';
 import ProfileDropdown from './ProfileDropdown';
@@ -42,16 +43,7 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
       display: 'flex', alignItems: 'center', gap: '1rem',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-        {/* Three dots logo — optically centered with text */}
-        <div style={{ display: 'flex', gap: '3.5px', alignItems: 'center', marginTop: '1px' }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1e3a5f', display: 'block' }} />
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0098d4', display: 'block' }} />
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#c8922a', display: 'block' }} />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <span className="app-header-title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '1.25rem', fontWeight: 800, color: C.primary, letterSpacing: '-0.5px' }}>tyro</span>
-          <span className="app-header-title-accent" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '1.25rem', fontWeight: 800, color: C.accent, letterSpacing: '-0.5px' }}>sign</span>
-        </div>
+        <PixelDropLogo height={42} textSize={27} />
       </div>
 
       <nav className="app-header-nav" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>

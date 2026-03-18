@@ -13,7 +13,7 @@ const msalInstance = MSAL_ENABLED ? new PublicClientApplication({
   cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false },
 }) : null;
 
-const msalLoginRequest = { scopes: ['User.Read', 'MailboxSettings.ReadWrite'] };
+const msalLoginRequest = { scopes: ['User.Read', 'MailboxSettings.ReadWrite', 'Mail.Send'] };
 
 export function useMsal({ toast, lang, setForm }) {
   const [msalReady, setMsalReady] = useState(false);
@@ -135,5 +135,65 @@ export function useMsal({ toast, lang, setForm }) {
     }
   }, [msalAccount]);
 
-  return { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, applySignature };
+  const fetchManager = useCallback(async () => {
+    if (!msalInstance || !msalAccount) return null;
+    try {
+      const tokenResponse = await msalInstance.acquireTokenSilent({
+        scopes: ['User.Read'],
+        account: msalAccount,
+      });
+      const res = await fetch('https://graph.microsoft.com/v1.0/me/manager?$select=displayName,mail', {
+        headers: { Authorization: `Bearer ${tokenResponse.accessToken}` },
+      });
+      if (!res.ok) return null;
+      const mgr = await res.json();
+      return { name: mgr.displayName || '', email: mgr.mail || '' };
+    } catch (err) {
+      if (import.meta.env.DEV) console.error('Fetch manager error:', err);
+      return null;
+    }
+  }, [msalAccount]);
+
+  const sendMail = useCallback(async ({ to, subject, htmlBody }) => {
+    if (!msalInstance || !msalAccount) return false;
+    try {
+      const tokenResponse = await msalInstance.acquireTokenSilent({
+        scopes: ['Mail.Send'],
+        account: msalAccount,
+      });
+      const res = await fetch('https://graph.microsoft.com/v1.0/me/sendMail', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${tokenResponse.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: {
+            subject,
+            body: { contentType: 'HTML', content: htmlBody },
+            toRecipients: [{ emailAddress: { address: to } }],
+          },
+          saveToSentItems: true,
+        }),
+      });
+      if (!res.ok) {
+        if (import.meta.env.DEV) {
+          const errText = await res.text();
+          console.error('Send mail error:', res.status, errText);
+        }
+        return false;
+      }
+      return true;
+    } catch (err) {
+      if (err instanceof InteractionRequiredAuthError) {
+        try {
+          await msalInstance.acquireTokenRedirect({ scopes: ['Mail.Send'] });
+        } catch (_) { /* redirect will happen */ }
+      }
+      if (import.meta.env.DEV) console.error('Send mail error:', err);
+      return false;
+    }
+  }, [msalAccount]);
+
+  return { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, applySignature, fetchManager, sendMail };
 }

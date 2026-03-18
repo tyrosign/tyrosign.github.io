@@ -64,7 +64,7 @@ export default function App() {
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();
-  const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout } = useMsal({ toast, lang, setForm });
+  const { MSAL_ENABLED, msalReady, msalAccount, authLoading, handleLogin, handleLogout, fetchManager, sendMail } = useMsal({ toast, lang, setForm });
 
   // ─── Logo loader (PNG → base64, kalite kaybı yok) ───
   const logoCache = useRef({});
@@ -329,6 +329,7 @@ export default function App() {
             sigBanner={sigBanner} setSigBanner={setSigBanner}
             bannerFileRef={bannerFileRef} procBanner={procBanner}
             msalAccount={msalAccount} toast={toast}
+            fetchManager={fetchManager} sendMail={sendMail}
           />
         )}
 

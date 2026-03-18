@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Copy, Check, RefreshCw, Info } from 'lucide-react';
+import { Copy, Check, RefreshCw, Info, Mail } from 'lucide-react';
 import { C } from '../constants/theme';
 
 const QrIcon = () => (
@@ -66,7 +66,7 @@ const Tip = ({ text, children }) => (
   </div>
 );
 
-const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcClick, onOutlookOpen, msalAccount, showSteps, setShowSteps, L }) => (
+const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcClick, onOutlookOpen, onNotifyClick, msalAccount, showSteps, setShowSteps, L }) => (
   <>
     <div className="export-btns" style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.6rem' }}>
 
@@ -92,7 +92,19 @@ const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcC
         </Tip>
       )}
 
-      {/* 3. QR Kod — Soft Navy */}
+      {/* 3. Yöneticime Bildir — Blue (only with MSAL) */}
+      {msalAccount && (
+        <Tip text={L.tipNotifyMgr}>
+          <button onClick={onNotifyClick} disabled={!hasData}
+            style={{ ...mkBtn(PAL.blue, hasData), width: '100%' }}
+          >
+            <Mail size={13} />
+            {L.notifyMgr}
+          </button>
+        </Tip>
+      )}
+
+      {/* 4. QR Kod — Soft Navy */}
       <Tip text={L.tipQr}>
         <button onClick={onQrClick} disabled={!hasData}
           style={{ ...mkBtn(PAL.soft, hasData), width: '100%' }}

@@ -28,6 +28,8 @@ export const GLOBAL_CSS = `
   @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
   @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-6px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(24px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes progressFlow { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
   @keyframes progressGlow { 0%, 100% { box-shadow: 0 0 4px rgba(0,152,212,0.3), 0 0 8px rgba(0,152,212,0.1); } 50% { box-shadow: 0 0 8px rgba(0,152,212,0.5), 0 0 16px rgba(0,152,212,0.2); } }
   @keyframes progressComplete { 0%, 100% { box-shadow: 0 0 6px rgba(22,163,74,0.4), 0 0 12px rgba(22,163,74,0.15); } 50% { box-shadow: 0 0 10px rgba(22,163,74,0.6), 0 0 20px rgba(22,163,74,0.25); } }

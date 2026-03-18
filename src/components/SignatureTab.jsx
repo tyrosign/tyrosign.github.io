@@ -16,16 +16,18 @@ import PromoBannerSection from './PromoBannerSection';
 // Lazy-load heavy modals (QR + BusinessCard contain qrcode lib)
 const QrModal = lazy(() => import('./QrModal'));
 const BusinessCardModal = lazy(() => import('./BusinessCardModal'));
+const NotifyManagerModal = lazy(() => import('./NotifyManagerModal'));
 
 const SignatureTab = memo(({
   form, uf, stg, effectiveStg, setStg, office, company, sigHTML, hasData, progress, L, lang,
   copied, doCopy, doReset, showSteps, setShowSteps,
   designOpen, setDesignOpen,
   sigBanner, setSigBanner, bannerFileRef, procBanner,
-  msalAccount, toast,
+  msalAccount, toast, fetchManager, sendMail,
 }) => {
   const [qrOpen, setQrOpen] = useState(false);
   const [bcOpen, setBcOpen] = useState(false);
+  const [notifyOpen, setNotifyOpen] = useState(false);
 
   // ─── Form Validation ───
   const v = useMemo(() => {
@@ -141,6 +143,7 @@ const SignatureTab = memo(({
               hasData={hasData} copied={copied} doCopy={doCopy} doReset={doReset}
               onQrClick={() => setQrOpen(true)}
               onBcClick={() => setBcOpen(true)}
+              onNotifyClick={() => setNotifyOpen(true)}
               onOutlookOpen={handleOutlookOpen}
               msalAccount={msalAccount}
               showSteps={showSteps} setShowSteps={setShowSteps} L={L}
@@ -183,6 +186,23 @@ const SignatureTab = memo(({
             toast={toast}
             L={L}
             lang={lang}
+          />
+        </Suspense>
+      )}
+
+      {/* Notify Manager Modal (lazy-loaded) */}
+      {notifyOpen && (
+        <Suspense fallback={null}>
+          <NotifyManagerModal
+            open={notifyOpen}
+            onClose={() => setNotifyOpen(false)}
+            form={form}
+            sigHTML={sigHTML}
+            toast={toast}
+            L={L}
+            lang={lang}
+            fetchManager={fetchManager}
+            sendMail={sendMail}
           />
         </Suspense>
       )}

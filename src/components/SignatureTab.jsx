@@ -1,5 +1,5 @@
 import { memo, useState, useCallback, useMemo, lazy, Suspense } from 'react';
-import { User, Phone, Eye, Download } from 'lucide-react';
+import { User, Phone, Eye, Download, RefreshCw } from 'lucide-react';
 import { C } from '../constants/theme';
 import { OFFICES, OFFICE_GROUPS } from '../constants/offices';
 import { COMPANIES, COMPANY_GROUPS, COMPANY_GROUP_LABELS_EN } from '../constants/companies';
@@ -59,7 +59,23 @@ const SignatureTab = memo(({
         {/* LEFT: Kişisel Bilgiler + İletişim (tek kart) */}
         <div className="sig-sec-personal" style={{ animation: 'slideInLeft 0.4s ease-out' }}>
           <GlassCard accent style={{ height: '100%' }}>
-            <SectionTitle icon={User}>{L.pi}</SectionTitle>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.7rem' }}>
+              <div style={{ flex: 1, marginBottom: '-0.7rem' }}><SectionTitle icon={User}>{L.pi}</SectionTitle></div>
+              <button
+                onClick={doReset}
+                title={L.tipReset}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: 28, height: 28, borderRadius: 7, border: 'none',
+                  background: `${C.textM}15`, cursor: 'pointer', marginLeft: 'auto',
+                  transition: 'all 0.15s ease', color: C.textM,
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = `${C.textM}30`; e.currentTarget.style.color = C.primary; }}
+                onMouseLeave={e => { e.currentTarget.style.background = `${C.textM}15`; e.currentTarget.style.color = C.textM; }}
+              >
+                <RefreshCw size={13} />
+              </button>
+            </div>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <div style={{ flex: 1 }}><FormField label={L.fn} value={form.firstName} onChange={e => uf('firstName', e.target.value)} placeholder="Cenk" required success={!!v.firstName?.ok} /></div>
               <div style={{ flex: 1 }}><FormField label={L.ln} value={form.lastName} onChange={e => uf('lastName', e.target.value)} placeholder="Şaylı" required success={!!v.lastName?.ok} /></div>
@@ -140,7 +156,7 @@ const SignatureTab = memo(({
           <GlassCard accent>
             <SectionTitle icon={Download}>{L.exportTitle}</SectionTitle>
             <ExportSection
-              hasData={hasData} copied={copied} doCopy={doCopy} doReset={doReset}
+              hasData={hasData} copied={copied} doCopy={doCopy}
               onQrClick={() => setQrOpen(true)}
               onBcClick={() => setBcOpen(true)}
               onNotifyClick={() => setNotifyOpen(true)}

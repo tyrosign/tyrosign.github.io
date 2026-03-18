@@ -13,7 +13,7 @@ const msalInstance = MSAL_ENABLED ? new PublicClientApplication({
   cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false },
 }) : null;
 
-const msalLoginRequest = { scopes: ['User.Read', 'MailboxSettings.ReadWrite', 'Mail.Send'] };
+const msalLoginRequest = { scopes: ['User.Read', 'User.Read.All', 'MailboxSettings.ReadWrite', 'Mail.Send'] };
 
 export function useMsal({ toast, lang, setForm }) {
   const [msalReady, setMsalReady] = useState(false);
@@ -139,7 +139,7 @@ export function useMsal({ toast, lang, setForm }) {
     if (!msalInstance || !msalAccount) return null;
     try {
       const tokenResponse = await msalInstance.acquireTokenSilent({
-        scopes: ['User.Read'],
+        scopes: ['User.Read.All'],
         account: msalAccount,
       });
       const res = await fetch('https://graph.microsoft.com/v1.0/me/manager?$select=displayName,mail', {

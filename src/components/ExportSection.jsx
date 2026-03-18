@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Copy, Check, RefreshCw, Info, Mail } from 'lucide-react';
+import { Copy, Check, Info, Mail } from 'lucide-react';
 import { C } from '../constants/theme';
 
 const QrIcon = () => (
@@ -66,7 +66,7 @@ const Tip = ({ text, children }) => (
   </div>
 );
 
-const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcClick, onOutlookOpen, onNotifyClick, msalAccount, showSteps, setShowSteps, L }) => (
+const ExportSection = memo(({ hasData, copied, doCopy, onQrClick, onBcClick, onOutlookOpen, onNotifyClick, msalAccount, showSteps, setShowSteps, L }) => (
   <>
     <div className="export-btns" style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.6rem' }}>
 
@@ -92,11 +92,11 @@ const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcC
         </Tip>
       )}
 
-      {/* 3. Yöneticime Bildir — Blue (only with MSAL) */}
+      {/* 3. Yöneticime Bildir — Gold (only with MSAL) */}
       {msalAccount && (
         <Tip text={L.tipNotifyMgr}>
           <button onClick={onNotifyClick} disabled={!hasData}
-            style={{ ...mkBtn(PAL.blue, hasData), width: '100%' }}
+            style={{ ...mkBtn(PAL.gold, hasData), width: '100%' }}
           >
             <Mail size={13} />
             {L.notifyMgr}
@@ -124,15 +124,6 @@ const ExportSection = memo(({ hasData, copied, doCopy, doReset, onQrClick, onBcC
         </button>
       </Tip>
 
-      {/* 5. Temizle — Gray */}
-      <Tip text={L.tipReset}>
-        <button onClick={doReset}
-          style={{ ...mkBtn(PAL.gray, true), width: '100%' }}
-        >
-          <RefreshCw size={12} />
-          {L.rst}
-        </button>
-      </Tip>
     </div>
 
     <div style={{ borderTop: `1px solid ${C.borderSub}`, paddingTop: '0.5rem' }}>

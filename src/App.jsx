@@ -18,6 +18,7 @@ import BottomTabBar from './components/BottomTabBar';
 import SignatureTab from './components/SignatureTab';
 import BannerTab from './components/BannerTab';
 const SettingsModal = lazy(() => import('./components/SettingsModal'));
+const LogoConceptsPage = lazy(() => import('./components/LogoConceptsPage'));
 import AppFooter from './components/AppFooter';
 import ToastContainer from './components/ToastContainer';
 import CopySuccess from './components/CopySuccess';
@@ -28,7 +29,7 @@ export default function App() {
   const [lang, _setLang] = useState(() => { try { return localStorage.getItem('tyro-lang') || 'tr'; } catch { return 'tr'; } });
   // Synchronous localStorage write — prevents loss during MSAL loginRedirect
   const setLang = useCallback((l) => { try { localStorage.setItem('tyro-lang', l); } catch { /* private mode */ } _setLang(l); }, []);
-  const [tab, setTab] = useState('signature');
+  const [tab, setTab] = useState(() => window.location.hash === '#concepts' ? 'concepts' : 'signature');
   const [copied, setCopied] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
   const [settingsTab, setSettingsTab] = useState('logo');
@@ -349,6 +350,12 @@ export default function App() {
               toast={toast} L={L} lang={lang}
               DEFAULT_LOGO_BASE64={DEFAULT_LOGO_BASE64}
             />
+          </Suspense>
+        )}
+
+        {tab === 'concepts' && (
+          <Suspense fallback={null}>
+            <LogoConceptsPage onBack={() => setTab('signature')} />
           </Suspense>
         )}
 

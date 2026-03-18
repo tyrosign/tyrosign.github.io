@@ -140,8 +140,8 @@ export const GLOBAL_CSS = `
     .tip-wrap .tip-box { display: none!important; }
     .app-header { padding: 0 0.75rem!important; height: 44px!important; gap: 0.4rem!important; }
     .app-header-logo { display: none!important; }
-    .app-header-title { font-size: 0.82rem!important; }
-    .app-header-title-accent { font-size: 0.82rem!important; }
+    .app-header-title { font-size: 1.1rem!important; }
+    .app-header-title-accent { font-size: 1.1rem!important; }
     .app-header-nav { display: none!important; }
     .lang-toggle { margin-left: auto!important; transform: scale(0.85)!important; transform-origin: right center!important; }
     .bottom-tab-bar { display: flex!important; }

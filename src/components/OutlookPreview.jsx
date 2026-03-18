@@ -140,10 +140,10 @@ const OutlookPreview = memo(({ hasData, sigHTML, L, lang }) => (
       background: 'linear-gradient(180deg, #f8f9fa, #eef0f2)',
       borderBottom: '1px solid #e0e3e8',
     }}>
-      <div style={{ display: 'flex', gap: 5 }}>
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#1e3a5f' }} />
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#8dc63f' }} />
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#00b4d8' }} />
+      <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#1e3a5f', display: 'block' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#0098d4', display: 'block' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#c8922a', display: 'block' }} />
       </div>
       <span style={{ flex: 1, textAlign: 'center', fontSize: '0.65rem', color: C.text2, fontWeight: 500 }}>{L.mockTitle}</span>
     </div>

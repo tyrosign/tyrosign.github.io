@@ -41,11 +41,16 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
       padding: '0 2rem', height: 56,
       display: 'flex', alignItems: 'center', gap: '1rem',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-        <TyroLogo size={34} />
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.2rem' }}>
-          <span className="app-header-title" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.primary }}>TYRO</span>
-          <span className="app-header-title-accent" style={{ fontFamily: 'Plus Jakarta Sans,sans-serif', fontSize: '1rem', fontWeight: 800, color: C.accent }}>SignSnap</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        {/* Three dots logo — optically centered with text */}
+        <div style={{ display: 'flex', gap: '3.5px', alignItems: 'center', marginTop: '1px' }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1e3a5f', display: 'block' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0098d4', display: 'block' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#c8922a', display: 'block' }} />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline' }}>
+          <span className="app-header-title" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '1.25rem', fontWeight: 800, color: C.primary, letterSpacing: '-0.5px' }}>tyro</span>
+          <span className="app-header-title-accent" style={{ fontFamily: "'Plus Jakarta Sans',sans-serif", fontSize: '1.25rem', fontWeight: 800, color: C.accent, letterSpacing: '-0.5px' }}>sign</span>
         </div>
       </div>
 

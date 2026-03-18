@@ -158,7 +158,7 @@ const SettingsModal = memo(({
             <p style={{ fontSize: '0.7rem', fontWeight: 700, color: C.primary, marginBottom: '0.6rem' }}>{lang === 'tr' ? 'Başlık Teması' : 'Header Theme'}</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1.2rem' }}>
               {[
-                { id: 'navy-dots', bg: '#1e3a5f', label: 'Navy', tyro: '#fff' },
+                { id: 'navy', bg: '#1e3a5f', label: 'Navy', tyro: '#fff' },
                 { id: 'gradient', bg: 'linear-gradient(135deg, #1e3a5f, #0098d4)', label: 'Gradient', tyro: '#fff' },
                 { id: 'charcoal', bg: '#0f172a', label: 'Charcoal', tyro: '#fff' },
                 { id: 'light', bg: '#fff', label: 'Light', tyro: '#1e3a5f', border: true },
@@ -179,13 +179,6 @@ const SettingsModal = memo(({
                         <span style={{ color: t.tyro || '#fff' }}>tyro</span>
                         <span style={{ color: '#c8922a' }}>sign</span>
                       </span>
-                      {t.id === 'navy-dots' && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: 3, marginTop: 4 }}>
-                          <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#fff', opacity: 0.6 }} />
-                          <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#0098d4' }} />
-                          <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#c8922a' }} />
-                        </div>
-                      )}
                     </div>
                     <div style={{ fontSize: '0.55rem', fontWeight: 600, color: active ? C.accent : C.textM, padding: '0.25rem 0', textAlign: 'center' }}>
                       {t.label}

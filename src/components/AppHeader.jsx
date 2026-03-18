@@ -7,12 +7,12 @@ import ProfileDropdown from './ProfileDropdown';
 
 /* ── Header Theme Configs ── */
 const THEMES = {
-  'navy-dots': {
+  'navy': {
     bg: '#1e3a5f',
     tyroColor: '#fff',
     signColor: '#c8922a',
-    tabBg: 'rgba(255,255,255,0.1)',
-    tabActive: 'rgba(255,255,255,0.2)',
+    tabBg: 'rgba(255,255,255,0.08)',
+    tabActive: 'rgba(255,255,255,0.22)',
     tabText: 'rgba(255,255,255,0.6)',
     tabActiveText: '#fff',
     tabActiveIcon: '#c8922a',
@@ -21,7 +21,7 @@ const THEMES = {
     langSlider: 'rgba(255,255,255,0.2)',
     langActive: '#fff',
     langInactive: 'rgba(255,255,255,0.45)',
-    showDots: true,
+    showDots: false,
   },
   gradient: {
     bg: 'linear-gradient(135deg, #1e3a5f 0%, #0098d4 100%)',
@@ -118,8 +118,8 @@ const ThemedTabBtn = memo(({ active, onClick, icon: Icon, label, theme }) => (
   </button>
 ));
 
-const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto, headerTheme = 'navy-dots' }) => {
-  const theme = THEMES[headerTheme] || THEMES['navy-dots'];
+const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto, headerTheme = 'navy' }) => {
+  const theme = THEMES[headerTheme] || THEMES['navy'];
   const isGradient = headerTheme === 'gradient';
 
   return (
@@ -132,23 +132,14 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
       display: 'flex', alignItems: 'center', gap: '1rem',
     }}>
       {/* Logo — tyrosign text only */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
-        {theme.showDots && (
-          <div style={{ display: 'flex', gap: 4, marginRight: 2 }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#fff', opacity: 0.6 }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0098d4' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#c8922a' }} />
-          </div>
-        )}
-        <span style={{
-          fontFamily: "'Baloo 2', 'Plus Jakarta Sans', Inter, sans-serif",
-          fontSize: 25, fontWeight: 700, letterSpacing: -1, lineHeight: 1,
-          cursor: 'pointer',
-        }} onClick={() => setTab('signature')}>
-          <span style={{ color: theme.tyroColor }}>tyro</span>
-          <span style={{ color: theme.signColor }}>sign</span>
-        </span>
-      </div>
+      <span style={{
+        fontFamily: "'Baloo 2', 'Plus Jakarta Sans', Inter, sans-serif",
+        fontSize: 25, fontWeight: 700, letterSpacing: -1, lineHeight: 1,
+        cursor: 'pointer', flexShrink: 0,
+      }} onClick={() => setTab('signature')}>
+        <span style={{ color: theme.tyroColor }}>tyro</span>
+        <span style={{ color: theme.signColor }}>sign</span>
+      </span>
 
       {/* Nav tabs */}
       <nav className="app-header-nav" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>

@@ -58,7 +58,7 @@ export default function App() {
     companyTextColor: '#333333', contactLabelColor: '#888888', contactValueColor: '#555555',
     bannerAccentColor: '',
     designId: 'corporate',
-    headerTheme: (() => { try { return localStorage.getItem('tyro-headerTheme') || 'navy-dots'; } catch { return 'navy-dots'; } })(),
+    headerTheme: (() => { try { return localStorage.getItem('tyro-headerTheme') || 'navy'; } catch { return 'navy'; } })(),
   });
   const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '', companyId: 'tiryaki-agro', logoPosition: 'top-right', showLogo: true });
   const [sigBanner, setSigBanner] = useState({ enabled: false, base64: '', width: 0, height: 0, linkUrl: '', alt: '' });

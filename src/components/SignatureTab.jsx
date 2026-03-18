@@ -108,7 +108,7 @@ const SignatureTab = memo(({
 
             <SectionTitle icon={Phone}>{L.ci}</SectionTitle>
             <FormField label={L.gsm} value={form.gsm} onChange={e => uf('gsm', e.target.value)} placeholder="0530 914 45 91" error={v.gsm?.err} success={!!v.gsm?.ok} />
-            <FormField label={L.email} value={form.email} onChange={e => uf('email', e.target.value)} placeholder="cenk.sayli@tiryaki.com.tr" required error={v.email?.err} success={!!v.email?.ok} type="email" />
+            <FormField label={L.email} value={form.email} onChange={e => uf('email', e.target.value.toLowerCase())} placeholder="cenk.sayli@tiryaki.com.tr" required error={v.email?.err} success={!!v.email?.ok} type="email" />
             <div style={{ marginBottom: '0.4rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.7rem', fontWeight: 600, color: C.text2, marginBottom: '0.25rem' }}>
                 LinkedIn

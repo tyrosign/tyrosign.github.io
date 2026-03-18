@@ -33,7 +33,7 @@ export function useMsal({ toast, lang, setForm }) {
         ...prev,
         firstName: p.givenName || prev.firstName,
         lastName: p.surname || prev.lastName,
-        email: p.mail || prev.email,
+        email: (p.mail || prev.email || '').toLowerCase(),
         titleTR: p.jobTitle || prev.titleTR,
         gsm: p.mobilePhone || prev.gsm,
       }));

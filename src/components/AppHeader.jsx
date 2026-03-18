@@ -6,6 +6,33 @@ import TabBtn from './ui/TabBtn';
 import LinkedInIcon from './ui/LinkedInIcon';
 import ProfileDropdown from './ProfileDropdown';
 
+/* Pill Slider — iOS style language toggle */
+const LangToggle = memo(({ lang, setLang }) => (
+  <div className="lang-toggle" style={{
+    position: 'relative', display: 'flex',
+    padding: 3, borderRadius: 20,
+    background: `${C.primaryGhost}`,
+    width: 76, height: 30, flexShrink: 0,
+  }}>
+    <span style={{
+      position: 'absolute', top: 3, left: lang === 'tr' ? 3 : 38,
+      width: 35, height: 24, borderRadius: 17,
+      background: '#fff',
+      boxShadow: '0 1px 4px rgba(30,58,95,0.15)',
+      transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    }} />
+    {['tr', 'en'].map(l => (
+      <button key={l} onClick={() => setLang(l)} aria-label={l === 'tr' ? 'Türkçe' : 'English'} style={{
+        position: 'relative', zIndex: 1, flex: 1,
+        background: 'none', border: 'none', cursor: 'pointer',
+        fontSize: '0.62rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
+        color: lang === l ? C.primary : C.textM,
+        transition: 'color 0.25s',
+      }}>{l.toUpperCase()}</button>
+    ))}
+  </div>
+));
+
 const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto }) => (
     <header className="app-header" style={{
       position: 'sticky', top: 0, zIndex: 100,
@@ -34,26 +61,7 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
         </div>
       </nav>
 
-      <div className="app-header-lang" style={{
-        display: 'flex', borderRadius: '20px', overflow: 'hidden',
-        border: `1.5px solid ${C.borderSub}`, background: C.glass,
-        backdropFilter: 'blur(10px)', boxShadow: '0 1px 4px rgba(30,58,95,0.06)',
-      }}>
-        <button onClick={() => setLang('tr')} aria-label="Türkçe" style={{
-          padding: '0.3rem 0.6rem', border: 'none', cursor: 'pointer',
-          fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
-          background: lang === 'tr' ? `linear-gradient(135deg, ${C.accent}, #d4a43a)` : 'transparent',
-          color: lang === 'tr' ? '#fff' : C.textM,
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        }}>TR</button>
-        <button onClick={() => setLang('en')} aria-label="English" style={{
-          padding: '0.3rem 0.6rem', border: 'none', cursor: 'pointer',
-          fontSize: '0.65rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
-          background: lang === 'en' ? `linear-gradient(135deg, ${C.accent}, #d4a43a)` : 'transparent',
-          color: lang === 'en' ? '#fff' : C.textM,
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        }}>EN</button>
-      </div>
+      <LangToggle lang={lang} setLang={setLang} />
 
       {msalAccount && (
         <ProfileDropdown

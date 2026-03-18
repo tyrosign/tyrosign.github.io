@@ -14,6 +14,7 @@ import { useMsal } from './hooks/useMsal';
 import { useBannerCanvas } from './hooks/useBannerCanvas';
 import LoginSplash from './components/LoginSplash';
 import AppHeader from './components/AppHeader';
+import BottomTabBar from './components/BottomTabBar';
 import SignatureTab from './components/SignatureTab';
 import BannerTab from './components/BannerTab';
 const SettingsModal = lazy(() => import('./components/SettingsModal'));
@@ -343,7 +344,7 @@ export default function App() {
         {tab === 'settings' && (
           <Suspense fallback={null}>
             <SettingsModal
-              setTab={setTab} settingsTab={settingsTab} setSettingsTab={setSettingsTab}
+              settingsTab={settingsTab} setSettingsTab={setSettingsTab}
               stg={stg} setStg={setStg} fRef={fRef} procLogo={procLogo}
               toast={toast} L={L} lang={lang}
               DEFAULT_LOGO_BASE64={DEFAULT_LOGO_BASE64}
@@ -353,6 +354,7 @@ export default function App() {
 
       </main>
 
+      <BottomTabBar tab={tab} setTab={setTab} />
       <AppFooter />
       <CopySuccess show={showCelebration} />
       {tab === 'signature' && <OnboardingGuide L={L} />}

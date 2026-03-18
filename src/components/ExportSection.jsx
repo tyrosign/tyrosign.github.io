@@ -80,7 +80,7 @@ const ExportSection = memo(({ hasData, copied, doCopy, onQrClick, onBcClick, onO
     <div
       className="export-btns"
       style={{
-        display: 'flex', gap: '2px',
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))', gap: '2px',
         padding: '3px',
         background: `linear-gradient(135deg, ${C.primaryGhost}, rgba(30,58,95,0.03))`,
         borderRadius: 11,

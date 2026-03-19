@@ -1,7 +1,7 @@
 {
-  "name": "tyro-sign-snap",
+  "name": "tyrosign",
   "version": "1.0.0",
-  "description": "TYRO Sign Snap - Tiryaki Agro Corporate Email Signature Generator",
+  "description": "tyrosign - Tiryaki Agro Corporate Email Signature Generator",
   "private": true,
   "scripts": {
     "dev": "vite",

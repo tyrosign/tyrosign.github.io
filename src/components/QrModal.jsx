@@ -203,7 +203,7 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lan
     const dotGrad = qCtx.createLinearGradient(0, 0, qrSize, qrSize);
     dotGrad.addColorStop(0, NAVY);
     dotGrad.addColorStop(0.5, '#1a4a6e');
-    dotGrad.addColorStop(1, '#0098d4');
+    dotGrad.addColorStop(1, '#15607a');
 
     function isFinderArea(r, c) {
       if (r < 7 && c < 7) return true;
@@ -317,11 +317,8 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lan
         if (qrModules.get(r, c)) {
           const cx = (c + qrMargin + 0.5) * cell;
           const cy = (r + qrMargin + 0.5) * cell;
-          // Slightly varied dot sizes for visual rhythm
-          const dist = Math.sqrt(Math.pow(cx - qrSize / 2, 2) + Math.pow(cy - qrSize / 2, 2)) / (qrSize / 2);
-          const sizeVar = dotR * (0.85 + dist * 0.15);
           qCtx.beginPath();
-          qCtx.arc(cx, cy, sizeVar, 0, Math.PI * 2);
+          qCtx.arc(cx, cy, dotR, 0, Math.PI * 2);
           qCtx.fill();
         }
       }

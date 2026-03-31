@@ -75,11 +75,11 @@ function drawRoundedQr(ctx, qrData, size, margin, darkColor, lightColor) {
   roundRect(ctx, 0, 0, size, size, size * 0.06);
   ctx.fill();
 
-  // Navy-to-blue gradient for data dots
+  // Navy-to-blue gradient for data dots (kept dark for scanner contrast)
   const dotGrad = ctx.createLinearGradient(0, 0, size, size);
   dotGrad.addColorStop(0, NAVY);
   dotGrad.addColorStop(0.5, '#1a4a6e');
-  dotGrad.addColorStop(1, '#0098d4');
+  dotGrad.addColorStop(1, '#15607a');
 
   function isFinderPattern(row, col) {
     if (row < 7 && col < 7) return true;
@@ -192,9 +192,8 @@ function drawRoundedQr(ctx, qrData, size, margin, darkColor, lightColor) {
         const cx = (col + margin + 0.5) * cellSize;
         const cy = (row + margin + 0.5) * cellSize;
         const dist = Math.sqrt(Math.pow(cx - size / 2, 2) + Math.pow(cy - size / 2, 2)) / (size / 2);
-        const sizeVar = dotRadius * (0.85 + dist * 0.15);
         ctx.beginPath();
-        ctx.arc(cx, cy, sizeVar, 0, Math.PI * 2);
+        ctx.arc(cx, cy, dotRadius, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -214,7 +213,7 @@ async function drawQrWithLogo(vcard, size, logoBase64) {
     const ctx = canvas.getContext('2d');
     try {
       const logoImg = await loadImage(logoBase64);
-      const logoSize = Math.round(size * 0.30);
+      const logoSize = Math.round(size * 0.22);
       const x = (size - logoSize) / 2;
       const y = (size - logoSize) / 2;
       const pad = 10;
@@ -675,9 +674,7 @@ function generateQrSvg(vcard, logoBase64) {
       if (modules.get(row, col)) {
         const cx = (col + margin + 0.5) * cellSize;
         const cy = (row + margin + 0.5) * cellSize;
-        const dist = Math.sqrt(Math.pow(cx - svgSize / 2, 2) + Math.pow(cy - svgSize / 2, 2)) / (svgSize / 2);
-        const sizeVar = dotR * (0.85 + dist * 0.15);
-        dots += '<circle cx="' + cx.toFixed(2) + '" cy="' + cy.toFixed(2) + '" r="' + sizeVar.toFixed(2) + '" fill="url(#navyGrad)"/>';
+        dots += '<circle cx="' + cx.toFixed(2) + '" cy="' + cy.toFixed(2) + '" r="' + dotR.toFixed(2) + '" fill="url(#navyGrad)"/>';
       }
     }
   }
@@ -688,7 +685,7 @@ function generateQrSvg(vcard, logoBase64) {
     '<linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
     '<stop offset="0%" stop-color="' + NAVY + '"/>' +
     '<stop offset="50%" stop-color="#1a4a6e"/>' +
-    '<stop offset="100%" stop-color="#0098d4"/>' +
+    '<stop offset="100%" stop-color="#15607a"/>' +
     '</linearGradient>' +
     '<filter id="glow"><feGaussianBlur stdDeviation="' + (cellSize * 0.4).toFixed(1) + '" result="blur"/>' +
     '<feFlood flood-color="' + NAVY + '" flood-opacity="0.2"/>' +
@@ -704,7 +701,7 @@ function generateQrSvg(vcard, logoBase64) {
 
   if (logoBase64) {
     const center = svgSize / 2;
-    const r = Math.round(center * 0.30);
+    const r = Math.round(center * 0.22);
     const pad = 8;
     const imgSize = Math.round(r * 1.7);
     svg +=

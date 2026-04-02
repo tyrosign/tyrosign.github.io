@@ -7,8 +7,8 @@ const msalInstance = MSAL_ENABLED ? new PublicClientApplication({
   auth: {
     clientId: import.meta.env.VITE_CLIENT_ID,
     authority: `https://login.microsoftonline.com/${import.meta.env.VITE_TENANT_ID}`,
-    redirectUri: window.location.origin,
-    postLogoutRedirectUri: window.location.origin,
+    redirectUri: window.location.origin + window.location.pathname,
+    postLogoutRedirectUri: window.location.origin + window.location.pathname,
   },
   cache: { cacheLocation: 'sessionStorage', storeAuthStateInCookie: false },
 }) : null;

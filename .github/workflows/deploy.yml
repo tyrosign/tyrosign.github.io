@@ -31,7 +31,6 @@ jobs:
         env:
           VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
           VITE_TENANT_ID: ${{ secrets.VITE_TENANT_ID }}
-          VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

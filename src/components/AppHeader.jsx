@@ -152,7 +152,7 @@ const ThemedTabBtn = memo(({ active, onClick, icon: Icon, label, theme }) => (
   </button>
 ));
 
-const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto, headerTheme = 'light' }) => {
+const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpen, setProfileOpen, handleLogout, profilePhoto, headerTheme = 'light', ...rest }) => {
   const theme = THEMES[headerTheme] || THEMES['light'];
   const isGradient = headerTheme === 'gradient';
 
@@ -201,6 +201,7 @@ const AppHeader = memo(({ tab, setTab, lang, setLang, L, msalAccount, profileOpe
           setProfileOpen={setProfileOpen}
           handleLogout={handleLogout}
           profilePhoto={profilePhoto}
+          setTab={setTab}
         />
       )}
     </header>

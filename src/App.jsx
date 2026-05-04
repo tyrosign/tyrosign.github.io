@@ -21,6 +21,7 @@ const SettingsModal = lazy(() => import('./components/SettingsModal'));
 const LogoConceptsPage = lazy(() => import('./components/LogoConceptsPage'));
 const FontDemoPage = lazy(() => import('./components/FontDemoPage'));
 const LogoLabPage = lazy(() => import('./components/LogoLabPage'));
+const HelpPage = lazy(() => import('./components/HelpPage'));
 import AppFooter from './components/AppFooter';
 import ToastContainer from './components/ToastContainer';
 import CopySuccess from './components/CopySuccess';
@@ -396,6 +397,12 @@ export default function App() {
         {tab === 'lab' && (
           <Suspense fallback={null}>
             <LogoLabPage onBack={() => setTab('signature')} />
+          </Suspense>
+        )}
+
+        {tab === 'help' && (
+          <Suspense fallback={null}>
+            <HelpPage lang={lang} onBack={() => setTab('signature')} />
           </Suspense>
         )}
 

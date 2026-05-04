@@ -19,7 +19,7 @@ const Avatar = ({ size, photo, initials }) => (
   </div>
 );
 
-const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, handleLogout, profilePhoto }) => {
+const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, handleLogout, profilePhoto, setTab }) => {
   const initials = (msalAccount.name || '').split(' ').map(n => n?.[0] || '').join('').slice(0, 2).toLocaleUpperCase('tr-TR');
 
   return (
@@ -85,6 +85,25 @@ const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, 
               </div>
             </div>
             <div style={{ padding: '0.35rem', background: '#fff' }}>
+              <button onClick={() => { setProfileOpen(false); setTab('help'); }} style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: '0.55rem',
+                padding: '0.5rem 0.65rem', borderRadius: 10,
+                border: 'none', background: 'transparent', cursor: 'pointer',
+                fontSize: '0.72rem', fontWeight: 600, color: C.primary,
+                fontFamily: 'Inter,sans-serif',
+                transition: 'background 0.15s ease',
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = `${C.primary}0a`}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                {{ tr: 'Yardım', en: 'Help', ru: 'Помощь', ar: 'مساعدة' }[lang] || 'Help'}
+              </button>
+              <div style={{ height: 1, background: C.borderSub, margin: '0.1rem 0.5rem' }} />
               <button onClick={() => { setProfileOpen(false); handleLogout(); }} style={{
                 width: '100%', display: 'flex', alignItems: 'center', gap: '0.55rem',
                 padding: '0.5rem 0.65rem', borderRadius: 10,

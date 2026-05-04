@@ -15,9 +15,9 @@ const APP = {
   },
   features: [
     { icon: 'pen-tool', label: { tr: 'İmza Oluşturucu', en: 'Signature Builder', ru: 'Конструктор Подписей', ar: 'منشئ التوقيع' }, desc: { tr: 'Kurumsal ve klasik tasarımlarla Outlook uyumlu e-posta imzanızı anında oluşturun', en: 'Instantly create Outlook-compatible email signatures with Corporate & Classic designs', ru: 'Мгновенно создавайте подписи для Outlook с корпоративным и классическим дизайном', ar: 'أنشئ توقيعات بريد إلكتروني متوافقة مع Outlook بتصاميم مؤسسية وكلاسيكية' }, num: 31, suffix: '', statLabel: { tr: 'şirket', en: 'companies', ru: 'компаний', ar: 'شركة' }, formatK: false },
-    { icon: 'briefcase', label: { tr: 'Tüm Grup Şirketleri', en: 'All Group Companies', ru: 'Все Компании Группы', ar: 'جميع شركات المجموعة' }, desc: { tr: 'Tiryaki grubundaki tüm şirketlerin logoları, ofis adresleri ve iletişim bilgileri hazır', en: 'Logos, office addresses and contact info for all Tiryaki group companies ready to use', ru: 'Логотипы, адреса офисов и контакты всех компаний группы Tiryaki готовы к использованию', ar: 'شعارات وعناوين المكاتب ومعلومات الاتصال لجميع شركات مجموعة Tiryaki جاهزة' }, num: 21, suffix: '', statLabel: { tr: 'ofis', en: 'offices', ru: 'офисов', ar: 'مكتب' }, formatK: false },
+    { icon: 'card', label: { tr: 'Dijital Kartvizit', en: 'Digital Business Card', ru: 'Цифровая Визитка', ar: 'بطاقة عمل رقمية' }, desc: { tr: 'Profesyonel dijital kartvizitinizi oluşturun, profil fotoğrafınızı ekleyin ve tek tıkla paylaşın', en: 'Create your professional digital business card, add your profile photo and share with one click', ru: 'Создайте профессиональную цифровую визитку, добавьте фото профиля и поделитесь одним кликом', ar: 'أنشئ بطاقة عملك الرقمية الاحترافية، أضف صورتك وشاركها بنقرة واحدة' }, num: 0, suffix: '', statLabel: { tr: '', en: '', ru: '', ar: '' }, formatK: false },
     { icon: 'mail', label: { tr: 'Microsoft 365', en: 'Microsoft 365', ru: 'Microsoft 365', ar: 'Microsoft 365' }, desc: { tr: 'Azure AD hesabınızla giriş yapın, profil bilgileriniz otomatik gelsin, Outlook\'a tek tıkla aktarın', en: 'Sign in with Azure AD, auto-fill your profile, apply to Outlook with one click', ru: 'Войдите через Azure AD, автозаполнение профиля, применение в Outlook одним кликом', ar: 'سجّل الدخول عبر Azure AD، واملأ ملفك الشخصي تلقائيًا، وطبّق التوقيع في Outlook بنقرة واحدة' }, num: 0, suffix: '', statLabel: { tr: '', en: '', ru: '', ar: '' }, formatK: false },
-    { icon: 'star', label: { tr: 'QR Kod & Kartvizit', en: 'QR Code & Card', ru: 'QR-код и Визитка', ar: 'رمز QR والبطاقة' }, desc: { tr: 'Dijital kartvizit oluşturun, vCard QR koduyla iletişim bilgilerinizi anında paylaşın', en: 'Create digital business cards, share contact info instantly via vCard QR code', ru: 'Создайте цифровую визитку и мгновенно делитесь контактами через vCard QR-код', ar: 'أنشئ بطاقات عمل رقمية وشارك معلومات الاتصال فورًا عبر رمز vCard QR' }, num: 0, suffix: '', statLabel: { tr: '', en: '', ru: '', ar: '' }, formatK: false },
+    { icon: 'qr', label: { tr: 'QR Kod ile Paylaşım', en: 'QR Code Sharing', ru: 'QR-код', ar: 'مشاركة عبر QR' }, desc: { tr: 'vCard QR koduyla iletişim bilgilerinizi anında paylaşın, telefonla okutunca rehbere kayıt oluşturur', en: 'Share your contact info instantly via vCard QR code, scan to save directly to phone contacts', ru: 'Мгновенно делитесь контактами через vCard QR-код, сканируйте для сохранения в телефоне', ar: 'شارك معلومات الاتصال فورًا عبر رمز vCard QR، امسح للحفظ مباشرة في جهات الاتصال' }, num: 0, suffix: '', statLabel: { tr: '', en: '', ru: '', ar: '' }, formatK: false },
   ],
 };
 
@@ -28,19 +28,19 @@ const ICONS = {
       <path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/>
     </svg>
   ),
-  briefcase: (sz = 20) => (
-    <svg width={sz} height={sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-    </svg>
-  ),
   mail: (sz = 20) => (
     <svg width={sz} height={sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
     </svg>
   ),
-  star: (sz = 20) => (
+  card: (sz = 20) => (
     <svg width={sz} height={sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="14" x2="10" y2="14"/><line x1="6" y1="17" x2="14" y2="17"/>
+    </svg>
+  ),
+  qr: (sz = 20) => (
+    <svg width={sz} height={sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="6" height="6" x="3" y="3" rx="1"/><rect width="6" height="6" x="15" y="3" rx="1"/><rect width="6" height="6" x="3" y="15" rx="1"/><path d="M15 15h2v2h-2z"/><path d="M19 15h2v2h-2z"/><path d="M15 19h2v2h-2z"/><path d="M19 19h2v2h-2z"/>
     </svg>
   ),
   lock: (sz = 12) => (

@@ -90,7 +90,7 @@ const SignatureTab = memo(({
               clearLabel={L.so}
               options={OFFICES}
               groups={OFFICE_GROUPS}
-              groupLabels={lang === 'en' ? { 'Türkiye': L.grpTR, 'Uluslararası': L.grpIntl } : undefined}
+              groupLabels={lang !== 'tr' ? { 'Türkiye': L.grpTR, 'Uluslararası': L.grpIntl } : undefined}
             />
             <SearchableSelect
               label={L.sc}
@@ -100,8 +100,8 @@ const SignatureTab = memo(({
               placeholder={L.sco}
               options={COMPANIES}
               groups={COMPANY_GROUPS}
-              nameKey={lang === 'en' ? 'nameEN' : undefined}
-              groupLabels={lang === 'en' ? COMPANY_GROUP_LABELS_EN : undefined}
+              nameKey={lang !== 'tr' ? 'nameEN' : undefined}
+              groupLabels={lang !== 'tr' ? COMPANY_GROUP_LABELS_EN : undefined}
             />
 
             <div style={{ height: 1, background: C.borderSub, margin: '0.5rem 0 0.6rem' }} />

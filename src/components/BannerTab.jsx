@@ -64,8 +64,8 @@ const BannerTab = memo(({ banner, setBanner, stg, canvasRef, downloadBanner, L, 
               placeholder={L.sco}
               options={COMPANIES}
               groups={COMPANY_GROUPS}
-              nameKey={lang === 'en' ? 'nameEN' : undefined}
-              groupLabels={lang === 'en' ? COMPANY_GROUP_LABELS_EN : undefined}
+              nameKey={lang !== 'tr' ? 'nameEN' : undefined}
+              groupLabels={lang !== 'tr' ? COMPANY_GROUP_LABELS_EN : undefined}
             />
 
             {/* Template Selection */}

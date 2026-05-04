@@ -5,7 +5,7 @@ import { OFFICES } from './constants/offices';
 import { COMPANIES } from './constants/companies';
 import { PROGRESS_FIELDS } from './constants/progressFields';
 import { MAX_LOGO_SIZE, MAX_BANNER_SIZE, MAX_LOGO_W, MAX_LOGO_H, DEFAULT_LOGO_W, DEFAULT_LOGO_H, SIG_WIDTH } from './constants/limits';
-import { TR, EN } from './i18n/translations';
+import { TR, EN, RU, AR } from './i18n/translations';
 import { genSig } from './signature/genSig';
 import { genSigCorporate } from './signature/genSigCorporate';
 import { GLOBAL_CSS } from './styles/globalCss';
@@ -140,7 +140,7 @@ export default function App() {
   }, []);
 
   // ─── Derived ───
-  const L = useMemo(() => lang === 'tr' ? TR : EN, [lang]);
+  const L = useMemo(() => ({ tr: TR, en: EN, ru: RU, ar: AR })[lang] || EN, [lang]);
   const hasData = form.firstName.trim().length > 0;
   const office = OFFICES.find(o => o.id === form.officeId) || null;
   const company = useMemo(() => COMPANIES.find(c => c.id === form.companyId) || COMPANIES[0], [form.companyId]);
@@ -148,7 +148,7 @@ export default function App() {
   // ─── Dynamic company logo (lang-aware) ───
   const [companyLogo, setCompanyLogo] = useState({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H });
   useEffect(() => {
-    const url = company.id === 'tiryaki-ttech' ? company.logoEN : (lang === 'tr' ? company.logoTR : company.logoEN);
+    const url = company.id === 'tiryaki-ttech' ? company.logoEN : (lang === 'tr' ? company.logoTR : company.logoEN /* ru/ar use EN logos */);
     if (!url) { setCompanyLogo({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H }); return; }
     let cancelled = false;
     loadLogo(url).then(result => {

@@ -312,7 +312,7 @@ async function drawBusinessCard(qrCanvas, form, stg, office, company, profileBas
   const PAD = 24; // horizontal padding for text
 
   const fullName = formatName(form);
-  const companyName = (lang === 'en' && company && company.nameEN) ? company.nameEN : ((company && company.name) || stg.companyName || 'Tiryaki Agro');
+  const companyName = (lang !== 'tr' && company && company.nameEN) ? company.nameEN : ((company && company.name) || stg.companyName || 'Tiryaki Agro');
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' / ');
   const hasTwoLines = !!titleText;
 
@@ -717,7 +717,7 @@ function generateQrSvg(vcard, logoBase64) {
 
 function getCompanyName(company, stg, lang) {
   if (!company) return stg.companyName || 'Tiryaki Agro';
-  return (lang === 'en' && company.nameEN) ? company.nameEN : company.name;
+  return (lang !== 'tr' && company.nameEN) ? company.nameEN : company.name;
 }
 
 const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toast, L, lang, profilePhoto }) => {

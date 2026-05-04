@@ -4,6 +4,8 @@ import { C } from '../constants/theme';
 const TEXTS = {
   tr: { title: 'Bir hata oluştu', body: 'Uygulama beklenmedik bir hatayla karşılaştı. Lütfen sayfayı yenileyin.', btn: 'Sayfayı Yenile' },
   en: { title: 'Something went wrong', body: 'The application encountered an unexpected error. Please refresh the page.', btn: 'Refresh Page' },
+  ru: { title: 'Произошла ошибка', body: 'Приложение столкнулось с непредвиденной ошибкой. Пожалуйста, обновите страницу.', btn: 'Обновить страницу' },
+  ar: { title: 'حدث خطأ', body: 'واجه التطبيق خطأً غير متوقع. يرجى تحديث الصفحة.', btn: 'تحديث الصفحة' },
 };
 
 export default class ErrorBoundary extends Component {

@@ -133,8 +133,8 @@ export const GLOBAL_CSS = `
   @media(min-width:769px) and (max-width:1024px) {
     .sig-grid { grid-template-columns: 1fr 1fr!important; gap: 0.85rem!important; }
     .sig-sec-banner { grid-column: 1 / -1!important; }
-    .lang-toggle { width: 76px!important; height: 30px!important; }
-    .lang-toggle button { font-size: 0.58rem!important; }
+    .lang-toggle { width: 146px!important; height: 30px!important; }
+    .lang-toggle button { font-size: 0.54rem!important; }
   }
   @media(max-width:768px) {
     .tip-wrap .tip-box { display: none!important; }

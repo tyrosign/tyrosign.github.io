@@ -100,32 +100,40 @@ const THEMES = {
   },
 };
 
-/* ── Pill Slider — themed language toggle ── */
-const LangToggle = memo(({ lang, setLang, theme }) => (
-  <div className="lang-toggle" style={{
-    position: 'relative', display: 'flex',
-    padding: 3, borderRadius: 20,
-    background: theme.langBg,
-    width: 76, height: 30, flexShrink: 0,
-  }}>
-    <span style={{
-      position: 'absolute', top: 3, left: lang === 'tr' ? 3 : 38,
-      width: 35, height: 24, borderRadius: 17,
-      background: theme.langSlider,
-      boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-      transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    }} />
-    {['tr', 'en'].map(l => (
-      <button key={l} onClick={() => setLang(l)} aria-label={l === 'tr' ? 'Türkçe' : 'English'} style={{
-        position: 'relative', zIndex: 1, flex: 1,
-        background: 'none', border: 'none', cursor: 'pointer',
-        fontSize: '0.62rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
-        color: lang === l ? theme.langActive : theme.langInactive,
-        transition: 'color 0.25s',
-      }}>{l.toUpperCase()}</button>
-    ))}
-  </div>
-));
+/* ── Pill Slider — themed language toggle (4 langs) ── */
+const LANGS = ['tr', 'en', 'ru', 'ar'];
+const LANG_LABELS = { tr: 'Türkçe', en: 'English', ru: 'Русский', ar: 'العربية' };
+const LangToggle = memo(({ lang, setLang, theme }) => {
+  const idx = LANGS.indexOf(lang);
+  const btnW = 35;
+  const pad = 3;
+  const totalW = btnW * LANGS.length + pad * 2;
+  return (
+    <div className="lang-toggle" style={{
+      position: 'relative', display: 'flex',
+      padding: pad, borderRadius: 20,
+      background: theme.langBg,
+      width: totalW, height: 30, flexShrink: 0,
+    }}>
+      <span style={{
+        position: 'absolute', top: pad, left: pad + idx * btnW,
+        width: btnW, height: 24, borderRadius: 17,
+        background: theme.langSlider,
+        boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+        transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      }} />
+      {LANGS.map(l => (
+        <button key={l} onClick={() => setLang(l)} aria-label={LANG_LABELS[l]} style={{
+          position: 'relative', zIndex: 1, width: btnW,
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontSize: '0.58rem', fontWeight: 700, fontFamily: 'Inter,sans-serif',
+          color: lang === l ? theme.langActive : theme.langInactive,
+          transition: 'color 0.25s', padding: 0,
+        }}>{l.toUpperCase()}</button>
+      ))}
+    </div>
+  );
+});
 
 /* ── Themed Tab Button ── */
 const ThemedTabBtn = memo(({ active, onClick, icon: Icon, label, theme }) => (

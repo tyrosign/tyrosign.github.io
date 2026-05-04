@@ -5,17 +5,19 @@ const APP = {
   prefix: 'tyro',
   suffix: 'sign',
   version: '1.0.0',
-  headline1: { tr: 'Kurumsal Dijital', en: 'Corporate Digital' },
-  headline2: { tr: 'İmza & Kart Stüdyosu', en: 'Signature & Card Studio' },
+  headline1: { tr: 'Kurumsal Dijital', en: 'Corporate Digital', ru: 'Корпоративная Цифровая', ar: 'الاستوديو الرقمي' },
+  headline2: { tr: 'İmza & Kart Stüdyosu', en: 'Signature & Card Studio', ru: 'Студия Подписей и Визиток', ar: 'للتوقيع والبطاقات' },
   description: {
     tr: 'E-posta imzalarınızı, dijital kartvizitlerinizi ve LinkedIn bannerlarınızı tek platformdan oluşturun ve yönetin.',
     en: 'Create and manage your email signatures, digital business cards, and LinkedIn banners from a single platform.',
+    ru: 'Создавайте и управляйте подписями электронной почты, цифровыми визитками и баннерами LinkedIn на единой платформе.',
+    ar: 'أنشئ وأدر توقيعات البريد الإلكتروني وبطاقات العمل الرقمية وبانرات LinkedIn من منصة واحدة.',
   },
   features: [
-    { icon: 'pen-tool', label: { tr: 'İmza Oluşturucu', en: 'Signature Builder' }, desc: { tr: 'Kurumsal ve klasik tasarımlarla Outlook uyumlu e-posta imzanızı anında oluşturun', en: 'Instantly create Outlook-compatible email signatures with Corporate & Classic designs' }, num: 31, suffix: '', statLabel: { tr: 'şirket', en: 'companies' }, formatK: false },
-    { icon: 'briefcase', label: { tr: 'Tüm Grup Şirketleri', en: 'All Group Companies' }, desc: { tr: 'Tiryaki grubundaki tüm şirketlerin logoları, ofis adresleri ve iletişim bilgileri hazır', en: 'Logos, office addresses and contact info for all Tiryaki group companies ready to use' }, num: 21, suffix: '', statLabel: { tr: 'ofis', en: 'offices' }, formatK: false },
-    { icon: 'mail', label: { tr: 'Microsoft 365', en: 'Microsoft 365' }, desc: { tr: 'Azure AD hesabınızla giriş yapın, profil bilgileriniz otomatik gelsin, Outlook\'a tek tıkla aktarın', en: 'Sign in with Azure AD, auto-fill your profile, apply to Outlook with one click' }, num: 0, suffix: '', statLabel: { tr: '', en: '' }, formatK: false },
-    { icon: 'star', label: { tr: 'QR Kod & Kartvizit', en: 'QR Code & Card' }, desc: { tr: 'Dijital kartvizit oluşturun, vCard QR koduyla iletişim bilgilerinizi anında paylaşın', en: 'Create digital business cards, share contact info instantly via vCard QR code' }, num: 0, suffix: '', statLabel: { tr: '', en: '' }, formatK: false },
+    { icon: 'pen-tool', label: { tr: 'İmza Oluşturucu', en: 'Signature Builder', ru: 'Конструктор Подписей', ar: 'منشئ التوقيع' }, desc: { tr: 'Kurumsal ve klasik tasarımlarla Outlook uyumlu e-posta imzanızı anında oluşturun', en: 'Instantly create Outlook-compatible email signatures with Corporate & Classic designs', ru: 'Мгновенно создавайте подписи для Outlook с корпоративным и классическим дизайном', ar: 'أنشئ توقيعات بريد إلكتروني متوافقة مع Outlook بتصاميم مؤسسية وكلاسيكية' }, num: 31, suffix: '', statLabel: { tr: 'şirket', en: 'companies', ru: 'компаний', ar: 'شركة' }, formatK: false },
+    { icon: 'briefcase', label: { tr: 'Tüm Grup Şirketleri', en: 'All Group Companies', ru: 'Все Компании Группы', ar: 'جميع شركات المجموعة' }, desc: { tr: 'Tiryaki grubundaki tüm şirketlerin logoları, ofis adresleri ve iletişim bilgileri hazır', en: 'Logos, office addresses and contact info for all Tiryaki group companies ready to use', ru: 'Логотипы, адреса офисов и контакты всех компаний группы Tiryaki готовы к использованию', ar: 'شعارات وعناوين المكاتب ومعلومات الاتصال لجميع شركات مجموعة Tiryaki جاهزة' }, num: 21, suffix: '', statLabel: { tr: 'ofis', en: 'offices', ru: 'офисов', ar: 'مكتب' }, formatK: false },
+    { icon: 'mail', label: { tr: 'Microsoft 365', en: 'Microsoft 365', ru: 'Microsoft 365', ar: 'Microsoft 365' }, desc: { tr: 'Azure AD hesabınızla giriş yapın, profil bilgileriniz otomatik gelsin, Outlook\'a tek tıkla aktarın', en: 'Sign in with Azure AD, auto-fill your profile, apply to Outlook with one click', ru: 'Войдите через Azure AD, автозаполнение профиля, применение в Outlook одним кликом', ar: 'سجّل الدخول عبر Azure AD، واملأ ملفك الشخصي تلقائيًا، وطبّق التوقيع في Outlook بنقرة واحدة' }, num: 0, suffix: '', statLabel: { tr: '', en: '', ru: '', ar: '' }, formatK: false },
+    { icon: 'star', label: { tr: 'QR Kod & Kartvizit', en: 'QR Code & Card', ru: 'QR-код и Визитка', ar: 'رمز QR والبطاقة' }, desc: { tr: 'Dijital kartvizit oluşturun, vCard QR koduyla iletişim bilgilerinizi anında paylaşın', en: 'Create digital business cards, share contact info instantly via vCard QR code', ru: 'Создайте цифровую визитку и мгновенно делитесь контактами через vCard QR-код', ar: 'أنشئ بطاقات عمل رقمية وشارك معلومات الاتصال فورًا عبر رمز vCard QR' }, num: 0, suffix: '', statLabel: { tr: '', en: '', ru: '', ar: '' }, formatK: false },
   ],
 };
 
@@ -330,7 +332,12 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
     });
   }, []);
 
-  const L = useCallback((trText, enText) => lang === 'tr' ? trText : enText, [lang]);
+  const L = useCallback((trText, enText, ruText, arText) => {
+    if (lang === 'tr') return trText;
+    if (lang === 'ru') return ruText || enText;
+    if (lang === 'ar') return arText || enText;
+    return enText;
+  }, [lang]);
   const headline1 = APP.headline1[lang] || APP.headline1.tr;
   const headline2 = APP.headline2[lang] || APP.headline2.tr;
   const description = typeof APP.description === 'object' ? (APP.description[lang] || APP.description.tr) : APP.description;
@@ -524,13 +531,13 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
               fontSize: '1.6rem', fontWeight: 700, color: '#0f172a', margin: '0 0 8px',
               animation: 'fadeLeft 0.5s cubic-bezier(0.4,0,0.2,1) 700ms both',
             }}>
-              {L('Hoş geldiniz', 'Welcome')}
+              {L('Hoş geldiniz', 'Welcome', 'Добро пожаловать', 'مرحباً')}
             </h2>
             <p style={{
               fontSize: '0.92rem', color: '#475569', margin: '0 0 28px', textAlign: 'center', lineHeight: 1.5, whiteSpace: 'pre-line',
               animation: 'fadeLeft 0.5s cubic-bezier(0.4,0,0.2,1) 750ms both',
             }}>
-              {L('Devam etmek için Microsoft hesabınızla\ngiriş yapın', 'Sign in with your Microsoft\naccount to continue')}
+              {L('Devam etmek için Microsoft hesabınızla\ngiriş yapın', 'Sign in with your Microsoft\naccount to continue', 'Войдите с помощью учётной\nзаписи Microsoft', 'سجّل الدخول بحساب\nMicrosoft للمتابعة')}
             </p>
 
             {/* Login Button */}
@@ -573,10 +580,10 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
                     </svg>
                   </div>
                   <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0f172a' }}>
-                    {L('Giriş başarılı', 'Login successful')}
+                    {L('Giriş başarılı', 'Login successful', 'Вход выполнен', 'تم تسجيل الدخول')}
                   </span>
                   <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                    {L('Yönlendiriliyorsunuz...', 'Redirecting...')}
+                    {L('Yönlendiriliyorsunuz...', 'Redirecting...', 'Перенаправление...', 'جارٍ التوجيه...')}
                   </span>
                 </div>
               ) : (
@@ -585,7 +592,7 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
                   className="tyro-login-btn"
                   onClick={onLogin}
                   disabled={loginState === 'loading' || !msalReady}
-                  aria-label={L('Microsoft ile giriş yap', 'Sign in with Microsoft')}
+                  aria-label={L('Microsoft ile giriş yap', 'Sign in with Microsoft', 'Войти через Microsoft', 'تسجيل الدخول عبر Microsoft')}
                   style={{
                     position: 'relative', zIndex: 1,
                     width: '100%', padding: '14px 20px', borderRadius: 14,
@@ -611,12 +618,12 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
                         borderTopColor: '#0098d4', borderRadius: '50%',
                         animation: 'spinLoader 0.8s linear infinite',
                       }} />
-                      <span>{L('Oturumunuz hazırlanıyor...', 'Preparing your session...')}</span>
+                      <span>{L('Oturumunuz hazırlanıyor...', 'Preparing your session...', 'Подготовка сессии...', 'جارٍ تحضير جلستك...')}</span>
                     </>
                   ) : (
                     <>
                       <MsLogo />
-                      <span>{L('Microsoft ile Giriş Yap', 'Sign in with Microsoft')}</span>
+                      <span>{L('Microsoft ile Giriş Yap', 'Sign in with Microsoft', 'Войти через Microsoft', 'تسجيل الدخول عبر Microsoft')}</span>
                     </>
                   )}
                 </button>
@@ -630,33 +637,55 @@ const LoginSplash = memo(({ lang, setLang, authLoading, msalReady, handleLogin }
             }}>
               <span style={{ color: '#64748b' }}>{ICONS.lock(12)}</span>
               <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
-                {L('Entra ID korumalı güvenli oturum', 'Secured by Entra ID')}
+                {L('Entra ID korumalı güvenli oturum', 'Secured by Entra ID', 'Защищено Entra ID', 'محمي بواسطة Entra ID')}
               </span>
             </div>
           </div>
 
-          {/* Footer: TR/EN */}
+          {/* Footer: Language selector — pill toggle */}
           <div style={{
-            position: 'absolute', bottom: 18, left: 0, right: 0,
-            display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 4,
+            position: 'absolute', bottom: 20, left: 0, right: 0,
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
           }}>
-            {['tr', 'en'].map(l => (
-              <button
-                key={l}
-                className="tyro-lang-btn"
-                onClick={() => setLang(l)}
-                style={{
-                  border: 'none', cursor: 'pointer', borderRadius: 8, padding: '6px 14px',
-                  fontSize: '0.82rem', fontWeight: lang === l ? 700 : 400,
-                  color: lang === l ? '#1e293b' : '#94a3b8',
-                  background: lang === l ? 'rgba(0,0,0,0.06)' : 'transparent',
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
+            <div style={{
+              display: 'flex', alignItems: 'center',
+              background: 'rgba(15,23,42,0.06)',
+              borderRadius: 12, padding: 3,
+              border: '1px solid rgba(15,23,42,0.08)',
+              backdropFilter: 'blur(8px)',
+            }}>
+              {[
+                { code: 'tr', label: 'TR', full: 'Türkçe' },
+                { code: 'en', label: 'EN', full: 'English' },
+                { code: 'ru', label: 'RU', full: 'Русский' },
+                { code: 'ar', label: 'AR', full: 'العربية' },
+              ].map(l => (
+                <button
+                  key={l.code}
+                  className="tyro-lang-btn"
+                  onClick={() => setLang(l.code)}
+                  aria-label={l.full}
+                  title={l.full}
+                  style={{
+                    border: 'none', cursor: 'pointer', borderRadius: 9,
+                    padding: '6px 14px',
+                    fontSize: '0.72rem', fontWeight: lang === l.code ? 700 : 500,
+                    letterSpacing: '0.02em',
+                    color: lang === l.code ? '#fff' : '#64748b',
+                    background: lang === l.code
+                      ? 'linear-gradient(135deg, #1e3a5f, #0098d4)'
+                      : 'transparent',
+                    boxShadow: lang === l.code
+                      ? '0 2px 8px rgba(30,58,95,0.3)'
+                      : 'none',
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

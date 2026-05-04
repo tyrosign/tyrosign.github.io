@@ -24,7 +24,7 @@ async function drawCardCanvas(qrDataUrl, form, stg, company, lang) {
   const qrBoxSize = qrSize + qrPad * 2;
 
   const fullName = formatName(form);
-  const companyName = (lang === 'en' && company && company.nameEN) ? company.nameEN : ((company && company.name) || stg.companyName || 'Tiryaki Agro');
+  const companyName = (lang !== 'tr' && company && company.nameEN) ? company.nameEN : ((company && company.name) || stg.companyName || 'Tiryaki Agro');
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' / ');
 
   // Height calc — matches modal spacing exactly
@@ -386,7 +386,7 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lan
   if (!open) return null;
 
   const fullName = formatName(form);
-  const companyName = (lang === 'en' && company && company.nameEN) ? company.nameEN : ((company && company.name) || 'Tiryaki Agro');
+  const companyName = (lang !== 'tr' && company && company.nameEN) ? company.nameEN : ((company && company.name) || 'Tiryaki Agro');
   const titleText = [form.titleTR, form.titleEN].filter(Boolean).join(' · ');
 
   return (

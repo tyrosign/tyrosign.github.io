@@ -69,13 +69,16 @@ export function useBannerCanvas(canvasRef, tab, banner, stg) {
         ctx.globalAlpha = 1;
       }
 
-      // Website — only in template mode
+      // Website — only in template mode, use webLink if provided
       if (!isCustom) {
-        ctx.font = `bold ${Math.round(sz.h * 0.05)}px "Inter", sans-serif`;
-        ctx.fillStyle = acBar;
-        ctx.textAlign = 'right';
-        ctx.fillText(stg.website, sz.w * 0.94, sz.h * 0.85);
-        ctx.textAlign = 'left';
+        const webText = banner.webLink || stg.website;
+        if (webText) {
+          ctx.font = `bold ${Math.round(sz.h * 0.05)}px "Inter", sans-serif`;
+          ctx.fillStyle = acBar;
+          ctx.textAlign = 'right';
+          ctx.fillText(webText, sz.w * 0.94, sz.h * 0.85);
+          ctx.textAlign = 'left';
+        }
       }
 
       // Reset shadow

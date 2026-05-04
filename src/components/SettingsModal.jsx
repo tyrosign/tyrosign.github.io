@@ -155,7 +155,7 @@ const SettingsModal = memo(({
         {settingsTab === 'style' && (
           <div style={{ animation: 'fadeIn 0.2s ease' }}>
             {/* Header Theme Selection */}
-            <p style={{ fontSize: '0.7rem', fontWeight: 700, color: C.primary, marginBottom: '0.6rem' }}>{lang === 'tr' ? 'Başlık Teması' : 'Header Theme'}</p>
+            <p style={{ fontSize: '0.7rem', fontWeight: 700, color: C.primary, marginBottom: '0.6rem' }}>{{ tr: 'Başlık Teması', en: 'Header Theme', ru: 'Тема заголовка', ar: 'سمة العنوان' }[lang] || 'Header Theme'}</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1.2rem' }}>
               {[
                 { id: 'navy', bg: '#1e3a5f', label: 'Navy', tyro: '#fff' },

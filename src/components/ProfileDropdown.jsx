@@ -101,7 +101,7 @@ const ProfileDropdown = memo(({ msalAccount, lang, profileOpen, setProfileOpen, 
                   <polyline points="16 17 21 12 16 7" />
                   <line x1="21" y1="12" x2="9" y2="12" />
                 </svg>
-                {lang === 'tr' ? 'Çıkış Yap' : 'Sign Out'}
+                {{ tr: 'Çıkış Yap', en: 'Sign Out', ru: 'Выйти', ar: 'تسجيل الخروج' }[lang] || 'Sign Out'}
               </button>
             </div>
           </div>

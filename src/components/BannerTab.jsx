@@ -68,22 +68,24 @@ const BannerTab = memo(({ banner, setBanner, stg, canvasRef, downloadBanner, L, 
               groupLabels={lang !== 'tr' ? COMPANY_GROUP_LABELS_EN : undefined}
             />
 
-            {/* Template Selection */}
-            <div style={{ marginBottom: '1rem', marginTop: '0.6rem' }}>
-              <label style={{ fontSize: '0.7rem', fontWeight: 600, color: C.text2, marginBottom: '0.4rem', display: 'block' }}>{L.banTpl}</label>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
-                {BANNER_TEMPLATES.map(t => (
-                  <button key={t.id} onClick={() => setBanner(p => ({ ...p, template: t.id, customBg: '' }))} style={{
-                    flex: 1, padding: '0.5rem', borderRadius: '8px', cursor: 'pointer',
-                    border: !banner.customBg && banner.template === t.id ? `2px solid ${C.accent}` : `1px solid ${C.borderSub}`,
-                    background: t.bg, color: t.textColor, fontSize: '0.62rem', fontWeight: 600,
-                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: !banner.customBg && banner.template === t.id ? 'scale(1.04)' : 'scale(1)',
-                    opacity: banner.customBg ? 0.5 : 1,
-                  }}>{t.name}</button>
-                ))}
+            {/* Template Selection — only show if multiple templates */}
+            {BANNER_TEMPLATES.length > 1 && (
+              <div style={{ marginBottom: '1rem', marginTop: '0.6rem' }}>
+                <label style={{ fontSize: '0.7rem', fontWeight: 600, color: C.text2, marginBottom: '0.4rem', display: 'block' }}>{L.banTpl}</label>
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                  {BANNER_TEMPLATES.map(t => (
+                    <button key={t.id} onClick={() => setBanner(p => ({ ...p, template: t.id, customBg: '' }))} style={{
+                      flex: 1, padding: '0.5rem', borderRadius: '8px', cursor: 'pointer',
+                      border: !banner.customBg && banner.template === t.id ? `2px solid ${C.accent}` : `1px solid ${C.borderSub}`,
+                      background: t.bg, color: t.textColor, fontSize: '0.62rem', fontWeight: 600,
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      transform: !banner.customBg && banner.template === t.id ? 'scale(1.04)' : 'scale(1)',
+                      opacity: banner.customBg ? 0.5 : 1,
+                    }}>{t.name}</button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Custom Image Upload */}
             <div style={{ marginBottom: '1rem' }}>
@@ -221,6 +223,7 @@ const BannerTab = memo(({ banner, setBanner, stg, canvasRef, downloadBanner, L, 
             </div>
             <FormField label={L.banTitle} value={banner.title} onChange={e => setBanner(p => ({ ...p, title: e.target.value }))} placeholder={stg.companyName} />
             <FormField label={L.banSub} value={banner.subtitle} onChange={e => setBanner(p => ({ ...p, subtitle: e.target.value }))} placeholder={stg.slogan} />
+            <FormField label={L.banWebLink || 'Web Link'} value={banner.webLink || ''} onChange={e => setBanner(p => ({ ...p, webLink: e.target.value }))} placeholder={stg.website || 'www.tiryaki.com.tr'} />
             <Btn onClick={downloadBanner} icon={Download}>{L.banDl}</Btn>
           </GlassCard>
         </div>

@@ -150,7 +150,7 @@ const OutlookPreview = memo(({ hasData, sigHTML, L, lang }) => (
     <div style={{ borderBottom: '1px solid #e8eaed', padding: '0.4rem 0.8rem' }}>
       <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.68rem', marginBottom: '0.25rem' }}>
         <span style={{ fontWeight: 600, color: C.text1, minWidth: 38 }}>{L.mockSubject}</span>
-        <span style={{ color: C.text2 }}>{lang === 'tr' ? 'Toplantı Daveti' : 'Meeting Invitation'}</span>
+        <span style={{ color: C.text2 }}>{{ tr: 'Toplantı Daveti', en: 'Meeting Invitation', ru: 'Приглашение на встречу', ar: 'دعوة اجتماع' }[lang] || 'Meeting Invitation'}</span>
       </div>
       <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.68rem' }}>
         <span style={{ fontWeight: 600, color: C.text1, minWidth: 38 }}>{L.mockTo}</span>

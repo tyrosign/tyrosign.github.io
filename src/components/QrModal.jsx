@@ -145,7 +145,8 @@ async function drawCardCanvas(qrDataUrl, form, stg, company, lang) {
   // Bottom hint
   ctx.fillStyle = '#bbbbbb';
   ctx.font = 'italic 9px "Inter", Arial, sans-serif';
-  ctx.fillText(lang === 'tr' ? 'Rehbere eklemek için QR okutun' : 'Scan QR to save contact', W / 2, H - 12);
+  const hintTexts = { tr: 'Rehbere eklemek için QR okutun', en: 'Scan QR to save contact', ru: 'Сканируйте QR для сохранения контакта', ar: 'امسح رمز QR لحفظ جهة الاتصال' };
+  ctx.fillText(hintTexts[lang] || hintTexts.en, W / 2, H - 12);
 
   return canvas;
 }

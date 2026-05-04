@@ -109,7 +109,7 @@ export default function NotifyManagerModal({ open, onClose, form, sigHTML, toast
 
   const handleSend = useCallback(async () => {
     if (!toEmail.trim()) {
-      toast(lang === 'tr' ? 'Alıcı e-posta adresi boş olamaz' : 'Recipient email cannot be empty', 'err');
+      toast({ tr: 'Alıcı e-posta adresi boş olamaz', en: 'Recipient email cannot be empty', ru: 'Адрес электронной почты получателя не может быть пустым', ar: 'لا يمكن أن يكون عنوان البريد الإلكتروني فارغًا' }[lang] || 'Recipient email cannot be empty', 'err');
       return;
     }
     setSending(true);

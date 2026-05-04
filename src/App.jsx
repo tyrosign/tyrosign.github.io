@@ -70,7 +70,13 @@ export default function App() {
     } catch { /* ignore */ }
     return DEFAULT_STG;
   });
-  const [banner, setBanner] = useState({ template: 'classic', size: 'linkedin', title: '', subtitle: '', customBg: '', companyId: 'tiryaki-agro', logoPosition: 'top-right', showLogo: true });
+  const [banner, setBanner] = useState(() => {
+    try {
+      const saved = localStorage.getItem('tyro-banner');
+      if (saved) { const p = JSON.parse(saved); return { template: 'light', size: 'linkedin', title: '', subtitle: '', webLink: '', customBg: '', companyId: 'tiryaki-agro', logoPosition: 'top-right', showLogo: true, ...p, customBg: '' }; }
+    } catch {}
+    return { template: 'light', size: 'linkedin', title: '', subtitle: '', webLink: '', customBg: '', companyId: 'tiryaki-agro', logoPosition: 'top-right', showLogo: true };
+  });
   const [sigBanner, setSigBanner] = useState({ enabled: false, base64: '', width: 0, height: 0, linkUrl: '', alt: '' });
   const [profileOpen, setProfileOpen] = useState(false);
   const [designOpen, setDesignOpen] = useState(false);
@@ -83,6 +89,7 @@ export default function App() {
   // ─── Persist lang + all settings ───
   useEffect(() => { try { localStorage.setItem('tyro-lang', lang); } catch { /* private mode */ } }, [lang]);
   useEffect(() => { try { localStorage.setItem('tyro-stg', JSON.stringify(stg)); } catch {} }, [stg]);
+  useEffect(() => { try { const { customBg, ...rest } = banner; localStorage.setItem('tyro-banner', JSON.stringify(rest)); } catch {} }, [banner]);
 
   // ─── Hooks ───
   const { toasts, toast } = useToast();

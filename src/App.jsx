@@ -256,11 +256,25 @@ export default function App() {
   }, [toast, lang]);
 
   const doCopy = useCallback(async () => {
-    const onSuccess = () => {
+    const onSuccess = (path) => {
+      // Diagnostic: window.__tyroCopyPath gives ofis kullanıcısına hangi yol başarılı oldu bilgisi
+      try { window.__tyroCopyPath = path; console.info('[TYRO] clipboard path:', path); } catch {}
       setCopied(true); setShowCelebration(true); toast(L.cpd);
       setTimeout(() => setCopied(false), 2500);
       setTimeout(() => setShowCelebration(false), 1800);
     };
+
+    // Diagnostic: domain + clipboard API durumu
+    try {
+      console.info('[TYRO] copy invoked', {
+        host: window.location.host,
+        secure: window.isSecureContext,
+        hasClipboardAPI: !!(navigator.clipboard && navigator.clipboard.write),
+        hasClipboardItem: typeof ClipboardItem !== 'undefined',
+        execCommandSupported: typeof document.queryCommandSupported === 'function'
+          ? document.queryCommandSupported('copy') : 'unknown',
+      });
+    } catch {}
 
     // ─── PRIMARY: DOM-range execCommand copy (universal cross-browser support)
     // Works in: Chrome, Firefox, Safari (desktop+iOS), Edge, Opera, Brave, mobile
@@ -316,7 +330,8 @@ export default function App() {
     }
     if (window.scrollY !== prevScrollY) window.scrollTo(0, prevScrollY);
 
-    if (domCopySucceeded) { onSuccess(); return; }
+    if (domCopySucceeded) { onSuccess('execCommand'); return; }
+    console.warn('[TYRO] execCommand path failed, trying ClipboardItem');
 
     // ─── FALLBACK: ClipboardItem API (modern; may fail in restricted corp envs)
     try {
@@ -331,18 +346,24 @@ export default function App() {
             'text/plain': new Blob([plainText], { type: 'text/plain' }),
           }),
         ]);
-        onSuccess();
+        onSuccess('ClipboardItem');
         return;
       }
-    } catch { /* last resort below */ }
+    } catch (err) {
+      console.warn('[TYRO] ClipboardItem path failed:', err && err.message);
+    }
 
-    // ─── LAST RESORT: writeText only
+    // ─── LAST RESORT: writeText only (PLAIN TEXT — rich format kaybolur)
     try {
       const tmp = document.createElement('div');
       tmp.innerHTML = sigHTML;
       await navigator.clipboard.writeText(tmp.innerText || tmp.textContent || '');
-      onSuccess();
-    } catch { toast('Error', 'err'); }
+      onSuccess('writeText-plainOnly');
+      console.warn('[TYRO] Only plain text copied — rich HTML lost. Likely cause: Permissions-Policy or corporate proxy stripping clipboard API.');
+    } catch (err) {
+      console.error('[TYRO] All clipboard paths failed:', err && err.message);
+      toast('Error', 'err');
+    }
   }, [sigHTML, L, toast]);
 
   // ─── Keyboard Shortcuts ───

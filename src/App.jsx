@@ -261,32 +261,59 @@ export default function App() {
       setTimeout(() => setCopied(false), 2500);
       setTimeout(() => setShowCelebration(false), 1800);
     };
+
+    // ─── PRIMARY: DOM-range execCommand copy (most reliable for rich HTML)
+    // - Doesn't require clipboard-write permission (works in corporate envs)
+    // - Auto-generates BOTH text/html and text/plain from same DOM (proper entity decoding)
+    // - Outlook respects this on Ctrl+V AND right-click paste
+    let domCopySucceeded = false;
+    const div = document.createElement('div');
+    div.setAttribute('contenteditable', 'true');
+    div.innerHTML = sigHTML;
+    // Make element selectable but invisible — don't use display:none or off-screen left
+    // because that breaks selection in some browsers / corporate environments
+    div.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none;user-select:text;-webkit-user-select:text;';
+    document.body.appendChild(div);
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(div);
+      const sel = window.getSelection();
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(range);
+        domCopySucceeded = document.execCommand('copy');
+        sel.removeAllRanges();
+      }
+    } catch { /* fall through to ClipboardItem */ }
+    document.body.removeChild(div);
+
+    if (domCopySucceeded) { onSuccess(); return; }
+
+    // ─── FALLBACK: ClipboardItem API (modern; may fail in restricted corp envs)
     try {
       if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+        // Properly decode HTML entities for plain text version
+        const tmp = document.createElement('div');
+        tmp.innerHTML = sigHTML;
+        const plainText = tmp.innerText || tmp.textContent || '';
         await navigator.clipboard.write([
           new ClipboardItem({
             'text/html': new Blob([sigHTML], { type: 'text/html' }),
-            'text/plain': new Blob([sigHTML.replace(/<[^>]*>/g, '')], { type: 'text/plain' }),
+            'text/plain': new Blob([plainText], { type: 'text/plain' }),
           }),
         ]);
         onSuccess();
         return;
       }
-    } catch { /* fallback below */ }
-    const div = document.createElement('div');
-    div.innerHTML = sigHTML;
-    div.style.position = 'fixed'; div.style.left = '-9999px';
-    document.body.appendChild(div);
-    const range = document.createRange();
-    range.selectNodeContents(div);
-    const sel = window.getSelection();
-    if (!sel) { document.body.removeChild(div); return; }
-    sel.removeAllRanges(); sel.addRange(range);
+    } catch { /* last resort below */ }
+
+    // ─── LAST RESORT: writeText only
     try {
-      document.execCommand('copy');
+      const tmp = document.createElement('div');
+      tmp.innerHTML = sigHTML;
+      await navigator.clipboard.writeText(tmp.innerText || tmp.textContent || '');
       onSuccess();
     } catch { toast('Error', 'err'); }
-    sel.removeAllRanges(); document.body.removeChild(div);
   }, [sigHTML, L, toast]);
 
   // ─── Keyboard Shortcuts ───

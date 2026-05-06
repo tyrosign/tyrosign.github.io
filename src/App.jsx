@@ -262,30 +262,59 @@ export default function App() {
       setTimeout(() => setShowCelebration(false), 1800);
     };
 
-    // ─── PRIMARY: DOM-range execCommand copy (most reliable for rich HTML)
-    // - Doesn't require clipboard-write permission (works in corporate envs)
+    // ─── PRIMARY: DOM-range execCommand copy (universal cross-browser support)
+    // Works in: Chrome, Firefox, Safari (desktop+iOS), Edge, Opera, Brave, mobile
+    // - Doesn't require clipboard-write permission (works in corporate envs / DLP / MDM)
     // - Auto-generates BOTH text/html and text/plain from same DOM (proper entity decoding)
     // - Outlook respects this on Ctrl+V AND right-click paste
+    // - iOS Safari: contenteditable + visible-but-tiny element required (opacity:0 alone fails)
     let domCopySucceeded = false;
+    const prevActive = document.activeElement; // restore focus after
+    const prevScrollY = window.scrollY;        // iOS Safari may scroll on focus
     const div = document.createElement('div');
     div.setAttribute('contenteditable', 'true');
+    div.setAttribute('readonly', 'false');     // iOS Safari requires non-readonly
+    div.setAttribute('aria-hidden', 'true');
     div.innerHTML = sigHTML;
-    // Make element selectable but invisible — don't use display:none or off-screen left
-    // because that breaks selection in some browsers / corporate environments
-    div.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none;user-select:text;-webkit-user-select:text;';
+    // iOS Safari + Firefox: element MUST be in viewport with non-zero size to be selectable.
+    // Use 1×1 px transparent element instead of off-screen / display:none / visibility:hidden.
+    // user-select + -webkit-user-select ensures programmatic selection works on Safari/iOS.
+    div.style.cssText = [
+      'position:fixed', 'top:0', 'left:0',
+      'width:1px', 'height:1px',
+      'padding:0', 'margin:0', 'border:0',
+      'opacity:0',
+      'overflow:hidden',
+      'background:transparent',
+      'user-select:text', '-webkit-user-select:text', '-moz-user-select:text',
+      'font-size:12pt',  // iOS Safari prevents zoom on focus when font-size >= 12pt
+    ].join(';');
     document.body.appendChild(div);
     try {
+      // Firefox needs explicit focus before selection in some cases
+      if (typeof div.focus === 'function') div.focus({ preventScroll: true });
+
       const range = document.createRange();
       range.selectNodeContents(div);
       const sel = window.getSelection();
       if (sel) {
         sel.removeAllRanges();
         sel.addRange(range);
-        domCopySucceeded = document.execCommand('copy');
+        // iOS Safari fallback — explicit setSelectionRange not applicable to div,
+        // but Range-based selection works when element is contenteditable + visible
+        if (typeof document.queryCommandSupported !== 'function' ||
+            document.queryCommandSupported('copy')) {
+          domCopySucceeded = document.execCommand('copy');
+        }
         sel.removeAllRanges();
       }
     } catch { /* fall through to ClipboardItem */ }
     document.body.removeChild(div);
+    // Restore focus + scroll (iOS Safari may have shifted)
+    if (prevActive && typeof prevActive.focus === 'function') {
+      try { prevActive.focus({ preventScroll: true }); } catch {}
+    }
+    if (window.scrollY !== prevScrollY) window.scrollTo(0, prevScrollY);
 
     if (domCopySucceeded) { onSuccess(); return; }
 

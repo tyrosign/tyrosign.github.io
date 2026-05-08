@@ -49,7 +49,7 @@ export const TR = {
   olOpen: 'Outlook',
   bcGen: 'Kartvizit', bcTitle: 'Dijital Kartvizit', bcDl: 'Görsel İndir', bcCopy: 'Kopyala', bcCopied: 'Kartvizit kopyalandı!', bcHtml: 'Dijital Kart İndir', bcScan: 'Taratarak rehbere ekleyin',
   bcShare: 'Paylaş', bcShareFail: 'Paylaşım desteklenmiyor', bcSaveContact: 'Rehbere Ekle',
-  bcDownload: 'İndir', bcDigitalCard: 'Dijital Kart',
+  bcDownload: 'İndir', bcDigitalCard: 'Dijital Kart İndir',
   bcCopyFail: 'Kopyalama başarısız', bcCopyUnsupported: 'Kopyalama desteklenmiyor',
   bcProfileHint: 'Logoya tıklayarak kişisel profil fotoğrafınızı yükleyebilirsiniz',
   bcProfileTitle: 'Fotoğrafa tıklayarak profil resmi yükleyebilirsiniz',

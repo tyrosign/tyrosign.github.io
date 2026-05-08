@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TYRO SignSnap — Logo Concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .page-header h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #1d1d1f;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header p {
+    font-size: 1.05rem;
+    color: #86868b;
+    font-weight: 400;
+  }
+
+  .concepts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .concept-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .concept-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+
+  .concept-num {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+  }
+
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+
+  .logo-icon {
+    width: 140px;
+    height: 140px;
+    transition: transform 0.4s ease;
+  }
+
+  .concept-card:hover .logo-icon {
+    transform: scale(1.06);
+  }
+
+  .app-name-section {
+    margin-top: 1.2rem;
+  }
+
+  .app-name-section h2 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 0.3rem;
+  }
+
+  .app-name-section .tagline {
+    font-size: 0.82rem;
+    color: #86868b;
+    font-weight: 400;
+  }
+
+  .concept-desc {
+    font-size: 0.85rem;
+    color: #6e6e73;
+    line-height: 1.7;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f2;
+    text-align: left;
+  }
+
+  .variant-row {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f2;
+  }
+
+  .variant {
+    text-align: center;
+  }
+
+  .variant span {
+    display: block;
+    font-size: 0.68rem;
+    color: #86868b;
+    margin-top: 0.6rem;
+    font-weight: 500;
+  }
+
+  .variant svg {
+    width: 64px;
+    height: 64px;
+  }
+
+  .dark-preview {
+    background: #1d1d1f;
+    border-radius: 12px;
+    padding: 1rem;
+    display: inline-flex;
+  }
+
+  @media (max-width: 560px) {
+    .concepts-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .concept-card { padding: 2rem 1.5rem; }
+    .page-header h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>TYRO SignSnap — Logo Konseptleri</h1>
+  <p>Arkaplan yok · 3D premium · Kurumsal kalite</p>
+</div>
+
+<div class="concepts-grid">
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- CONCEPT 1: Fountain Pen + Signature Stroke        -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="concept-card">
+    <div class="concept-num">Konsept 01</div>
+
+    <div class="icon-wrapper">
+      <svg class="logo-icon" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="penBody1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2e4d72"/>
+            <stop offset="45%" stop-color="#1e3a5f"/>
+            <stop offset="100%" stop-color="#152d4a"/>
+          </linearGradient>
+          <linearGradient id="penShine1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+            <stop offset="30%" stop-color="rgba(255,255,255,0.08)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+          <linearGradient id="gold1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e0a832"/>
+            <stop offset="50%" stop-color="#c8922a"/>
+            <stop offset="100%" stop-color="#a67820"/>
+          </linearGradient>
+          <linearGradient id="goldSig1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#c8922a"/>
+            <stop offset="60%" stop-color="#d4a23a"/>
+            <stop offset="100%" stop-color="#c8922a"/>
+          </linearGradient>
+          <filter id="penDrop1">
+            <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="rgba(30,58,95,0.35)"/>
+          </filter>
+          <filter id="sigGlow1">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(200,146,42,0.4)"/>
+          </filter>
+        </defs>
+
+        <!-- Gold signature stroke -->
+        <g filter="url(#sigGlow1)">
+          <path d="M28 128 C40 110, 48 132, 60 116 S76 104, 88 118 S100 128, 112 112 L118 108"
+                fill="none" stroke="url(#goldSig1)" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Decorative dot -->
+          <circle cx="122" cy="106" r="2.5" fill="#c8922a" opacity="0.7"/>
+        </g>
+
+        <!-- 3D Fountain Pen (diagonal, pointing to signature) -->
+        <g filter="url(#penDrop1)" transform="translate(58, 8) rotate(40, 40, 40)">
+          <!-- Pen cap -->
+          <rect x="34" y="0" width="16" height="14" rx="4" fill="url(#penBody1)"/>
+          <rect x="34" y="0" width="7" height="14" rx="4" fill="url(#penShine1)"/>
+          <!-- Cap ring -->
+          <rect x="33" y="12" width="18" height="3" rx="1" fill="#c8922a" opacity="0.9"/>
+          <!-- Clip -->
+          <rect x="49" y="2" width="3" height="22" rx="1.2" fill="url(#gold1)"/>
+          <circle cx="50.5" cy="24" r="2" fill="#c8922a"/>
+
+          <!-- Pen barrel -->
+          <rect x="35" y="15" width="14" height="48" rx="2.5" fill="url(#penBody1)"/>
+          <!-- Barrel shine (3D highlight) -->
+          <rect x="35" y="15" width="6" height="48" rx="2.5" fill="url(#penShine1)"/>
+          <!-- Barrel ring -->
+          <rect x="34" y="56" width="16" height="3" rx="1" fill="#8a9bb5" opacity="0.5"/>
+
+          <!-- Grip section -->
+          <rect x="36" y="60" width="12" height="12" rx="1.5" fill="#2a4d70"/>
+          <rect x="36" y="60" width="5" height="12" rx="1.5" fill="rgba(255,255,255,0.08)"/>
+          <!-- Grip lines -->
+          <line x1="36" y1="63" x2="48" y2="63" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <line x1="36" y1="66" x2="48" y2="66" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <line x1="36" y1="69" x2="48" y2="69" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+
+          <!-- Nib -->
+          <polygon points="42,72 36,72 42,92 48,72" fill="url(#gold1)"/>
+          <!-- Nib center slit -->
+          <line x1="42" y1="74" x2="42" y2="90" stroke="#8a6a18" stroke-width="0.7"/>
+          <!-- Nib tip highlight -->
+          <circle cx="42" cy="91" r="1" fill="#e0b840" opacity="0.8"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="app-name-section">
+      <h2 style="color: #1e3a5f;">TYRO <span style="color: #c8922a;">Sign</span>Snap</h2>
+      <div class="tagline">Corporate Signature Generator</div>
+    </div>
+
+    <div class="concept-desc">
+      <strong>Dolma Kalem + İmza:</strong> 3D dolma kalem altın imza atıyor. Navy gövde, altın uç ve klips detayı. Kalem şirket ciddiyetini, imza çizgisi ise uygulamanın amacını temsil ediyor. Arka plan yok — her yerde kullanılabilir.
+    </div>
+
+    <div class="variant-row">
+      <div class="variant">
+        <svg viewBox="0 0 160 160">
+          <path d="M28 128 C40 110, 48 132, 60 116 S76 104, 88 118 S100 128, 112 112 L118 108" fill="none" stroke="#c8922a" stroke-width="3.5" stroke-linecap="round"/>
+          <g transform="translate(58, 8) rotate(40, 40, 40)"><rect x="34" y="0" width="16" height="14" rx="4" fill="#1e3a5f"/><rect x="49" y="2" width="3" height="22" rx="1.2" fill="#c8922a"/><rect x="35" y="15" width="14" height="48" rx="2.5" fill="#1e3a5f"/><rect x="36" y="60" width="12" height="12" rx="1.5" fill="#2a4d70"/><polygon points="42,72 36,72 42,92 48,72" fill="#c8922a"/></g>
+        </svg>
+        <span>Flat</span>
+      </div>
+      <div class="variant">
+        <div class="dark-preview">
+          <svg viewBox="0 0 160 160" width="64" height="64">
+            <path d="M28 128 C40 110, 48 132, 60 116 S76 104, 88 118 S100 128, 112 112 L118 108" fill="none" stroke="#d4a23a" stroke-width="3.5" stroke-linecap="round"/>
+            <g transform="translate(58, 8) rotate(40, 40, 40)"><rect x="34" y="0" width="16" height="14" rx="4" fill="#3a6a9f"/><rect x="49" y="2" width="3" height="22" rx="1.2" fill="#d4a23a"/><rect x="35" y="15" width="14" height="48" rx="2.5" fill="#3a6a9f"/><rect x="36" y="60" width="12" height="12" rx="1.5" fill="#4a7ab0"/><polygon points="42,72 36,72 42,92 48,72" fill="#d4a23a"/></g>
+          </svg>
+        </div>
+        <span>Dark BG</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- CONCEPT 2: Shield + Check — Trust & Authority     -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="concept-card">
+    <div class="concept-num">Konsept 02</div>
+
+    <div class="icon-wrapper">
+      <svg class="logo-icon" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="shield2" x1="0.5" y1="0" x2="0.5" y2="1">
+            <stop offset="0%" stop-color="#2e5280"/>
+            <stop offset="50%" stop-color="#1e3a5f"/>
+            <stop offset="100%" stop-color="#142a48"/>
+          </linearGradient>
+          <linearGradient id="shieldShine2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.2)"/>
+            <stop offset="50%" stop-color="rgba(255,255,255,0.05)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+          <linearGradient id="blueAccent2" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0098d4"/>
+            <stop offset="100%" stop-color="#00b0e8"/>
+          </linearGradient>
+          <linearGradient id="goldCheck2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e0aa34"/>
+            <stop offset="100%" stop-color="#c8922a"/>
+          </linearGradient>
+          <filter id="shieldDrop2">
+            <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(30,58,95,0.3)"/>
+          </filter>
+          <filter id="checkGlow2">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(200,146,42,0.5)"/>
+          </filter>
+        </defs>
+
+        <!-- 3D Shield -->
+        <g filter="url(#shieldDrop2)">
+          <!-- Shield body -->
+          <path d="M80 14 L36 36 C32 38 28 44 28 48 L28 80 C28 108 50 132 80 144 C110 132 132 108 132 80 L132 48 C132 44 128 38 124 36 Z"
+                fill="url(#shield2)"/>
+          <!-- Shield 3D shine -->
+          <path d="M80 16 L38 37 C34.5 39 31 44 31 47.5 L31 79 C31 80 31 81 31.1 82 L80 16 Z"
+                fill="url(#shieldShine2)" opacity="0.7"/>
+          <!-- Shield inner border highlight -->
+          <path d="M80 18 L40 38 C37 39.5 34 44.5 34 47.5 L34 79 C34 105 54 127 80 138 C106 127 126 105 126 79 L126 47.5 C126 44.5 123 39.5 120 38 Z"
+                fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+          <!-- Blue accent stripe across shield -->
+          <path d="M36 70 L124 70" stroke="url(#blueAccent2)" stroke-width="2.5" opacity="0.4"/>
+
+          <!-- Gold checkmark -->
+          <g filter="url(#checkGlow2)">
+            <polyline points="58,80 72,96 106,58" fill="none" stroke="url(#goldCheck2)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="app-name-section">
+      <h2><span style="color: #1e3a5f;">TYRO</span> <span style="color: #0098d4;">Sign</span><span style="color: #c8922a;">Snap</span></h2>
+      <div class="tagline">Verified Corporate Identity</div>
+    </div>
+
+    <div class="concept-desc">
+      <strong>Kalkan + Onay:</strong> 3D navy kalkan üzerinde altın checkmark. Kurumsal güven, doğrulanmış kimlik anlamı. Kalkan şekli 3D gölge + highlight ile derinlik kazanıyor. Mavi aksan çizgi Tiryaki brand'ini tamamlıyor.
+    </div>
+
+    <div class="variant-row">
+      <div class="variant">
+        <svg viewBox="0 0 160 160">
+          <path d="M80 14 L36 36 C32 38 28 44 28 48 L28 80 C28 108 50 132 80 144 C110 132 132 108 132 80 L132 48 C132 44 128 38 124 36 Z" fill="#1e3a5f"/>
+          <polyline points="58,80 72,96 106,58" fill="none" stroke="#c8922a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Flat</span>
+      </div>
+      <div class="variant">
+        <div class="dark-preview">
+          <svg viewBox="0 0 160 160" width="64" height="64">
+            <path d="M80 14 L36 36 C32 38 28 44 28 48 L28 80 C28 108 50 132 80 144 C110 132 132 108 132 80 L132 48 C132 44 128 38 124 36 Z" fill="#3a6a9f"/>
+            <polyline points="58,80 72,96 106,58" fill="none" stroke="#d4a23a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span>Dark BG</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- CONCEPT 3: Layered Cards + Snap Flash             -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="concept-card">
+    <div class="concept-num">Konsept 03</div>
+
+    <div class="icon-wrapper">
+      <svg class="logo-icon" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="card3front" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#eaecf0"/>
+          </linearGradient>
+          <linearGradient id="card3mid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d8dce5"/>
+            <stop offset="100%" stop-color="#c8cdd8"/>
+          </linearGradient>
+          <linearGradient id="accentStripe3" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#1e3a5f"/>
+            <stop offset="50%" stop-color="#0098d4"/>
+            <stop offset="100%" stop-color="#c8922a"/>
+          </linearGradient>
+          <filter id="cardDrop3a">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(30,58,95,0.15)"/>
+          </filter>
+          <filter id="cardDrop3b">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(30,58,95,0.2)"/>
+          </filter>
+          <filter id="flashGlow3">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="rgba(200,146,42,0.5)"/>
+          </filter>
+        </defs>
+
+        <!-- Back card -->
+        <g filter="url(#cardDrop3a)" transform="rotate(-6, 80, 80)">
+          <rect x="24" y="38" width="112" height="72" rx="10" fill="#c0c5d0"/>
+          <rect x="24" y="38" width="112" height="4" rx="10" fill="#a8adb8"/>
+        </g>
+
+        <!-- Middle card -->
+        <g filter="url(#cardDrop3a)" transform="rotate(3, 80, 80)">
+          <rect x="22" y="40" width="116" height="74" rx="10" fill="url(#card3mid)"/>
+          <rect x="22" y="40" width="116" height="4" rx="10" fill="#bcc1cc"/>
+        </g>
+
+        <!-- Front card -->
+        <g filter="url(#cardDrop3b)">
+          <rect x="20" y="42" width="120" height="76" rx="10" fill="url(#card3front)"/>
+          <!-- Inner border -->
+          <rect x="21" y="43" width="118" height="74" rx="9" fill="none" stroke="rgba(0,0,0,0.04)" stroke-width="0.5"/>
+
+          <!-- Accent gradient stripe -->
+          <clipPath id="stripeClip3"><rect x="20" y="42" width="120" height="5" rx="10"/></clipPath>
+          <rect x="20" y="42" width="120" height="5" fill="url(#accentStripe3)" clip-path="url(#stripeClip3)"/>
+
+          <!-- Name -->
+          <rect x="34" y="56" width="52" height="5.5" rx="2.5" fill="#1e3a5f" opacity="0.85"/>
+          <!-- Title -->
+          <rect x="34" y="66" width="36" height="3.5" rx="1.5" fill="#0098d4" opacity="0.45"/>
+          <!-- Info lines -->
+          <rect x="34" y="76" width="68" height="2.5" rx="1.2" fill="#c0c4cc"/>
+          <rect x="34" y="83" width="56" height="2.5" rx="1.2" fill="#c0c4cc"/>
+          <rect x="34" y="90" width="48" height="2.5" rx="1.2" fill="#c0c4cc"/>
+          <rect x="34" y="97" width="40" height="2.5" rx="1.2" fill="#c0c4cc"/>
+
+          <!-- Mini logo area -->
+          <rect x="104" y="56" width="26" height="26" rx="6" fill="#1e3a5f" opacity="0.06"/>
+          <rect x="109" y="62" width="16" height="3" rx="1" fill="#1e3a5f" opacity="0.18"/>
+          <rect x="111" y="68" width="12" height="2.5" rx="1" fill="#c8922a" opacity="0.25"/>
+        </g>
+
+        <!-- Snap flash (top right) — gold lightning lines -->
+        <g filter="url(#flashGlow3)">
+          <line x1="128" y1="38" x2="140" y2="22" stroke="#c8922a" stroke-width="3" stroke-linecap="round"/>
+          <line x1="134" y1="44" x2="148" y2="32" stroke="#c8922a" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+          <line x1="124" y1="30" x2="132" y2="18" stroke="#c8922a" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+          <!-- Flash sparkle -->
+          <circle cx="142" cy="20" r="2.5" fill="#c8922a" opacity="0.5"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="app-name-section">
+      <h2 style="color: #1e3a5f;">Sign<span style="color: #0098d4;">Snap</span> <span style="font-weight: 500; font-size: 0.7em; color: #86868b;">by TYRO</span></h2>
+      <div class="tagline">Snap. Sign. Send.</div>
+    </div>
+
+    <div class="concept-desc">
+      <strong>Kart Yığını + Snap:</strong> 3 katmanlı imza kartı üst üste, en öndeki gradient accent şeritli ve detaylı. Altın "snap" flaş çizgileri hızlı oluşturmayı simgeliyor. Uygulamanın tam amacını — e-posta imza kartı oluşturmayı — doğrudan gösteriyor.
+    </div>
+
+    <div class="variant-row">
+      <div class="variant">
+        <svg viewBox="0 0 160 160">
+          <g transform="rotate(-6, 80, 80)"><rect x="24" y="38" width="112" height="72" rx="10" fill="#c0c5d0"/></g>
+          <g transform="rotate(3, 80, 80)"><rect x="22" y="40" width="116" height="74" rx="10" fill="#d8dce5"/></g>
+          <rect x="20" y="42" width="120" height="76" rx="10" fill="#fff"/><rect x="20" y="42" width="120" height="5" rx="3" fill="url(#accentStripe3)"/>
+          <rect x="34" y="56" width="52" height="5.5" rx="2.5" fill="#1e3a5f" opacity="0.85"/>
+          <rect x="34" y="66" width="36" height="3.5" rx="1.5" fill="#0098d4" opacity="0.45"/>
+          <line x1="128" y1="38" x2="140" y2="22" stroke="#c8922a" stroke-width="3" stroke-linecap="round"/>
+          <line x1="134" y1="44" x2="148" y2="32" stroke="#c8922a" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+        <span>Flat</span>
+      </div>
+      <div class="variant">
+        <div class="dark-preview">
+          <svg viewBox="0 0 160 160" width="64" height="64">
+            <g transform="rotate(-6, 80, 80)"><rect x="24" y="38" width="112" height="72" rx="10" fill="#3a4a5c"/></g>
+            <g transform="rotate(3, 80, 80)"><rect x="22" y="40" width="116" height="74" rx="10" fill="#4a5a6c"/></g>
+            <rect x="20" y="42" width="120" height="76" rx="10" fill="#2a3a4c"/>
+            <rect x="20" y="42" width="120" height="5" rx="3" fill="url(#accentStripe3)"/>
+            <rect x="34" y="56" width="52" height="5.5" rx="2.5" fill="#fff" opacity="0.85"/>
+            <rect x="34" y="66" width="36" height="3.5" rx="1.5" fill="#0098d4" opacity="0.6"/>
+            <line x1="128" y1="38" x2="140" y2="22" stroke="#d4a23a" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span>Dark BG</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- CONCEPT 4: TS Monogram — Bold Typography           -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div class="concept-card">
+    <div class="concept-num">Konsept 04</div>
+
+    <div class="icon-wrapper">
+      <svg class="logo-icon" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="navy4" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2e5280"/>
+            <stop offset="100%" stop-color="#1e3a5f"/>
+          </linearGradient>
+          <linearGradient id="gold4" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e0aa34"/>
+            <stop offset="50%" stop-color="#c8922a"/>
+            <stop offset="100%" stop-color="#a87820"/>
+          </linearGradient>
+          <linearGradient id="blue4" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0098d4"/>
+            <stop offset="100%" stop-color="#00b2e8"/>
+          </linearGradient>
+          <filter id="tDrop4">
+            <feDropShadow dx="1" dy="3" stdDeviation="4" flood-color="rgba(30,58,95,0.3)"/>
+          </filter>
+          <filter id="sDrop4">
+            <feDropShadow dx="1" dy="3" stdDeviation="4" flood-color="rgba(200,146,42,0.35)"/>
+          </filter>
+          <filter id="lineDrop4">
+            <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(0,152,212,0.3)"/>
+          </filter>
+        </defs>
+
+        <!-- Big T -->
+        <g filter="url(#tDrop4)">
+          <text x="18" y="118" font-family="'Plus Jakarta Sans', -apple-system, sans-serif" font-size="110" font-weight="800" fill="url(#navy4)" letter-spacing="-5">T</text>
+        </g>
+
+        <!-- Overlapping S -->
+        <g filter="url(#sDrop4)">
+          <text x="72" y="124" font-family="'Plus Jakarta Sans', -apple-system, sans-serif" font-size="100" font-weight="800" fill="url(#gold4)" letter-spacing="-3">S</text>
+        </g>
+
+        <!-- Blue accent underline -->
+        <g filter="url(#lineDrop4)">
+          <rect x="20" y="130" width="120" height="4" rx="2" fill="url(#blue4)"/>
+        </g>
+
+        <!-- Subtle signature flourish under T -->
+        <path d="M30 140 C45 136, 55 142, 70 138 S90 134, 110 140" fill="none" stroke="#c8922a" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+      </svg>
+    </div>
+
+    <div class="app-name-section">
+      <h2><span style="color: #1e3a5f; font-size: 1.8rem;">T</span><span style="color: #c8922a; font-size: 1.8rem;">S</span> <span style="color: #1e3a5f;">SignSnap</span></h2>
+      <div class="tagline">Tiryaki Signature Platform</div>
+    </div>
+
+    <div class="concept-desc">
+      <strong>TS Monogram:</strong> Büyük navy "T" ve altın "S" harfleri 3D gölge ile derinlik kazanıyor. Mavi accent çizgi ve ince imza flourish detayı. Minimal, hatırlanabilir, her boyutta ölçeklenebilir — favicon'dan büyük banner'a kadar.
+    </div>
+
+    <div class="variant-row">
+      <div class="variant">
+        <svg viewBox="0 0 160 160">
+          <text x="18" y="118" font-family="'Plus Jakarta Sans',sans-serif" font-size="110" font-weight="800" fill="#1e3a5f" letter-spacing="-5">T</text>
+          <text x="72" y="124" font-family="'Plus Jakarta Sans',sans-serif" font-size="100" font-weight="800" fill="#c8922a" letter-spacing="-3">S</text>
+          <rect x="20" y="130" width="120" height="4" rx="2" fill="#0098d4"/>
+        </svg>
+        <span>Flat</span>
+      </div>
+      <div class="variant">
+        <div class="dark-preview">
+          <svg viewBox="0 0 160 160" width="64" height="64">
+            <text x="18" y="118" font-family="'Plus Jakarta Sans',sans-serif" font-size="110" font-weight="800" fill="#5a8ab8" letter-spacing="-5">T</text>
+            <text x="72" y="124" font-family="'Plus Jakarta Sans',sans-serif" font-size="100" font-weight="800" fill="#d4a23a" letter-spacing="-3">S</text>
+            <rect x="20" y="130" width="120" height="4" rx="2" fill="#20b0e8"/>
+          </svg>
+        </div>
+        <span>Dark BG</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align: center; margin-top: 4rem; padding: 2rem; color: #86868b; font-size: 0.82rem;">
+  <p>Tüm logolar arka plansız, şeffaf — her yere yerleştirilebilir.</p>
+  <p style="margin-top: 0.5rem;">Renk paleti: Navy <span style="color:#1e3a5f;">■</span> #1e3a5f &nbsp;·&nbsp; Blue <span style="color:#0098d4;">■</span> #0098d4 &nbsp;·&nbsp; Gold <span style="color:#c8922a;">■</span> #c8922a</p>
+</div>
+
+</body>
+</html>

@@ -89,6 +89,18 @@ export default function App() {
 
   // ─── Persist lang + all settings ───
   useEffect(() => { try { localStorage.setItem('tyro-lang', lang); } catch { /* private mode */ } }, [lang]);
+
+  // ─── Browser tab title — language-aware ───
+  useEffect(() => {
+    const slogan = {
+      tr: 'Kurumsal Dijital İmza Stüdyosu',
+      en: 'Corporate Digital Signature Studio',
+      ru: 'Корпоративная Студия Цифровых Подписей',
+      ar: 'استوديو التوقيع الرقمي المؤسسي',
+    }[lang] || 'Corporate Digital Signature Studio';
+    document.title = `tyrosign - ${slogan}`;
+    try { document.documentElement.setAttribute('lang', lang); } catch {}
+  }, [lang]);
   useEffect(() => { try { localStorage.setItem('tyro-stg', JSON.stringify(stg)); } catch {} }, [stg]);
   useEffect(() => { try { const { customBg, ...rest } = banner; localStorage.setItem('tyro-banner', JSON.stringify(rest)); } catch {} }, [banner]);
 

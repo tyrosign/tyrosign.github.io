@@ -178,12 +178,13 @@ const QrModal = memo(({ open, onClose, form, office, stg, company, toast, L, lan
     if (!open || !canvasRef.current) return;
     const vcard = generateVCard(form, office, stg, company, lang);
 
-    // Draw rounded-dot QR
-    const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'M' });
+    // Draw rounded-dot QR — High EC level + larger margin for reliable scanning
+    // even from screens, low-light, or oblique angles
+    const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'H' });
     const qrModules = qrData.modules;
     const moduleCount = qrModules.size;
     const qrSize = 280;
-    const qrMargin = 2;
+    const qrMargin = 4;
     const totalMods = moduleCount + qrMargin * 2;
     const cell = qrSize / totalMods;
     const dotR = cell * 0.42;

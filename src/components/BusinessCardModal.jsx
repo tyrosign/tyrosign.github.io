@@ -205,18 +205,22 @@ async function drawQrWithLogo(vcard, size, logoBase64) {
   canvas.width = size;
   canvas.height = size;
 
+  // High error correction (30% recovery) + larger margin (4 modules) for reliable scanning
+  // even when logo overlay covers center modules.
   const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'H' });
   const ctx = canvas.getContext('2d');
-  drawRoundedQr(ctx, qrData, size, 2, NAVY, '#ffffff');
+  drawRoundedQr(ctx, qrData, size, 4, NAVY, '#ffffff');
 
   if (logoBase64) {
     const ctx = canvas.getContext('2d');
     try {
       const logoImg = await loadImage(logoBase64);
-      const logoSize = Math.round(size * 0.22);
+      // Logo coverage kept conservative (~18%) — combined with white pad (~22% total)
+      // stays under H-level error correction threshold (30%) to guarantee scannability.
+      const logoSize = Math.round(size * 0.18);
       const x = (size - logoSize) / 2;
       const y = (size - logoSize) / 2;
-      const pad = 10;
+      const pad = 8;
 
       // White circle background
       ctx.fillStyle = '#ffffff';
@@ -588,7 +592,8 @@ function generateQrSvg(vcard, logoBase64) {
   const modules = qrData.modules;
   const moduleCount = modules.size;
   const svgSize = 260;
-  const margin = 2;
+  // Margin 4 (was 2) — improves scanner detection in low-light / oblique angles
+  const margin = 4;
   const totalModules = moduleCount + margin * 2;
   const cellSize = svgSize / totalModules;
   const dotR = cellSize * 0.42;
@@ -701,8 +706,10 @@ function generateQrSvg(vcard, logoBase64) {
 
   if (logoBase64) {
     const center = svgSize / 2;
-    const r = Math.round(center * 0.22);
-    const pad = 8;
+    // Logo radius reduced (was 0.22) so combined with white pad stays under H-level
+    // error correction tolerance (~30%) — guarantees scanner reads QR even with logo overlay.
+    const r = Math.round(center * 0.18);
+    const pad = 7;
     const imgSize = Math.round(r * 1.7);
     svg +=
       '<circle cx="' + center + '" cy="' + center + '" r="' + (r + pad) + '" fill="#ffffff"/>' +
@@ -991,13 +998,14 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
           borderRadius: 20,
           border: `1px solid ${C.borderSub}`,
           boxShadow: '0 24px 48px rgba(30,58,95,0.18), 0 8px 16px rgba(30,58,95,0.08)',
-          padding: '1.5rem',
+          padding: '1.5rem 1.5rem 0',
           width: '100%', maxWidth: 420,
           textAlign: 'center',
           position: 'relative',
           animation: 'slideInUp 0.3s cubic-bezier(0.22, 1, 0.36, 1)',
           maxHeight: '92vh',
-          overflowY: 'auto',
+          // Flex column so footer can stick at bottom while content scrolls
+          display: 'flex', flexDirection: 'column',
         }}
       >
         {/* Hidden profile photo input */}
@@ -1030,6 +1038,9 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
         >
           <X size={18} />
         </button>
+
+        {/* Scrollable content area — actions footer below stays visible */}
+        <div className="bc-scroll" style={{ flex: 1, overflowY: 'auto', minHeight: 0, paddingBottom: '0.75rem' }}>
 
         {/* Card Preview */}
         <div style={{
@@ -1263,10 +1274,18 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
           )}
         </div>
 
-        {/* Actions — Apple glass buttons */}
+        </div>{/* /bc-scroll */}
+
+        {/* Actions — sticky footer, always visible */}
         <div className="bc-actions" style={{
           display: 'flex', flexWrap: 'wrap', gap: '0.35rem', justifyContent: 'center',
-          background: 'rgba(0,0,0,0.04)', borderRadius: 16, padding: '0.35rem',
+          background: 'rgba(255,255,255,0.92)', borderRadius: 16,
+          padding: '0.5rem 0.35rem',
+          margin: '0 -0.25rem',
+          position: 'sticky', bottom: 0, zIndex: 5,
+          backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+          borderTop: `1px solid ${C.borderSub}`,
+          marginTop: '0.5rem',
         }}>
           {/* Kopyala — hover: gold */}
           <button
@@ -1338,6 +1357,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
           </svg>
           {L.bcProfileHint || 'Click on the logo to upload your profile photo'}
         </div>
+        <div style={{ height: '0.5rem' }} />
       </div>
     </div>
   );

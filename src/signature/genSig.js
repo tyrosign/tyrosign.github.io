@@ -36,9 +36,9 @@ export const genSig = (f, s, office, sigBanner) => {
   // Üst boşluk — spacer satırı (Word'de td padding-bottom rowspan'de sıkışabildiği için
   // dikey boşlukları spacer satırlarıyla veriyoruz; her istemcide simetrik durur).
   bandLines.push(`<tr><td height="15" style="font-size:0;line-height:15px;height:15px;">&nbsp;</td></tr>`);
-  bandLines.push(`<tr><td style="padding:0 0 2px;font-size:15px;font-weight:bold;color:${cName};font-family:Arial,sans-serif;line-height:1.3;">${name || 'Ad SOYAD'}</td></tr>`);
-  if (titleEN) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleEN}</td></tr>`);
-  if (titleTR) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleTR}</td></tr>`);
+  bandLines.push(`<tr><td style="padding:0 0 2px;font-size:17px;font-weight:bold;color:${cName};font-family:Arial,sans-serif;line-height:1.3;">${name || 'Ad SOYAD'}</td></tr>`);
+  if (titleEN) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:12px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleEN}</td></tr>`);
+  if (titleTR) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:12px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleTR}</td></tr>`);
   bandLines.push(`<tr><td height="10" style="font-size:0;line-height:10px;height:10px;">&nbsp;</td></tr>`);
   if (s.showAddress !== false && office) {
     bandLines.push(`<tr><td style="padding:0 0 6px;font-size:11px;color:${cText};font-family:Arial,sans-serif;line-height:1.5;">${escapeHtml(office.address)}, ${escapeHtml(office.city)}</td></tr>`);

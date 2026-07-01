@@ -3,14 +3,6 @@ import QRCode from 'qrcode';
 import { X, Copy, Check, Download, FileDown, Share2, Upload } from 'lucide-react';
 import { C } from '../constants/theme';
 import { generateVCard } from '../utils/generateVCard';
-import DEFAULT_LOGO_BASE64 from '../defaultLogo.js';
-
-/** Get QR center logo — only companies whose NAME starts with Tiryaki/T-Tech get default logo */
-function getQrLogo(stg, company) {
-  const name = (company?.name || stg.companyName || '').toLowerCase().trim();
-  if (name.startsWith('tiryaki') || name.startsWith('t-tech')) return DEFAULT_LOGO_BASE64;
-  return stg.logoBase64;
-}
 import { formatGSM, titleCase } from '../utils/formatting';
 // Background image lazy-loaded from public/ only when HTML download is triggered (saves ~710KB from bundle)
 const BG_CARD_URL = (import.meta.env.BASE_URL || '/') + 'bg-card.jpg';
@@ -200,44 +192,17 @@ function drawRoundedQr(ctx, qrData, size, margin, darkColor, lightColor) {
   }
 }
 
-async function drawQrWithLogo(vcard, size, logoBase64) {
+async function drawCardQr(vcard, size) {
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
 
-  // High error correction (30% recovery) + larger margin (4 modules) for reliable scanning
-  // even when logo overlay covers center modules.
-  const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'H' });
+  // Merkez logosu KALDIRILDI → yüksek hata düzeltmeye (H) gerek yok. 'M' (15%) daha az
+  // modül üretir → ekranda kareler büyür → telefon kamerasıyla (Android+iOS) daha güvenilir
+  // okunur. Margin 4 modül + yüksek kontrast korunur.
+  const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'M' });
   const ctx = canvas.getContext('2d');
   drawRoundedQr(ctx, qrData, size, 4, NAVY, '#ffffff');
-
-  if (logoBase64) {
-    const ctx = canvas.getContext('2d');
-    try {
-      const logoImg = await loadImage(logoBase64);
-      // Logo coverage kept conservative (~18%) — combined with white pad (~22% total)
-      // stays under H-level error correction threshold (30%) to guarantee scannability.
-      const logoSize = Math.round(size * 0.18);
-      const x = (size - logoSize) / 2;
-      const y = (size - logoSize) / 2;
-      const pad = 8;
-
-      // White circle background
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(size / 2, size / 2, logoSize / 2 + pad, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Draw logo preserving aspect ratio
-      const aspect = logoImg.width / logoImg.height;
-      let drawW = logoSize;
-      let drawH = logoSize;
-      if (aspect > 1) { drawH = logoSize / aspect; } else { drawW = logoSize * aspect; }
-      const drawX = x + (logoSize - drawW) / 2;
-      const drawY = y + (logoSize - drawH) / 2;
-      ctx.drawImage(logoImg, drawX, drawY, drawW, drawH);
-    } catch (e) { /* logo failed, QR still works */ }
-  }
 
   return canvas;
 }
@@ -587,8 +552,9 @@ const btnGlass = {
 };
 
 /** Generate QR SVG with modern gradient dots, gold finder centers, and logo overlay */
-function generateQrSvg(vcard, logoBase64) {
-  const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'H' });
+function generateQrSvg(vcard) {
+  // Merkez logosu yok → 'M' seviyesi yeterli; daha az modül = daha büyük/okunur kareler.
+  const qrData = QRCode.create(vcard, { errorCorrectionLevel: 'M' });
   const modules = qrData.modules;
   const moduleCount = modules.size;
   const svgSize = 260;
@@ -704,20 +670,6 @@ function generateQrSvg(vcard, logoBase64) {
     alignSvg +
     dots;
 
-  if (logoBase64) {
-    const center = svgSize / 2;
-    // Logo radius reduced (was 0.22) so combined with white pad stays under H-level
-    // error correction tolerance (~30%) — guarantees scanner reads QR even with logo overlay.
-    const r = Math.round(center * 0.18);
-    const pad = 7;
-    const imgSize = Math.round(r * 1.7);
-    svg +=
-      '<circle cx="' + center + '" cy="' + center + '" r="' + (r + pad) + '" fill="#ffffff"/>' +
-      '<clipPath id="logo-clip"><circle cx="' + center + '" cy="' + center + '" r="' + r + '"/></clipPath>' +
-      '<image href="' + logoBase64 + '" x="' + (center - imgSize / 2) + '" y="' + (center - imgSize / 2) + '" ' +
-      'width="' + imgSize + '" height="' + imgSize + '" preserveAspectRatio="xMidYMid meet" clip-path="url(#logo-clip)"/>';
-  }
-
   svg += '</svg>';
   return svg;
 }
@@ -748,7 +700,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
 
     const vcard = generateVCard(form, office, stg, company, lang);
 
-    drawQrWithLogo(vcard, 320, getQrLogo(stg, company)).then(qrCanvas => {
+    drawCardQr(vcard, 360).then(qrCanvas => {
       qrCanvasRef.current = qrCanvas;
       setQrReady(r => r + 1);
 
@@ -840,7 +792,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
     // Generate QR SVG with centered logo
     let qrSvg = '';
     try {
-      qrSvg = await generateQrSvg(vcard, getQrLogo(stg, company));
+      qrSvg = await generateQrSvg(vcard);
     } catch (e) { /* QR generation failed */ }
 
     // Avatar HTML (profile photo or logo)
@@ -1187,7 +1139,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
           {/* QR */}
           <div className="bc-qr-wrap" style={{
             margin: '20px auto 0',
-            width: 190, height: 190,
+            width: 210, height: 210,
             background: 'rgba(255, 255, 255, 0.55)',
             backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
             borderRadius: 18,
@@ -1197,7 +1149,7 @@ const BusinessCardModal = memo(({ open, onClose, form, office, stg, company, toa
             position: 'relative', zIndex: 1,
             padding: 6,
           }}>
-            <QrCanvasView source={qrCanvasRef.current} size={178} trigger={qrReady} />
+            <QrCanvasView source={qrCanvasRef.current} size={196} trigger={qrReady} />
           </div>
 
           {/* Glass info panel */}

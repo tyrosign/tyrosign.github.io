@@ -30,22 +30,24 @@ export const genSig = (f, s, office, sigBanner) => {
   const cText = '#e6ebf1';   // adres / telefon / mail
 
   // ── Bant içi metin satırları (iç tablo → Word'de güvenilir satır boşluğu) ──
+  // NOT: Eski Outlook (Word motoru) img margin'ini yok sayar → ikon-yazı boşluğu
+  // için margin YERİNE &nbsp; kullanılır. Satır boşlukları td padding'inde (Word-safe).
   const bandLines = [];
-  bandLines.push(`<tr><td style="padding:0 0 1px;font-size:15px;font-weight:bold;color:${cName};font-family:Arial,sans-serif;line-height:1.25;">${name || 'Ad SOYAD'}</td></tr>`);
-  if (titleEN) bandLines.push(`<tr><td style="padding:0;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.4;">${titleEN}</td></tr>`);
-  if (titleTR) bandLines.push(`<tr><td style="padding:0;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.4;">${titleTR}</td></tr>`);
-  bandLines.push(`<tr><td style="font-size:0;line-height:8px;height:8px;">&nbsp;</td></tr>`);
+  bandLines.push(`<tr><td style="padding:0 0 2px;font-size:15px;font-weight:bold;color:${cName};font-family:Arial,sans-serif;line-height:1.3;">${name || 'Ad SOYAD'}</td></tr>`);
+  if (titleEN) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleEN}</td></tr>`);
+  if (titleTR) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleTR}</td></tr>`);
+  bandLines.push(`<tr><td height="10" style="font-size:0;line-height:10px;height:10px;">&nbsp;</td></tr>`);
   if (s.showAddress !== false && office) {
-    bandLines.push(`<tr><td style="padding:0 0 5px;font-size:11px;color:${cText};font-family:Arial,sans-serif;line-height:1.45;">${escapeHtml(office.address)}, ${escapeHtml(office.city)}</td></tr>`);
+    bandLines.push(`<tr><td style="padding:0 0 6px;font-size:11px;color:${cText};font-family:Arial,sans-serif;line-height:1.5;">${escapeHtml(office.address)}, ${escapeHtml(office.city)}</td></tr>`);
   }
   const phones = [];
-  if (f.gsm) phones.push(`<img src="${mobileIconSvg}" width="12" height="12" alt="" style="vertical-align:middle;border:0;margin-right:3px;" /><span style="vertical-align:middle;">${escapeHtml(formatGSM(f.gsm))}</span>`);
-  if (s.showSDN !== false && office?.sdn) phones.push(`<img src="${phoneIconSvg}" width="12" height="12" alt="" style="vertical-align:middle;border:0;margin-right:3px;" /><span style="vertical-align:middle;">${escapeHtml(office.sdn)}</span>`);
+  if (f.gsm) phones.push(`<img src="${mobileIconSvg}" width="12" height="12" alt="" style="vertical-align:middle;border:0;" />&nbsp;<span style="vertical-align:middle;">${escapeHtml(formatGSM(f.gsm))}</span>`);
+  if (s.showSDN !== false && office?.sdn) phones.push(`<img src="${phoneIconSvg}" width="12" height="12" alt="" style="vertical-align:middle;border:0;" />&nbsp;<span style="vertical-align:middle;">${escapeHtml(office.sdn)}</span>`);
   if (phones.length > 0) {
-    bandLines.push(`<tr><td style="padding:0 0 4px;font-size:11px;color:${cText};font-family:Arial,sans-serif;white-space:nowrap;">${phones.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`);
+    bandLines.push(`<tr><td style="padding:0 0 5px;font-size:11px;color:${cText};font-family:Arial,sans-serif;line-height:1.4;white-space:nowrap;">${phones.join('&nbsp;&nbsp;&nbsp;&nbsp;')}</td></tr>`);
   }
   if (f.email) {
-    bandLines.push(`<tr><td style="padding:0;font-size:11px;font-family:Arial,sans-serif;"><a href="mailto:${escapeHtml(f.email)}" style="color:${cName};text-decoration:none;">@&nbsp;${escapeHtml(f.email)}</a></td></tr>`);
+    bandLines.push(`<tr><td style="padding:0;font-size:11px;font-family:Arial,sans-serif;line-height:1.4;"><a href="mailto:${escapeHtml(f.email)}" style="color:${cName};text-decoration:none;">@&nbsp;${escapeHtml(f.email)}</a></td></tr>`);
   }
 
   // ── Footer (logonun altı, tam genişlik satırı): web sitesi + LinkedIn ──
@@ -53,7 +55,7 @@ export const genSig = (f, s, office, sigBanner) => {
   const websiteDisplay = s.website ? s.website.replace(/^www\./i, '') : '';
   const footerItems = [];
   if (s.showWebsite !== false && websiteDisplay) footerItems.push(`<a href="https://${s.website}" style="color:${footerC};font-size:11px;text-decoration:none;font-style:italic;font-weight:bold;">${websiteDisplay}</a>`);
-  if (s.showLinkedin !== false && linkedinUrl) footerItems.push(`<a href="${linkedinUrl}" target="_blank" style="text-decoration:none;"><img src="${linkedinBlueSvg}" width="13" height="13" alt="in" style="vertical-align:-2px;border:0;margin-right:3px;" /><span style="color:${footerC};font-size:11px;font-style:italic;font-weight:bold;">${linkedinHandle || 'LinkedIn'}</span></a>`);
+  if (s.showLinkedin !== false && linkedinUrl) footerItems.push(`<a href="${linkedinUrl}" target="_blank" style="text-decoration:none;"><img src="${linkedinBlueSvg}" width="13" height="13" alt="in" style="vertical-align:-2px;border:0;" />&nbsp;<span style="color:${footerC};font-size:11px;font-style:italic;font-weight:bold;">${linkedinHandle || 'LinkedIn'}</span></a>`);
   // Footer içeriği (web + LinkedIn). Corporate gibi banda rowspan ile yaslanıp
   // bandın ALT hizasına oturur (aşağı sarkmaz).
   const hasFooter = footerItems.length > 0;
@@ -68,7 +70,7 @@ export const genSig = (f, s, office, sigBanner) => {
     `<table class="sigc-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
     `<td class="sigc-logo" style="vertical-align:top;padding:6px 24px 0 4px;">${logo}</td>` +
-    `<td class="sigc-band" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:16px 22px;">` +
+    `<td class="sigc-band" bgcolor="${rbBg}" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:16px 24px;">` +
       `<table cellpadding="0" cellspacing="0" border="0">${bandLines.join('')}</table>` +
     `</td>` +
     `</tr>` +

@@ -54,18 +54,21 @@ export const genSig = (f, s, office, sigBanner) => {
   const footerItems = [];
   if (s.showWebsite !== false && websiteDisplay) footerItems.push(`<a href="https://${s.website}" style="color:${footerC};font-size:11px;text-decoration:none;font-style:italic;font-weight:bold;">${websiteDisplay}</a>`);
   if (s.showLinkedin !== false && linkedinUrl) footerItems.push(`<a href="${linkedinUrl}" target="_blank" style="text-decoration:none;"><img src="${linkedinBlueSvg}" width="13" height="13" alt="in" style="vertical-align:-2px;border:0;margin-right:3px;" /><span style="color:${footerC};font-size:11px;font-style:italic;font-weight:bold;">${linkedinHandle || 'LinkedIn'}</span></a>`);
-  const footer = footerItems.length > 0
-    ? `<tr><td colspan="2" style="padding:12px 0 0 4px;line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`
+  // Footer içeriği (web + LinkedIn). Corporate gibi banda rowspan ile yaslanıp
+  // bandın ALT hizasına oturur (aşağı sarkmaz).
+  const hasFooter = footerItems.length > 0;
+  const footer = hasFooter
+    ? `<tr><td class="sigc-foot" style="vertical-align:bottom;padding:10px 0 2px 4px;line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`
     : '';
 
   // Responsive: dar ekranda logo üste, bant tam genişliğe geçer
-  const sigCSS = `<style>@media screen and (max-width:480px){.sigc-table{width:100%!important}.sigc-logo,.sigc-band{display:block!important;width:100%!important;box-sizing:border-box!important}.sigc-logo{text-align:center!important;padding:0 0 10px 0!important}}</style>`;
+  const sigCSS = `<style>@media screen and (max-width:480px){.sigc-table{width:100%!important}.sigc-logo,.sigc-band,.sigc-foot{display:block!important;width:100%!important;box-sizing:border-box!important}.sigc-logo{text-align:center!important;padding:0 0 10px 0!important}.sigc-foot{text-align:center!important;padding:10px 0 0 0!important}}</style>`;
 
   return sigCSS +
     `<table class="sigc-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
     `<td class="sigc-logo" style="vertical-align:top;padding:6px 24px 0 4px;">${logo}</td>` +
-    `<td class="sigc-band" style="vertical-align:top;background-color:${rbBg};padding:16px 22px;">` +
+    `<td class="sigc-band" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:16px 22px;">` +
       `<table cellpadding="0" cellspacing="0" border="0">${bandLines.join('')}</table>` +
     `</td>` +
     `</tr>` +

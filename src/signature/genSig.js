@@ -33,6 +33,9 @@ export const genSig = (f, s, office, sigBanner) => {
   // NOT: Eski Outlook (Word motoru) img margin'ini yok sayar → ikon-yazı boşluğu
   // için margin YERİNE &nbsp; kullanılır. Satır boşlukları td padding'inde (Word-safe).
   const bandLines = [];
+  // Üst boşluk — spacer satırı (Word'de td padding-bottom rowspan'de sıkışabildiği için
+  // dikey boşlukları spacer satırlarıyla veriyoruz; her istemcide simetrik durur).
+  bandLines.push(`<tr><td height="15" style="font-size:0;line-height:15px;height:15px;">&nbsp;</td></tr>`);
   bandLines.push(`<tr><td style="padding:0 0 2px;font-size:15px;font-weight:bold;color:${cName};font-family:Arial,sans-serif;line-height:1.3;">${name || 'Ad SOYAD'}</td></tr>`);
   if (titleEN) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleEN}</td></tr>`);
   if (titleTR) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleTR}</td></tr>`);
@@ -49,6 +52,8 @@ export const genSig = (f, s, office, sigBanner) => {
   if (f.email) {
     bandLines.push(`<tr><td style="padding:0;font-size:11px;font-family:Arial,sans-serif;line-height:1.4;"><a href="mailto:${escapeHtml(f.email)}" style="color:${cName};text-decoration:none;">@&nbsp;${escapeHtml(f.email)}</a></td></tr>`);
   }
+  // Alt boşluk — spacer satırı (mavi bandın alt kenarı yazıya bitişik kalmasın)
+  bandLines.push(`<tr><td height="15" style="font-size:0;line-height:15px;height:15px;">&nbsp;</td></tr>`);
 
   // ── Footer (logonun altı, tam genişlik satırı): web sitesi + LinkedIn ──
   const footerC = s.contactLabelColor || '#808285';
@@ -70,7 +75,7 @@ export const genSig = (f, s, office, sigBanner) => {
     `<table class="sigc-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
     `<td class="sigc-logo" style="vertical-align:top;padding:6px 24px 0 4px;">${logo}</td>` +
-    `<td class="sigc-band" bgcolor="${rbBg}" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:16px 24px;">` +
+    `<td class="sigc-band" bgcolor="${rbBg}" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:0 24px;border-radius:10px;">` +
       `<table cellpadding="0" cellspacing="0" border="0">${bandLines.join('')}</table>` +
     `</td>` +
     `</tr>` +

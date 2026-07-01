@@ -257,6 +257,22 @@ export default function App() {
     return genSig(form, effectiveStg, office, sigBanner);
   }, [form, effectiveStg, office, sigBanner]);
 
+  // ─── "Sabit Görsel": PNG'yi ÖNCEDEN üret ───
+  // Kopyalama anında html2canvas await'i tarayıcının user-gesture bağlamını koparır
+  // → execCommand/clipboard izni düşer → pano boş kalır. Bu yüzden görseli form/tasarım
+  // değişince arka planda hazırlayıp state'te tutuyoruz; kopyalama senkron gerçekleşir.
+  const [imageSigHTML, setImageSigHTML] = useState('');
+  useEffect(() => {
+    if (effectiveStg.designId !== 'image') { setImageSigHTML(''); return; }
+    let cancelled = false;
+    const t = setTimeout(() => {
+      buildImageSignatureHTML(form, effectiveStg, office, sigBanner)
+        .then(html => { if (!cancelled) setImageSigHTML(html); })
+        .catch(err => { if (!cancelled) { console.warn('[TYRO] Sabit Görsel üretimi başarısız:', err && err.message); setImageSigHTML(''); } });
+    }, 350);
+    return () => { cancelled = true; clearTimeout(t); };
+  }, [effectiveStg, form, office, sigBanner]);
+
   const progress = useMemo(() => {
     const filled = PROGRESS_FIELDS.filter(k => form[k].trim().length > 0).length;
     return { filled, total: PROGRESS_FIELDS.length, pct: Math.round((filled / PROGRESS_FIELDS.length) * 100) };
@@ -329,15 +345,17 @@ export default function App() {
       });
     } catch {}
 
-    // Panoya gidecek HTML. "Sabit Görsel" tasarımında imza yüksek-DPI PNG'ye çevrilir;
-    // diğer tasarımlarda üretilen HTML (corporate zaten [if mso] fallback içerir) kullanılır.
+    // Panoya gidecek HTML. "Sabit Görsel" tasarımında ÖNCEDEN üretilmiş PNG kullanılır
+    // (await YOK → user-gesture korunur, pano dolar). Diğer tasarımlarda üretilen HTML
+    // (corporate zaten [if mso] fallback içerir) kullanılır.
     let copyHTML = sigHTML;
     if (effectiveStg.designId === 'image') {
-      try {
-        copyHTML = await buildImageSignatureHTML(form, effectiveStg, office, sigBanner);
-      } catch (err) {
-        console.warn('[TYRO] Sabit Görsel render başarısız, HTML fallback:', err && err.message);
-        copyHTML = sigHTML;
+      if (imageSigHTML) {
+        copyHTML = imageSigHTML;
+      } else {
+        // Görsel henüz hazır değil (nadir yarış durumu) — boş kopyalama yapma, kullanıcıyı uyar
+        toast(lang === 'tr' ? 'Görsel hazırlanıyor, bir saniye sonra tekrar deneyin' : 'Image is being prepared, please try again in a moment', 'warn');
+        return;
       }
     }
 
@@ -429,7 +447,7 @@ export default function App() {
       console.error('[TYRO] All clipboard paths failed:', err && err.message);
       toast('Error', 'err');
     }
-  }, [sigHTML, effectiveStg, form, office, sigBanner, L, toast]);
+  }, [sigHTML, imageSigHTML, effectiveStg, form, office, sigBanner, lang, L, toast]);
 
   // ─── Keyboard Shortcuts ───
   useEffect(() => {

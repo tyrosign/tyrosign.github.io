@@ -1,5 +1,5 @@
 export const DESIGNS = [
-  { id: 'corporate', nameKey: 'designCorporate' },
   { id: 'classic', nameKey: 'designClassic' },
+  { id: 'corporate', nameKey: 'designCorporate' },
   { id: 'image', nameKey: 'designImage' },
 ];

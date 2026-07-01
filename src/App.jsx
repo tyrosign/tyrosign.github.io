@@ -104,7 +104,8 @@ export default function App() {
       const saved = localStorage.getItem('tyro-stg');
       if (saved) {
         const parsed = JSON.parse(saved);
-        return { ...DEFAULT_STG, ...parsed, social: { ...DEFAULT_STG.social, ...(parsed.social || {}) } };
+        // designId localStorage'a kaydedilmez → her açılışta varsayılan (klasik) gelir
+        return { ...DEFAULT_STG, ...parsed, social: { ...DEFAULT_STG.social, ...(parsed.social || {}) }, designId: DEFAULT_STG.designId };
       }
     } catch { /* ignore */ }
     return DEFAULT_STG;
@@ -139,7 +140,7 @@ export default function App() {
     document.title = `tyrosign - ${slogan}`;
     try { document.documentElement.setAttribute('lang', lang); } catch {}
   }, [lang]);
-  useEffect(() => { try { localStorage.setItem('tyro-stg', JSON.stringify(stg)); } catch {} }, [stg]);
+  useEffect(() => { try { const { designId, ...persist } = stg; localStorage.setItem('tyro-stg', JSON.stringify(persist)); } catch {} }, [stg]);
   useEffect(() => { try { const { customBg, ...rest } = banner; localStorage.setItem('tyro-banner', JSON.stringify(rest)); } catch {} }, [banner]);
 
   // ─── Hooks ───

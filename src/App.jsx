@@ -8,6 +8,7 @@ import { MAX_LOGO_SIZE, MAX_BANNER_SIZE, MAX_LOGO_W, MAX_LOGO_H, DEFAULT_LOGO_W,
 import { TR, EN, RU, AR } from './i18n/translations';
 import { genSig } from './signature/genSig';
 import { genSigCorporate } from './signature/genSigCorporate';
+import { sanitizeUrl } from './utils/formatting';
 import { GLOBAL_CSS } from './styles/globalCss';
 import { useToast } from './hooks/useToast';
 import { useMsal } from './hooks/useMsal';
@@ -26,6 +27,43 @@ import AppFooter from './components/AppFooter';
 import ToastContainer from './components/ToastContainer';
 import CopySuccess from './components/CopySuccess';
 import OnboardingGuide from './components/OnboardingGuide';
+
+// ─── "Sabit Görsel" tasarımı: corporate imzayı yüksek-DPI PNG'ye render eder ───
+// Masaüstünde net (2.5x), telefonda responsive (width:100%). Her istemcide (eski
+// Outlook dahil) birebir aynı görünür. Banner ayrı & tıklanabilir tutulur.
+const SIG_IMG_SCALE = 2.5;
+const SIG_IMG_W = 600;
+async function buildImageSignatureHTML(form, stg, office, sigBanner) {
+  const { default: html2canvas } = await import('html2canvas');
+  const corpHTML = genSigCorporate(form, stg, office, null, { withFallback: false });
+  const host = document.createElement('div');
+  host.style.cssText = `position:fixed;left:-10000px;top:0;width:${SIG_IMG_W}px;background:#ffffff;padding:0;margin:0;`;
+  host.innerHTML = corpHTML;
+  document.body.appendChild(host);
+  try {
+    // Görsellerin (logo/ikon) decode olmasını bekle
+    await Promise.all(Array.from(host.querySelectorAll('img')).map(img =>
+      img.complete ? Promise.resolve() : new Promise(res => { img.onload = img.onerror = res; })
+    ));
+    const target = host.firstElementChild || host;
+    const canvas = await html2canvas(target, {
+      scale: SIG_IMG_SCALE, backgroundColor: '#ffffff', useCORS: true, logging: false,
+    });
+    const dataUrl = canvas.toDataURL('image/png');
+    let html = `<img src="${dataUrl}" width="${SIG_IMG_W}" alt="Email Signature" style="display:block;width:100%;max-width:${SIG_IMG_W}px;height:auto;border:0;" />`;
+    if (sigBanner?.enabled && sigBanner?.base64) {
+      const open = sigBanner.linkUrl ? `<a href="${sanitizeUrl(sigBanner.linkUrl)}" target="_blank" style="text-decoration:none;">` : '';
+      const close = sigBanner.linkUrl ? '</a>' : '';
+      html = `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">` +
+        `<tr><td style="padding:0;">${html}</td></tr>` +
+        `<tr><td style="padding-top:10px;">${open}<img src="${sigBanner.base64}" width="${SIG_IMG_W}" alt="Banner" style="display:block;border:0;width:100%;max-width:${SIG_IMG_W}px;height:auto;" />${close}</td></tr>` +
+        `</table>`;
+    }
+    return html;
+  } finally {
+    document.body.removeChild(host);
+  }
+}
 
 export default function App() {
   // ─── State ───
@@ -212,7 +250,10 @@ export default function App() {
   useBannerCanvas(canvasRef, tab, banner, bannerStg);
 
   const sigHTML = useMemo(() => {
-    if (effectiveStg.designId === 'corporate') return genSigCorporate(form, effectiveStg, office, sigBanner);
+    // corporate → kavisli + eski Outlook için [if mso] klasik fallback
+    if (effectiveStg.designId === 'corporate') return genSigCorporate(form, effectiveStg, office, sigBanner, { withFallback: true });
+    // image ("Sabit Görsel") → önizlemede kavisli corporate görünür; kopyalarken PNG'ye çevrilir
+    if (effectiveStg.designId === 'image') return genSigCorporate(form, effectiveStg, office, sigBanner, { withFallback: false });
     return genSig(form, effectiveStg, office, sigBanner);
   }, [form, effectiveStg, office, sigBanner]);
 
@@ -288,6 +329,18 @@ export default function App() {
       });
     } catch {}
 
+    // Panoya gidecek HTML. "Sabit Görsel" tasarımında imza yüksek-DPI PNG'ye çevrilir;
+    // diğer tasarımlarda üretilen HTML (corporate zaten [if mso] fallback içerir) kullanılır.
+    let copyHTML = sigHTML;
+    if (effectiveStg.designId === 'image') {
+      try {
+        copyHTML = await buildImageSignatureHTML(form, effectiveStg, office, sigBanner);
+      } catch (err) {
+        console.warn('[TYRO] Sabit Görsel render başarısız, HTML fallback:', err && err.message);
+        copyHTML = sigHTML;
+      }
+    }
+
     // ─── PRIMARY: DOM-range execCommand copy (universal cross-browser support)
     // Works in: Chrome, Firefox, Safari (desktop+iOS), Edge, Opera, Brave, mobile
     // - Doesn't require clipboard-write permission (works in corporate envs / DLP / MDM)
@@ -301,7 +354,7 @@ export default function App() {
     div.setAttribute('contenteditable', 'true');
     div.setAttribute('readonly', 'false');     // iOS Safari requires non-readonly
     div.setAttribute('aria-hidden', 'true');
-    div.innerHTML = sigHTML;
+    div.innerHTML = copyHTML;
     // iOS Safari + Firefox: element MUST be in viewport with non-zero size to be selectable.
     // Use 1×1 px transparent element instead of off-screen / display:none / visibility:hidden.
     // user-select + -webkit-user-select ensures programmatic selection works on Safari/iOS.
@@ -350,11 +403,11 @@ export default function App() {
       if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
         // Properly decode HTML entities for plain text version
         const tmp = document.createElement('div');
-        tmp.innerHTML = sigHTML;
+        tmp.innerHTML = copyHTML;
         const plainText = tmp.innerText || tmp.textContent || '';
         await navigator.clipboard.write([
           new ClipboardItem({
-            'text/html': new Blob([sigHTML], { type: 'text/html' }),
+            'text/html': new Blob([copyHTML], { type: 'text/html' }),
             'text/plain': new Blob([plainText], { type: 'text/plain' }),
           }),
         ]);
@@ -368,7 +421,7 @@ export default function App() {
     // ─── LAST RESORT: writeText only (PLAIN TEXT — rich format kaybolur)
     try {
       const tmp = document.createElement('div');
-      tmp.innerHTML = sigHTML;
+      tmp.innerHTML = copyHTML;
       await navigator.clipboard.writeText(tmp.innerText || tmp.textContent || '');
       onSuccess('writeText-plainOnly');
       console.warn('[TYRO] Only plain text copied — rich HTML lost. Likely cause: Permissions-Policy or corporate proxy stripping clipboard API.');
@@ -376,7 +429,7 @@ export default function App() {
       console.error('[TYRO] All clipboard paths failed:', err && err.message);
       toast('Error', 'err');
     }
-  }, [sigHTML, L, toast]);
+  }, [sigHTML, effectiveStg, form, office, sigBanner, L, toast]);
 
   // ─── Keyboard Shortcuts ───
   useEffect(() => {

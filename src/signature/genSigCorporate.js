@@ -1,10 +1,15 @@
 import { escapeHtml, sanitizeUrl, titleCase, formatGSM } from '../utils/formatting';
 import { phoneIconSvg, mobileIconSvg, linkedinBlueSvg } from '../icons/svgDataUris';
+import { genSig } from './genSig';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CORPORATE SIGNATURE GENERATOR (PDF design - wave band)
+// opts.withFallback=true → eski Outlook (Word motoru) için [if mso] ile
+//   dikdörtgen/klasik sürüme otomatik düşer; kavis bozulması yaşanmaz.
+//   Modern istemciler (Gmail, Apple Mail, telefon, yeni Outlook) kavisli sürümü görür.
+// opts.withFallback=false → sadece kavisli sürüm (ör. PNG'ye render için).
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export const genSigCorporate = (f, s, office, sigBanner) => {
+export const genSigCorporate = (f, s, office, sigBanner, opts = {}) => {
   const firstName = escapeHtml(titleCase(f.firstName));
   const lastName = f.lastName ? escapeHtml(f.lastName.toLocaleUpperCase('tr-TR')) : '';
   const name = [firstName, lastName].filter(Boolean).join(' ');
@@ -42,7 +47,7 @@ export const genSigCorporate = (f, s, office, sigBanner) => {
   if (s.showLinkedin !== false && linkedinUrl) footerItems.push(`<a href="${linkedinUrl}" target="_blank" style="text-decoration:none;vertical-align:baseline;"><img src="${linkedinBlueSvg}" width="14" height="14" alt="in" style="vertical-align:-2px;border:0;margin-right:4px;" /><span style="color:${footerC};font-size:11px;font-style:italic;font-weight:bold;vertical-align:baseline;">${linkedinHandle || 'LinkedIn'}</span></a>`);
   const footer = footerItems.length > 0 ? `<div style="line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</div>` : '';
 
-  return `<table class="sig-corp-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
+  const corp = `<table class="sig-corp-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
     `<td class="sig-corp-logo" style="vertical-align:top;padding:34px 50px 0 0;">` +
       logo +
@@ -65,4 +70,12 @@ export const genSigCorporate = (f, s, office, sigBanner) => {
         `</td></tr>`
       : '') +
     `</table>`;
+
+  if (!opts.withFallback) return corp;
+
+  // Eski Outlook (Word motoru) kavis/rgba/hizalamayı bozar → onlara dikdörtgen klasik sürüm.
+  // Diğer tüm istemciler (yeni Outlook dahil) kavisli corporate'i görür.
+  const fallback = genSig(f, s, office, sigBanner);
+  return `<!--[if !mso]><!-->${corp}<!--<![endif]-->` +
+    `<!--[if mso]>${fallback}<![endif]-->`;
 };

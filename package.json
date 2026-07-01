@@ -1,6 +1,6 @@
 {
   "name": "tyrosign",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "tyrosign - Tiryaki Agro Corporate Email Signature Generator",
   "private": true,
   "scripts": {

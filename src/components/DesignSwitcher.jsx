@@ -4,33 +4,28 @@ import { DESIGNS } from '../constants/designs';
 
 const renderMiniPreview = (designId, stg, size = 1) => {
   const w = 40 * size, h = 24 * size;
+  // classic → dikdörtgen bant (kavissiz) | corporate/image → kavisli bant
+  const bandRadius = designId === 'classic' ? 0 : `${6 * size}px 0 0 ${3 * size}px`;
   return (
     <div style={{ width: w, height: h, borderRadius: 4, overflow: 'hidden', border: `1px solid ${C.borderSub}`, background: '#fff', display: 'flex', position: 'relative', flexShrink: 0 }}>
-      {designId === 'classic' ? (<>
-        <div style={{ width: 10 * size, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: 6 * size, height: 8 * size, borderRadius: 1, background: C.primary + '40' }} />
+      <div style={{ width: 14 * size, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: `${2 * size}px ${size}px` }}>
+        <div style={{ width: 8 * size, height: 9 * size, borderRadius: 1, background: C.primary + '30', marginBottom: size }} />
+        <div style={{ height: size, width: 10 * size, background: C.accent + '40', borderRadius: 1 }} />
+      </div>
+      <div style={{ flex: 1, background: stg.rightBlockBg || C.primary, borderRadius: bandRadius, display: 'flex', flexDirection: 'column', padding: `${3 * size}px`, gap: size }}>
+        <div style={{ height: 1.5 * size, width: '85%', background: 'rgba(255,255,255,0.7)', borderRadius: 1 }} />
+        <div style={{ height: size, width: '55%', background: 'rgba(255,255,255,0.4)', borderRadius: 1 }} />
+        <div style={{ height: size, width: '75%', background: 'rgba(255,255,255,0.3)', borderRadius: 1, marginTop: size }} />
+      </div>
+      {designId === 'image' && (
+        <div style={{ position: 'absolute', right: 2 * size, bottom: 2 * size, width: 8 * size, height: 8 * size, borderRadius: 2, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="PNG">
+          <svg width={5 * size} height={5 * size} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.6" />
+            <path d="M21 15l-5-5L5 21" />
+          </svg>
         </div>
-        <div style={{ width: 1, background: C.divider, flexShrink: 0 }} />
-        <div style={{ flex: 1, padding: `${3 * size}px ${2 * size}px`, display: 'flex', flexDirection: 'column', gap: size }}>
-          <div style={{ height: 1.5 * size, width: '80%', background: C.primary + '50', borderRadius: 1 }} />
-          <div style={{ height: size, width: '60%', background: C.accent + '40', borderRadius: 1 }} />
-          <div style={{ height: size, width: '90%', background: '#ddd', borderRadius: 1 }} />
-        </div>
-        <div style={{ width: 9 * size, background: C.primary, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: size }}>
-          <div style={{ width: 3 * size, height: 3 * size, borderRadius: 1, background: 'rgba(255,255,255,0.4)' }} />
-          <div style={{ width: 3 * size, height: 3 * size, borderRadius: 1, background: 'rgba(255,255,255,0.4)' }} />
-        </div>
-      </>) : (<>
-        <div style={{ width: 14 * size, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: `${2 * size}px ${size}px` }}>
-          <div style={{ width: 8 * size, height: 9 * size, borderRadius: 1, background: C.primary + '30', marginBottom: size }} />
-          <div style={{ height: size, width: 10 * size, background: C.accent + '40', borderRadius: 1 }} />
-        </div>
-        <div style={{ flex: 1, background: stg.rightBlockBg || C.primary, borderRadius: `${6 * size}px 0 0 ${3 * size}px`, display: 'flex', flexDirection: 'column', padding: `${3 * size}px`, gap: size }}>
-          <div style={{ height: 1.5 * size, width: '85%', background: 'rgba(255,255,255,0.7)', borderRadius: 1 }} />
-          <div style={{ height: size, width: '55%', background: 'rgba(255,255,255,0.4)', borderRadius: 1 }} />
-          <div style={{ height: size, width: '75%', background: 'rgba(255,255,255,0.3)', borderRadius: 1, marginTop: size }} />
-        </div>
-      </>)}
+      )}
     </div>
   );
 };

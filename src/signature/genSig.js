@@ -64,8 +64,11 @@ export const genSig = (f, s, office, sigBanner) => {
   // Footer içeriği (web + LinkedIn). Corporate gibi banda rowspan ile yaslanıp
   // bandın ALT hizasına oturur (aşağı sarkmaz).
   const hasFooter = footerItems.length > 0;
+  // Footer sol boşluğu: logonun görünür sol kenarıyla hizalı olsun (logo hücresi sol
+  // padding'i 4px + logonun içindeki şeffaf sol boşluk logoLeftOffset).
+  const footerPadLeft = (s.logoLeftOffset || 0) + 4;
   const footer = hasFooter
-    ? `<tr><td class="sigc-foot" style="vertical-align:bottom;padding:10px 0 2px 4px;line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`
+    ? `<tr><td class="sigc-foot" style="vertical-align:bottom;padding:10px 0 2px ${footerPadLeft}px;line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`
     : '';
 
   // Responsive: dar ekranda logo üste, bant tam genişliğe geçer

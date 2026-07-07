@@ -78,7 +78,7 @@ export const genSig = (f, s, office, sigBanner) => {
     `<table class="sigc-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
     `<td class="sigc-logo" style="vertical-align:top;padding:6px 24px 0 4px;">${logo}</td>` +
-    `<td class="sigc-band" bgcolor="${rbBg}" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:0 24px;">` +
+    `<td class="sigc-band" width="100%" bgcolor="${rbBg}" rowspan="${hasFooter ? '2' : '1'}" style="width:100%;vertical-align:top;background-color:${rbBg};padding:0 24px;">` +
       `<table cellpadding="0" cellspacing="0" border="0">${bandLines.join('')}</table>` +
     `</td>` +
     `</tr>` +

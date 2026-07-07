@@ -42,11 +42,18 @@ const SignatureTab = memo(({
     };
   }, [form.email, form.gsm, form.firstName, form.lastName, lang]);
 
+  // Şirket seçimi zorunlu — export aksiyonlarını (Outlook/QR/Kartvizit/Bildir) kapıla
+  const requireCompany = useCallback((fn) => () => {
+    if (!form.companyId) { toast(L.companyRequired, 'err'); return; }
+    fn();
+  }, [form.companyId, toast, L]);
+
   const handleOutlookOpen = useCallback(() => {
+    if (!form.companyId) { toast(L.companyRequired, 'err'); return; }
     doCopy();
     window.open('https://outlook.office.com/mail/options/accounts-category/signatures-subcategory', '_blank');
     toast(lang === 'tr' ? 'İmza kopyalandı — Outlook ayarlarına yapıştırın' : 'Signature copied — paste it in Outlook settings');
-  }, [doCopy, toast, lang]);
+  }, [doCopy, toast, lang, form.companyId, L]);
 
   return (
     <div style={{ animation: 'fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1)' }}>
@@ -98,6 +105,7 @@ const SignatureTab = memo(({
               value={form.companyId}
               onChange={v => uf('companyId', v)}
               placeholder={L.sco}
+              clearLabel={L.sco}
               options={COMPANIES}
               groups={COMPANY_GROUPS}
               nameKey={lang !== 'tr' ? 'nameEN' : undefined}
@@ -157,9 +165,9 @@ const SignatureTab = memo(({
             <SectionTitle icon={Download}>{L.exportTitle}</SectionTitle>
             <ExportSection
               hasData={hasData} copied={copied} doCopy={doCopy}
-              onQrClick={() => setQrOpen(true)}
-              onBcClick={() => setBcOpen(true)}
-              onNotifyClick={() => setNotifyOpen(true)}
+              onQrClick={requireCompany(() => setQrOpen(true))}
+              onBcClick={requireCompany(() => setBcOpen(true))}
+              onNotifyClick={requireCompany(() => setNotifyOpen(true))}
               onOutlookOpen={handleOutlookOpen}
               msalAccount={msalAccount}
               showSteps={showSteps} setShowSteps={setShowSteps} L={L}

@@ -82,7 +82,7 @@ export default function App() {
   const [settingsTab, setSettingsTab] = useState('logo');
   const [form, setForm] = useState({
     firstName: '', lastName: '', titleTR: '', titleEN: '',
-    officeId: '', companyId: 'tiryaki-agro', gsm: '', email: '', linkedinPersonal: '',
+    officeId: '', companyId: '', gsm: '', email: '', linkedinPersonal: '',
   });
   const DEFAULT_STG = {
     companyName: 'Tiryaki Agro', website: 'www.tiryaki.com.tr',
@@ -202,11 +202,12 @@ export default function App() {
   const L = useMemo(() => ({ tr: TR, en: EN, ru: RU, ar: AR })[lang] || EN, [lang]);
   const hasData = form.firstName.trim().length > 0;
   const office = OFFICES.find(o => o.id === form.officeId) || null;
-  const company = useMemo(() => COMPANIES.find(c => c.id === form.companyId) || COMPANIES[0], [form.companyId]);
+  const company = useMemo(() => COMPANIES.find(c => c.id === form.companyId) || null, [form.companyId]);
 
   // ─── Dynamic company logo (lang-aware) ───
   const [companyLogo, setCompanyLogo] = useState({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H });
   useEffect(() => {
+    if (!company) { setCompanyLogo({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H }); return; }
     const url = company.id === 'tiryaki-ttech' ? company.logoEN : (lang === 'tr' ? company.logoTR : company.logoEN /* ru/ar use EN logos */);
     if (!url) { setCompanyLogo({ base64: DEFAULT_LOGO_BASE64, w: DEFAULT_LOGO_W, h: DEFAULT_LOGO_H }); return; }
     let cancelled = false;
@@ -326,6 +327,8 @@ export default function App() {
   }, [toast, lang]);
 
   const doCopy = useCallback(async () => {
+    // Şirket seçimi zorunlu — boşsa kopyalama yapma, hata göster (Ctrl+C dahil)
+    if (!form.companyId) { toast(L.companyRequired, 'err'); return; }
     const onSuccess = (path) => {
       // Diagnostic: window.__tyroCopyPath gives ofis kullanıcısına hangi yol başarılı oldu bilgisi
       try { window.__tyroCopyPath = path; console.info('[TYRO] clipboard path:', path); } catch {}
@@ -467,7 +470,7 @@ export default function App() {
   }, [hasData, doCopy]);
 
   const doReset = useCallback(() => {
-    setForm({ firstName: '', lastName: '', titleTR: '', titleEN: '', officeId: '', companyId: 'tiryaki-agro', gsm: '', email: '', linkedinPersonal: '' });
+    setForm({ firstName: '', lastName: '', titleTR: '', titleEN: '', officeId: '', companyId: '', gsm: '', email: '', linkedinPersonal: '' });
     toast(L.rst, 'info');
   }, [L, toast]);
 

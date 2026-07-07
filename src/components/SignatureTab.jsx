@@ -17,6 +17,7 @@ import PromoBannerSection from './PromoBannerSection';
 const QrModal = lazy(() => import('./QrModal'));
 const BusinessCardModal = lazy(() => import('./BusinessCardModal'));
 const NotifyManagerModal = lazy(() => import('./NotifyManagerModal'));
+const CompanyPickerModal = lazy(() => import('./CompanyPickerModal'));
 
 const SignatureTab = memo(({
   form, uf, stg, effectiveStg, setStg, office, company, sigHTML, hasData, progress, L, lang,
@@ -28,6 +29,7 @@ const SignatureTab = memo(({
   const [qrOpen, setQrOpen] = useState(false);
   const [bcOpen, setBcOpen] = useState(false);
   const [notifyOpen, setNotifyOpen] = useState(false);
+  const [companyPickerOpen, setCompanyPickerOpen] = useState(false);
 
   // ─── Form Validation ───
   const v = useMemo(() => {
@@ -110,6 +112,32 @@ const SignatureTab = memo(({
               groups={COMPANY_GROUPS}
               nameKey={lang !== 'tr' ? 'nameEN' : undefined}
               groupLabels={lang !== 'tr' ? COMPANY_GROUP_LABELS_EN : undefined}
+              trailing={
+                <button
+                  type="button"
+                  className="company-visual-btn"
+                  onClick={() => setCompanyPickerOpen(true)}
+                  title={L.companyPickTitle}
+                  aria-label={L.companyPickTitle}
+                  style={{
+                    flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.4rem',
+                    padding: '0 0.75rem', whiteSpace: 'nowrap',
+                    background: `${C.primary}0d`, border: `1.5px solid ${C.borderSub}`, borderRadius: 8,
+                    cursor: 'pointer', color: C.primary, transition: 'all 0.15s ease',
+                    fontSize: '0.72rem', fontWeight: 600, fontFamily: 'Inter,sans-serif',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = `${C.accent}1a`; e.currentTarget.style.borderColor = `${C.accent}70`; e.currentTarget.style.color = C.accent; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = `${C.primary}0d`; e.currentTarget.style.borderColor = C.borderSub; e.currentTarget.style.color = C.primary; }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                  </svg>
+                  {L.companyPickBtn}
+                </button>
+              }
             />
 
             <div style={{ height: 1, background: C.borderSub, margin: '0.5rem 0 0.6rem' }} />
@@ -228,6 +256,20 @@ const SignatureTab = memo(({
             lang={lang}
             fetchManager={fetchManager}
             sendMail={sendMail}
+          />
+        </Suspense>
+      )}
+
+      {/* Görsel Şirket Seçici (lazy-loaded) */}
+      {companyPickerOpen && (
+        <Suspense fallback={null}>
+          <CompanyPickerModal
+            open={companyPickerOpen}
+            onClose={() => setCompanyPickerOpen(false)}
+            value={form.companyId}
+            onSelect={id => uf('companyId', id)}
+            lang={lang}
+            L={L}
           />
         </Suspense>
       )}

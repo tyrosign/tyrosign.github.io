@@ -9,6 +9,7 @@ export const TR = {
   lu: 'Şirket Logosu', lub: 'Logo Yükle', lr: 'Varsayılan', lh: 'PNG/JPG max 200x80px',
   lw: 'Genişlik', llh: 'Yükseklik', lch: 'Değiştir', so: 'Ofis seçiniz...',
   lv: 'Canlı Önizleme', prog: 'Tamamlanan', of: '/', sco: 'Şirket seçiniz...', companyRequired: 'Lütfen önce şirket seçimi yapın',
+  companyPickTitle: 'Şirketi Görsel Seç', companyPickDesc: 'Şirketinizin logosuna tıklayıp Tamam’a basın', companyPickOk: 'Tamam', companyPickCancel: 'Vazgeç', companyPickSelected: 'Seçilen', companyPickBtn: 'Logo Seç',
   ht: 'Outlook\'a Nasıl Eklenir?',
   steps: [
     'Yukarıdaki "İmzayı Kopyala" butonuna tıklayın.',
@@ -97,6 +98,7 @@ export const EN = {
   lu: 'Company Logo', lub: 'Upload Logo', lr: 'Default', lh: 'PNG/JPG max 200x80px',
   lw: 'Width', llh: 'Height', lch: 'Change', so: 'Select office...',
   lv: 'Live Preview', prog: 'Completed', of: '/', sco: 'Select company...', companyRequired: 'Please select a company first',
+  companyPickTitle: 'Pick Company Visually', companyPickDesc: 'Click your company logo, then press OK', companyPickOk: 'OK', companyPickCancel: 'Cancel', companyPickSelected: 'Selected', companyPickBtn: 'Pick Logo',
   ht: 'How to Add to Outlook?',
   steps: [
     'Click the "Copy Signature" button above.',
@@ -185,6 +187,7 @@ export const RU = {
   lu: 'Логотип компании', lub: 'Загрузить логотип', lr: 'По умолчанию', lh: 'PNG/JPG макс. 200x80px',
   lw: 'Ширина', llh: 'Высота', lch: 'Изменить', so: 'Выберите офис...',
   lv: 'Предварительный просмотр', prog: 'Заполнено', of: '/', sco: 'Выберите компанию...', companyRequired: 'Сначала выберите компанию',
+  companyPickTitle: 'Выбрать компанию визуально', companyPickDesc: 'Нажмите на логотип компании, затем OK', companyPickOk: 'OK', companyPickCancel: 'Отмена', companyPickSelected: 'Выбрано', companyPickBtn: 'Выбрать логотип',
   ht: 'Как добавить в Outlook?',
   steps: [
     'Нажмите кнопку «Копировать подпись» выше.',
@@ -273,6 +276,7 @@ export const AR = {
   lu: 'شعار الشركة', lub: 'رفع الشعار', lr: 'افتراضي', lh: 'PNG/JPG بحد أقصى 200x80 بكسل',
   lw: 'العرض', llh: 'الارتفاع', lch: 'تغيير', so: 'اختر المكتب...',
   lv: 'معاينة مباشرة', prog: 'مكتمل', of: '/', sco: 'اختر الشركة...', companyRequired: 'يرجى اختيار الشركة أولاً',
+  companyPickTitle: 'اختيار الشركة بصريًا', companyPickDesc: 'انقر على شعار شركتك ثم اضغط موافق', companyPickOk: 'موافق', companyPickCancel: 'إلغاء', companyPickSelected: 'المحدد', companyPickBtn: 'اختر الشعار',
   ht: 'كيفية الإضافة إلى Outlook؟',
   steps: [
     'انقر على زر "نسخ التوقيع" أعلاه.',

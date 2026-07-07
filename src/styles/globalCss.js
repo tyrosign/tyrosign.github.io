@@ -175,6 +175,8 @@ export const GLOBAL_CSS = `
     .export-btns button { justify-content: flex-start!important; padding-left: 1.2rem!important; }
     .sig-html-wrap > div { zoom: 0.52!important; }
     .sig-body { padding: 0.5rem!important; overflow: hidden!important; }
+    /* Görsel şirket seçim butonu mobilde gizli — metin seçimi kullanılır */
+    .company-visual-btn { display: none!important; }
   }
   @media(max-width:480px) {
     .app-header-nav .nav-tabs-inner { gap: 0!important; }

@@ -13,7 +13,7 @@ const ChevronIcon = ({ open }) => (
 
 const SearchableSelect = memo(({
   value, onChange, placeholder, label, required,
-  options, groups, groupLabels, nameKey, clearLabel,
+  options, groups, groupLabels, nameKey, clearLabel, trailing,
 }) => {
   const [open, setOpen] = useState(false);
   const [hlIdx, setHlIdx] = useState(-1); // keyboard highlight index
@@ -202,35 +202,38 @@ const SearchableSelect = memo(({
         </label>
       )}
 
-      <button
-        ref={btnRef}
-        type="button"
-        role="combobox"
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-labelledby={label ? `lbl-${label}` : undefined}
-        onClick={() => setOpen(p => !p)}
-        onKeyDown={handleKeyDown}
-        style={{
-          width: '100%', display: 'flex', alignItems: 'center', gap: '0.5rem',
-          padding: '0.45rem 0.65rem',
-          background: '#fff',
-          border: `1.5px solid ${open ? C.accent + '60' : C.borderSub}`,
-          borderRadius: 8,
-          cursor: 'pointer', transition: 'border-color 0.15s',
-          fontFamily: 'Inter,sans-serif', fontSize: '0.78rem', color: C.text1,
-          boxSizing: 'border-box', outline: 'none', textAlign: 'left',
-        }}
-      >
-        <span style={{
-          flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          color: selected ? C.text1 : C.textM,
-          fontWeight: selected ? 500 : 400,
-        }}>
-          {selected ? ((nameKey && selected[nameKey]) || selected.name) : placeholder}
-        </span>
-        <ChevronIcon open={open} />
-      </button>
+      <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'stretch' }}>
+        <button
+          ref={btnRef}
+          type="button"
+          role="combobox"
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          aria-labelledby={label ? `lbl-${label}` : undefined}
+          onClick={() => setOpen(p => !p)}
+          onKeyDown={handleKeyDown}
+          style={{
+            flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '0.5rem',
+            padding: '0.45rem 0.65rem',
+            background: '#fff',
+            border: `1.5px solid ${open ? C.accent + '60' : C.borderSub}`,
+            borderRadius: 8,
+            cursor: 'pointer', transition: 'border-color 0.15s',
+            fontFamily: 'Inter,sans-serif', fontSize: '0.78rem', color: C.text1,
+            boxSizing: 'border-box', outline: 'none', textAlign: 'left',
+          }}
+        >
+          <span style={{
+            flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            color: selected ? C.text1 : C.textM,
+            fontWeight: selected ? 500 : 400,
+          }}>
+            {selected ? ((nameKey && selected[nameKey]) || selected.name) : placeholder}
+          </span>
+          <ChevronIcon open={open} />
+        </button>
+        {trailing}
+      </div>
 
       {open && (
         <div

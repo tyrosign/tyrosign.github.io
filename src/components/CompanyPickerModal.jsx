@@ -1,7 +1,7 @@
 import { memo, useState, useEffect, useMemo } from 'react';
 import { X, Check } from 'lucide-react';
 import { C } from '../constants/theme';
-import { COMPANIES, COMPANY_GROUPS, COMPANY_GROUP_LABELS_EN } from '../constants/companies';
+import { COMPANIES, COMPANY_GROUPS } from '../constants/companies';
 import DEFAULT_LOGO_BASE64 from '../defaultLogo.js';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -25,7 +25,6 @@ const CompanyPickerModal = memo(({ open, onClose, value, onSelect, lang, L }) =>
 
   const nameOf = (c) => (lang !== 'tr' && c.nameEN) ? c.nameEN : c.name;
   const logoOf = (c) => (lang === 'tr' ? c.logoTR : c.logoEN); // RU/AR → EN
-  const labelOf = (g) => (lang !== 'tr' && COMPANY_GROUP_LABELS_EN[g]) || g;
 
   const selCompany = useMemo(() => COMPANIES.find(c => c.id === sel) || null, [sel]);
 
@@ -37,11 +36,13 @@ const CompanyPickerModal = memo(({ open, onClose, value, onSelect, lang, L }) =>
 
   const confirm = () => { if (sel) { onSelect(sel); onClose(); } };
 
-  // ── Tek şirket kartı (logo veya metin) ──
-  const Tile = ({ c, big }) => {
+  // ── Tek şirket kartı. head=true → grup başlığı (grup logosu, navy zeminli) ──
+  const Tile = ({ c, big, head }) => {
     const active = sel === c.id;
     // Logosu olmayan (ör. Ana Şirket / Tiryaki Agro) → standart tiryaki logosu
     const url = logoOf(c) || DEFAULT_LOGO_BASE64;
+    const restBg = head ? `${C.primary}0a` : '#ffffff';
+    const restBorder = head ? `${C.primary}45` : C.borderSub;
     return (
       <button
         type="button"
@@ -49,26 +50,20 @@ const CompanyPickerModal = memo(({ open, onClose, value, onSelect, lang, L }) =>
         title={nameOf(c)}
         style={{
           position: 'relative', width: '100%',
-          minHeight: big ? 72 : 58,
+          minHeight: big ? 72 : head ? 66 : 58,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: big ? '10px 14px' : '8px 10px',
-          background: active ? `${C.accent}0e` : '#ffffff',
-          border: active ? `2px solid ${C.accent}` : `1px solid ${C.borderSub}`,
+          background: active ? `${C.accent}0e` : restBg,
+          border: active ? `2px solid ${C.accent}` : `${head ? '1.5px' : '1px'} solid ${restBorder}`,
           borderRadius: 12, cursor: 'pointer',
           boxShadow: active ? `0 0 0 3px ${C.accent}22, 0 4px 14px ${C.primary}12` : '0 1px 3px rgba(30,58,95,0.06)',
           transition: 'all 0.16s ease',
         }}
         onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = `${C.accent}70`; e.currentTarget.style.boxShadow = `0 4px 14px ${C.primary}14`; } }}
-        onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = C.borderSub; e.currentTarget.style.boxShadow = '0 1px 3px rgba(30,58,95,0.06)'; } }}
+        onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = restBorder; e.currentTarget.style.boxShadow = '0 1px 3px rgba(30,58,95,0.06)'; } }}
       >
-        {url ? (
-          <img src={url} alt={nameOf(c)} loading="lazy"
-            style={{ maxWidth: '100%', maxHeight: big ? 46 : 38, objectFit: 'contain', display: 'block' }} />
-        ) : (
-          <span style={{ fontSize: big ? '0.95rem' : '0.72rem', fontWeight: 700, color: C.primary, fontFamily: 'Plus Jakarta Sans,sans-serif', textAlign: 'center', lineHeight: 1.2 }}>
-            {nameOf(c)}
-          </span>
-        )}
+        <img src={url} alt={nameOf(c)} loading="lazy"
+          style={{ maxWidth: '100%', maxHeight: big ? 46 : head ? 44 : 38, objectFit: 'contain', display: 'block' }} />
         {active && (
           <span style={{
             position: 'absolute', top: -8, right: -8, width: 22, height: 22, borderRadius: '50%',
@@ -135,22 +130,19 @@ const CompanyPickerModal = memo(({ open, onClose, value, onSelect, lang, L }) =>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.9rem', alignItems: 'flex-start' }}>
             {otherGroups.map(g => {
               // Görsel seçicide sadece logosu olan şirketler (ör. Bioethanol logosuz → gösterilmez)
-              const items = COMPANIES.filter(c => c.group === g && (c.logoTR || c.logoEN));
-              if (!items.length) return null;
-              // Çok uzun grup (ör. Tiryaki Anadolu, >6 şirket) → 2 sütun, yataya genişle
-              const twoCol = items.length > 6;
+              const all = COMPANIES.filter(c => c.group === g && (c.logoTR || c.logoEN));
+              if (!all.length) return null;
+              // Grup başı = adı grup adıyla aynı olan şirket (ör. "Tiryaki Anadolu")
+              const head = all.find(c => c.name === g) || all[0];
+              const subs = all.filter(c => c.id !== head.id);
+              // Çok uzun grup (ör. Tiryaki Anadolu, >6 alt şirket) → 2 sütun, yataya genişle
+              const twoCol = subs.length > 6;
               return (
                 <div key={g} style={{ flex: twoCol ? '2 1 300px' : '1 1 150px', minWidth: twoCol ? 290 : 140, maxWidth: twoCol ? 340 : 195 }}>
-                  <div style={{
-                    fontSize: '0.62rem', fontWeight: 700, color: '#fff', background: C.primary,
-                    borderRadius: 8, padding: '0.4rem 0.6rem', marginBottom: '0.55rem',
-                    fontFamily: 'Plus Jakarta Sans,sans-serif', textAlign: 'center',
-                    textTransform: 'uppercase', letterSpacing: '0.4px', lineHeight: 1.25,
-                  }}>
-                    {labelOf(g)}
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: twoCol ? '1fr 1fr' : '1fr', gap: '0.5rem' }}>
-                    {items.map(c => <Tile key={c.id} c={c} />)}
+                  {/* Grup başlığı = grup logosu (tıklanabilir, seçilebilir) */}
+                  <Tile c={head} head />
+                  <div style={{ display: 'grid', gridTemplateColumns: twoCol ? '1fr 1fr' : '1fr', gap: '0.5rem', marginTop: '0.55rem' }}>
+                    {subs.map(c => <Tile key={c.id} c={c} />)}
                   </div>
                 </div>
               );

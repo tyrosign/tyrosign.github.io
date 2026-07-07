@@ -34,6 +34,8 @@ export const COMPANIES = [
     logoTR: BASE + 'hasata-tr.png', logoEN: BASE + 'hasata-en.png' },
   { id: 'tiryaki-yudum', group: 'Tiryaki Anadolu', name: 'Tiryaki Yudum', nameEN: 'Tiryaki Yudum',
     logoTR: BASE + 'tiryaki-yudum-tr.png', logoEN: BASE + 'tiryaki-yudum-en.png' },
+  { id: 'tiryaki-tuketici', group: 'Tiryaki Anadolu', name: 'Tiryaki Tüketici Markaları', nameEN: 'Tiryaki Consumer Brands',
+    logoTR: BASE + 'tiryaki-tuketici-tr.png', logoEN: BASE + 'tiryaki-tuketici-en.png' },
 
   // ── Tiryaki Gelişen Pazarlar ──
   { id: 'tiryaki-gp', group: 'Tiryaki Gelişen Pazarlar', name: 'Tiryaki Gelişen Pazarlar', nameEN: 'Tiryaki Emerging Markets',
@@ -58,8 +60,6 @@ export const COMPANIES = [
     logoTR: BASE + 'ozark-tr.png', logoEN: BASE + 'ozark-en.png' },
   { id: 'giresunport', group: 'Tiryaki Organik', name: 'Giresunport', nameEN: 'Giresunport',
     logoTR: BASE + 'giresunport-tr.png', logoEN: BASE + 'giresunport-en.png' },
-  { id: 'tiryaki-tuketici', group: 'Tiryaki Organik', name: 'Tiryaki Tüketici Markaları', nameEN: 'Tiryaki Consumer Brands',
-    logoTR: BASE + 'tiryaki-tuketici-tr.png', logoEN: BASE + 'tiryaki-tuketici-en.png' },
 
   // ── Tiryaki Stratejik Hizmetler ──
   { id: 'tiryaki-stratejik', group: 'Tiryaki Stratejik Hizmetler', name: 'Tiryaki Stratejik Hizmetler', nameEN: 'Tiryaki Strategic Services',

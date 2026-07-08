@@ -68,7 +68,7 @@ export const genSig = (f, s, office, sigBanner) => {
   // padding'i 4px + logonun içindeki şeffaf sol boşluk logoLeftOffset).
   const footerPadLeft = (s.logoLeftOffset || 0) + 4;
   const footer = hasFooter
-    ? `<tr><td class="sigc-foot" style="vertical-align:bottom;padding:10px 0 2px ${footerPadLeft}px;line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`
+    ? `<tr><td class="sigc-foot" bgcolor="#ffffff" style="vertical-align:bottom;background-color:#ffffff;padding:10px 0 2px ${footerPadLeft}px;line-height:16px;white-space:nowrap;">${footerItems.join('&nbsp;&nbsp;&nbsp;')}</td></tr>`
     : '';
 
   // Responsive: dar ekranda logo üste, bant tam genişliğe geçer
@@ -77,7 +77,7 @@ export const genSig = (f, s, office, sigBanner) => {
   return sigCSS +
     `<table class="sigc-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
-    `<td class="sigc-logo" style="vertical-align:top;padding:6px 24px 0 4px;">${logo}</td>` +
+    `<td class="sigc-logo" bgcolor="#ffffff" style="vertical-align:top;background-color:#ffffff;padding:6px 24px 0 4px;">${logo}</td>` +
     `<td class="sigc-band" bgcolor="${rbBg}" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:0 24px;">` +
       `<table cellpadding="0" cellspacing="0" border="0">${bandLines.join('')}</table>` +
     `</td>` +

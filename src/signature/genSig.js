@@ -32,28 +32,34 @@ export const genSig = (f, s, office, sigBanner) => {
   // ── Bant içi metin satırları (iç tablo → Word'de güvenilir satır boşluğu) ──
   // NOT: Eski Outlook (Word motoru) img margin'ini yok sayar → ikon-yazı boşluğu
   // için margin YERİNE &nbsp; kullanılır. Satır boşlukları td padding'inde (Word-safe).
+  // KRİTİK: her metin hücresine lacivert arka plan (background-color:${rbBg}) da verilir.
+  // Yazı rengi + arka plan AYNI hücrede olunca:
+  //  • Outlook "sağ tık → Yapıştır" (Merge Formatting) yazı rengini "Otomatik"e sıfırlasa
+  //    bile, Word koyu zeminli hücrede "Otomatik" rengi BEYAZ basar → yazı beyaz kalır.
+  //  • Dark mode beyaz yazıyı siyaha çevirmez (koyu blok olarak tanır).
+  // Dış banttaki bgcolor tek başına yetmiyordu çünkü iç hücrelerin kendi zemini yoktu.
   const bandLines = [];
   // Üst boşluk — spacer satırı (Word'de td padding-bottom rowspan'de sıkışabildiği için
   // dikey boşlukları spacer satırlarıyla veriyoruz; her istemcide simetrik durur).
-  bandLines.push(`<tr><td height="15" style="font-size:0;line-height:15px;height:15px;">&nbsp;</td></tr>`);
-  bandLines.push(`<tr><td style="padding:0 0 2px;font-size:15px;font-weight:bold;color:${cName};font-family:Arial,sans-serif;line-height:1.3;">${name || 'Ad SOYAD'}</td></tr>`);
-  if (titleEN) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleEN}</td></tr>`);
-  if (titleTR) bandLines.push(`<tr><td style="padding:0 0 1px;font-size:11px;color:${cSub};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleTR}</td></tr>`);
-  bandLines.push(`<tr><td height="10" style="font-size:0;line-height:10px;height:10px;">&nbsp;</td></tr>`);
+  bandLines.push(`<tr><td height="15" bgcolor="${rbBg}" style="font-size:0;line-height:15px;height:15px;background-color:${rbBg};">&nbsp;</td></tr>`);
+  bandLines.push(`<tr><td bgcolor="${rbBg}" style="padding:0 0 2px;font-size:15px;font-weight:bold;color:${cName};background-color:${rbBg};font-family:Arial,sans-serif;line-height:1.3;">${name || 'Ad SOYAD'}</td></tr>`);
+  if (titleEN) bandLines.push(`<tr><td bgcolor="${rbBg}" style="padding:0 0 1px;font-size:11px;color:${cSub};background-color:${rbBg};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleEN}</td></tr>`);
+  if (titleTR) bandLines.push(`<tr><td bgcolor="${rbBg}" style="padding:0 0 1px;font-size:11px;color:${cSub};background-color:${rbBg};font-style:italic;font-family:Arial,sans-serif;line-height:1.45;">${titleTR}</td></tr>`);
+  bandLines.push(`<tr><td height="10" bgcolor="${rbBg}" style="font-size:0;line-height:10px;height:10px;background-color:${rbBg};">&nbsp;</td></tr>`);
   if (s.showAddress !== false && office) {
-    bandLines.push(`<tr><td style="padding:0 0 6px;font-size:11px;color:${cText};font-family:Arial,sans-serif;line-height:1.5;">${escapeHtml(office.address)}, ${escapeHtml(office.city)}</td></tr>`);
+    bandLines.push(`<tr><td bgcolor="${rbBg}" style="padding:0 0 6px;font-size:11px;color:${cText};background-color:${rbBg};font-family:Arial,sans-serif;line-height:1.5;">${escapeHtml(office.address)}, ${escapeHtml(office.city)}</td></tr>`);
   }
   const phones = [];
   if (f.gsm) phones.push(`<img src="${mobileIconSvg}" width="12" height="12" alt="" style="vertical-align:middle;border:0;" />&nbsp;<span style="vertical-align:middle;">${escapeHtml(formatGSM(f.gsm))}</span>`);
   if (s.showSDN !== false && office?.sdn) phones.push(`<img src="${phoneIconSvg}" width="12" height="12" alt="" style="vertical-align:middle;border:0;" />&nbsp;<span style="vertical-align:middle;">${escapeHtml(office.sdn)}</span>`);
   if (phones.length > 0) {
-    bandLines.push(`<tr><td style="padding:0 0 5px;font-size:11px;color:${cText};font-family:Arial,sans-serif;line-height:1.4;white-space:nowrap;">${phones.join('&nbsp;&nbsp;&nbsp;&nbsp;')}</td></tr>`);
+    bandLines.push(`<tr><td bgcolor="${rbBg}" style="padding:0 0 5px;font-size:11px;color:${cText};background-color:${rbBg};font-family:Arial,sans-serif;line-height:1.4;white-space:nowrap;">${phones.join('&nbsp;&nbsp;&nbsp;&nbsp;')}</td></tr>`);
   }
   if (f.email) {
-    bandLines.push(`<tr><td style="padding:0;font-size:11px;font-family:Arial,sans-serif;line-height:1.4;"><a href="mailto:${escapeHtml(f.email)}" style="color:${cName};text-decoration:none;">@&nbsp;${escapeHtml(f.email)}</a></td></tr>`);
+    bandLines.push(`<tr><td bgcolor="${rbBg}" style="padding:0;font-size:11px;background-color:${rbBg};font-family:Arial,sans-serif;line-height:1.4;"><a href="mailto:${escapeHtml(f.email)}" style="color:${cName};text-decoration:none;">@&nbsp;${escapeHtml(f.email)}</a></td></tr>`);
   }
   // Alt boşluk — spacer satırı (mavi bandın alt kenarı yazıya bitişik kalmasın)
-  bandLines.push(`<tr><td height="15" style="font-size:0;line-height:15px;height:15px;">&nbsp;</td></tr>`);
+  bandLines.push(`<tr><td height="15" bgcolor="${rbBg}" style="font-size:0;line-height:15px;height:15px;background-color:${rbBg};">&nbsp;</td></tr>`);
 
   // ── Footer (logonun altı, tam genişlik satırı): web sitesi + LinkedIn ──
   const footerC = s.contactLabelColor || '#808285';

@@ -81,7 +81,7 @@ export const genSig = (f, s, office, sigBanner) => {
   const sigCSS = `<style>@media screen and (max-width:480px){.sigc-table{width:100%!important}.sigc-logo,.sigc-band,.sigc-foot{display:block!important;width:100%!important;box-sizing:border-box!important}.sigc-logo{text-align:center!important;padding:0 0 10px 0!important}.sigc-foot{text-align:center!important;padding:10px 0 0 0!important}}</style>`;
 
   return sigCSS +
-    `<table class="sigc-table" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; font-family:Arial,sans-serif; border-collapse:collapse;">` +
+    `<table class="sigc-table" bgcolor="#ffffff" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px; max-width:600px; background-color:#ffffff; font-family:Arial,sans-serif; border-collapse:collapse;">` +
     `<tr>` +
     `<td class="sigc-logo" bgcolor="#ffffff" style="vertical-align:top;background-color:#ffffff;padding:6px 24px 0 4px;">${logo}</td>` +
     `<td class="sigc-band" bgcolor="${rbBg}" rowspan="${hasFooter ? '2' : '1'}" style="vertical-align:top;background-color:${rbBg};padding:0 24px;">` +

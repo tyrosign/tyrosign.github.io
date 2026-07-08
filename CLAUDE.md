@@ -24,12 +24,14 @@ Test runner / lint config yok — değişikliklerden sonra `npm run build` ile s
 Her canlı çıkışta tüm üç remote'a push gerekir:
 
 ```bash
-git push origin main         # TYROAIHUB/tyrosign — kaynak repo
-git push tyrosign-io main    # tyrosign/tyrosign.github.io — GitHub Pages deploy
+git push origin main         # TYROAIHUB/tyrosign — CANLI (Pages + özel alan adı tyrosign.ttech.business)
+git push tyrosign-io main    # tyrosign/tyrosign.github.io — mirror (github.io, özel alan adı YOK)
 git push ghe main            # THUB/tyrosign — kurumsal GHE mirror
 ```
 
-GitHub Pages CNAME `public/CNAME` → `tyrosign.ttech.business`. Deploy tamamlandığında live site ~1-2 dakika içinde güncellenir; ofis testinde **hard refresh (Ctrl+Shift+R)** gerekir, eski JS chunk cache'lenmiş olabilir.
+**Canlı site `origin` (TYROAIHUB/tyrosign) reposundan yayınlanır** — özel alan adı `tyrosign.ttech.business` bu reponun GitHub Pages'ine bağlıdır (doğrula: `gh api repos/TYROAIHUB/tyrosign/pages --jq .cname`). Deploy her iki repoda da `.github/workflows/deploy.yml` ile Actions üzerinden yapılır (`npm ci` + `npm run build` → `actions/deploy-pages`). GitHub Pages CNAME `public/CNAME` → `tyrosign.ttech.business`. Deploy tamamlandığında live site ~1-2 dakika içinde güncellenir; ofis testinde **hard refresh (Ctrl+Shift+R)** gerekir, eski JS chunk cache'lenmiş olabilir.
+
+⚠️ **Deploy yarışı:** Aynı repoya iki push'u arka arkaya (önceki deploy bitmeden) yapma — GitHub Pages "aynı anda tek deploy" kuralı ikinciyi *"in progress deployment"* (HTTP 400) ile düşürür. Build başarılı olsa bile deploy adımı patlar. Çözüm: bir push'un deploy'u bitmeden diğerini gönderme; düşerse `gh run rerun <run-id> --repo TYROAIHUB/tyrosign` ile yeniden tetikle. Durum: `gh run list --repo TYROAIHUB/tyrosign --limit 3`.
 
 ### Versioning (Semantic)
 - **Major (vX.0.0):** Mimari/breaking change
